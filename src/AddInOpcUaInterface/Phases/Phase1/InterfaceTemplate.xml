@@ -1,0 +1,1046 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UANodeSet LastModified="{insert_Date}" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns:si="http://www.siemens.com/OPCUA/2017/SimaticNodeSetExtensions">
+	<NamespaceUris>
+		<Uri>http://TIA.Add-In/ServerInterface</Uri>
+		<Uri>{insert_namespaceUri}</Uri>
+	</NamespaceUris>
+	<Aliases>
+		<!-- Tagtable & datablock variables -->
+		<Alias Alias="AOM_IDENT">ns=1;i=3026</Alias>
+		<Alias Alias="Boolean">i=1</Alias>
+		<Alias Alias="BOOL">i=1</Alias>
+		<Alias Alias="BYTE">ns=1;i=3001</Alias>
+		<Alias Alias="CHAR">ns=1;i=3012</Alias>
+		<Alias Alias="CONN_ANY">ns=1;i=3030</Alias>
+		<Alias Alias="CONN_OUC">ns=1;i=3060</Alias>
+		<Alias Alias="CONN_PRG">ns=1;i=3059</Alias>
+		<Alias Alias="CONN_R_ID">ns=1;i=3031</Alias>
+		<Alias Alias="COUNTER">ns=1;i=3016</Alias>
+		<Alias Alias="DATE">ns=1;i=3008</Alias>
+		<Alias Alias="DB_ANY">ns=1;i=3032</Alias>
+		<Alias Alias="DB_DYN">ns=1;i=3062</Alias>
+		<Alias Alias="DB_WWW">ns=1;i=3061</Alias>
+		<Alias Alias="DINT">i=6</Alias>
+		<Alias Alias="DWORD">ns=1;i=3003</Alias>
+		<Alias Alias="EVENT_ANY">ns=1;i=3046</Alias>
+		<Alias Alias="EVENT_ATT">ns=1;i=3047</Alias>
+		<Alias Alias="EVENT_HWINT">ns=1;i=3048</Alias>
+		<Alias Alias="HW_ANY">ns=1;i=3024</Alias>
+		<Alias Alias="HW_DEVICE">ns=1;i=3033</Alias>
+		<Alias Alias="HW_DPMASTER">ns=1;i=3044</Alias>
+		<Alias Alias="HW_DPSLAVE">ns=1;i=3045</Alias>
+		<Alias Alias="HW_HSC">ns=1;i=3040</Alias>
+		<Alias Alias="HW_IEPORT">ns=1;i=3039</Alias>
+		<Alias Alias="HW_INTERFACE">ns=1;i=3038</Alias>
+		<Alias Alias="HW_IO">ns=1;i=3034</Alias>
+		<Alias Alias="HW_IOSYSTEM">ns=1;i=3035</Alias>
+		<Alias Alias="HW_MODULE">ns=1;i=3037</Alias>
+		<Alias Alias="HW_PTO">ns=1;i=3042</Alias>
+		<Alias Alias="HW_PWM">ns=1;i=3041</Alias>
+		<Alias Alias="HW_SUBMODULE">ns=1;i=3036</Alias>
+		<Alias Alias="INT">i=4</Alias>
+		<Alias Alias="LDT">i=13</Alias>
+		<Alias Alias="LINT">i=8</Alias>
+		<Alias Alias="LREAL">i=11</Alias>
+		<Alias Alias="LTIME">ns=1;i=3007</Alias>
+		<Alias Alias="LTOD">ns=1;i=3010</Alias>
+		<Alias Alias="LTIME_OF_DAY">ns=1;i=3010</Alias>
+		<Alias Alias="LWORD">ns=1;i=3004</Alias>
+		<Alias Alias="OB_ANY">ns=1;i=3027</Alias>
+		<Alias Alias="OB_ATT">ns=1;i=3052</Alias>
+		<Alias Alias="OB_CYCLIC">ns=1;i=3051</Alias>
+		<Alias Alias="OB_DELAY">ns=1;i=3049</Alias>
+		<Alias Alias="OB_DIAG">ns=1;i=3055</Alias>
+		<Alias Alias="OB_HWINT">ns=1;i=3054</Alias>
+		<Alias Alias="OB_PCYCLE">ns=1;i=3053</Alias>
+		<Alias Alias="OB_STARTUP">ns=1;i=3057</Alias>
+		<Alias Alias="OB_TIMEERROR">ns=1;i=3056</Alias>
+		<Alias Alias="OB_TOD">ns=1;i=3050</Alias>
+		<Alias Alias="PIP">ns=1;i=3029</Alias>
+		<Alias Alias="PORT">ns=1;i=3058</Alias>
+		<Alias Alias="REAL">i=10</Alias>
+		<Alias Alias="RTM">ns=1;i=3028</Alias>
+		<Alias Alias="S5TIME">ns=1;i=3005</Alias>
+		<Alias Alias="SINT">i=2</Alias>
+		<Alias Alias="TIME">ns=1;i=3006</Alias>
+		<Alias Alias="TOD">ns=1;i=3009</Alias>
+		<Alias Alias="TIME_OF_DAY">ns=1;i=3009</Alias>
+		<Alias Alias="TIMER">ns=1;i=3015</Alias>
+		<Alias Alias="UDINT">i=7</Alias>
+		<Alias Alias="UINT">i=5</Alias>
+		<Alias Alias="ULINT">i=9</Alias>
+		<Alias Alias="USINT">i=3</Alias>
+		<Alias Alias="WCHAR">ns=1;i=3013</Alias>
+		<Alias Alias="WORD">ns=1;i=3002</Alias>
+		<!-- Datablocks variables -->
+		<Alias Alias="STRING">ns=1;i=3014</Alias>
+		<Alias Alias="WSTRING">i=12</Alias>
+		<Alias Alias="CREF">ns=1;s=DT_CREF</Alias>
+		<Alias Alias="DTL">ns=1;s=DT_DTL</Alias>
+		<Alias Alias="IEC_COUNTER">ns=1;s=DT_IEC_COUNTER</Alias>
+		<Alias Alias="IEC_DCOUNTER">ns=1;s=DT_IEC_DCOUNTER</Alias>
+		<Alias Alias="IEC_LCOUNTER">ns=1;s=DT_IEC_LCOUNTER</Alias>
+		<Alias Alias="IEC_LTIMER">ns=1;s=DT_IEC_LTIMER</Alias>
+		<Alias Alias="IEC_SCOUNTER">ns=1;s=DT_IEC_SCOUNTER</Alias>
+		<Alias Alias="IEC_TIMER">ns=1;s=DT_IEC_TIMER</Alias>
+		<Alias Alias="IEC_UCOUNTER">ns=1;s=DT_IEC_UCOUNTER</Alias>
+		<Alias Alias="IEC_UDCOUNTER">ns=1;s=DT_IEC_UDCOUNTER</Alias>
+		<Alias Alias="IEC_ULCOUNTER">ns=1;s=DT_IEC_ULCOUNTER</Alias>
+		<Alias Alias="IEC_USCOUNTER">ns=1;s=DT_IEC_USCOUNTER</Alias>
+		<Alias Alias="NREF">ns=1;s=DT_NREF</Alias>
+		<Alias Alias="DT">ns=1;i=3011</Alias>
+		<Alias Alias="DATE_AND_TIME">ns=1;i=3011</Alias>
+		<!-- Additional datatypes -->
+		<Alias Alias="TCON_PARAM">ns=1;s=DT_TCON_PARAM</Alias>
+		<Alias Alias="TCON_IP_V4">ns=1;s=DT_TCON_IP_V4</Alias>
+		<Alias Alias="TCON_IP_V4_SEC">ns=1;s=DT_TCON_IP_V4_SEC</Alias>
+		<Alias Alias="TCON_QDN">ns=1;s=DT_TCON_QDN</Alias>
+		<Alias Alias="TCON_QDN_SEC">ns=1;s=DT_TCON_QDN_SEC</Alias>
+		<Alias Alias="IP_V4">ns=1;s=DT_IP_V4</Alias>
+		<Alias Alias="IF_CONF_V4">ns=1;s=DT_IF_CONF_V4</Alias>
+		<Alias Alias="GEOADDR">ns=1;s=DT_GEOADDR</Alias>
+		<Alias Alias="TADDR_PARAM">ns=1;s=DT_TADDR_PARAM</Alias>
+		<Alias Alias="TP_TIME">ns=1;s=DT_IEC_TIMER</Alias>
+		<Alias Alias="TON_TIME">ns=1;s=DT_IEC_TIMER</Alias>
+		<Alias Alias="TOF_TIME">ns=1;s=DT_IEC_TIMER</Alias>
+		<Alias Alias="TONR_TIME">ns=1;s=DT_IEC_TIMER</Alias>
+		<!-- OPC UA Reference Aliases -->
+		<Alias Alias="HasTypeDefinition">i=40</Alias>
+		<Alias Alias="HasComponent">i=47</Alias>
+		<Alias Alias="HasModellingRule">i=37</Alias>
+		<Alias Alias="HasSubtype">i=45</Alias>
+		<Alias Alias="Organizes">i=35</Alias>
+		<Alias Alias="HasProperty">i=46</Alias>
+		<Alias Alias="HasEncoding">i=38</Alias>
+		<!-- Other OPC UA Aliases -->
+		<Alias Alias="OPC_UA_NODEID">i=17</Alias>
+	</Aliases>
+	<Extensions>
+		<Extension>
+			<si:Generator Product="TIA Portal" Edition="STEP 7 - Server Interface Generation" Version="V1.0.0" />
+		</Extension>
+	</Extensions>
+	<!-- Other dataTypes-->
+	<UADataType NodeId="ns=1;i=3400" BrowseName="1:SimaticStructures" IsAbstract="true">
+		<DisplayName>SimaticStructures</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3500" BrowseName="1:SimaticSystemStructures" IsAbstract="true">
+		<DisplayName>SimaticSystemStructures</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3064" BrowseName="1:SimaticVersion">
+		<DisplayName>SimaticVersion</DisplayName>
+		<References>
+			<Reference ReferenceType="HasEncoding">ns=1;i=5001</Reference>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=22</Reference>
+		</References>
+		<Definition Name="1:SimaticVersion">
+			<Field DataType="i=6" Name="Major" />
+			<Field DataType="i=6" Name="Minor" />
+			<Field DataType="i=6" Name="Build" />
+		</Definition>
+	</UADataType>
+	<UAObjectType NodeId="ns=1;i=1004" BrowseName="1:SimaticInterfaceType" IsAbstract="false">
+		<DisplayName>SimaticInterfaceType</DisplayName>
+		<References>
+			<Reference ReferenceType="HasProperty">ns=1;i=6010</Reference>
+			<Reference ReferenceType="HasProperty">ns=1;i=6011</Reference>
+			<Reference ReferenceType="HasProperty">ns=1;i=6014</Reference>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=58</Reference>
+		</References>
+	</UAObjectType>
+	<UAVariable NodeId="ns=1;i=6010" BrowseName="Icon" DataType="i=2003" AccessLevel="1">
+		<DisplayName>Icon</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+			<Reference ReferenceType="HasModellingRule">i=80</Reference>
+		</References>
+	</UAVariable>
+	<UAVariable NodeId="ns=1;i=6011" BrowseName="1:InterfaceUuid" DataType="i=14" AccessLevel="1">
+		<DisplayName>InterfaceUuid</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+			<Reference ReferenceType="HasModellingRule">i=80</Reference>
+		</References>
+	</UAVariable>
+	<UAVariable NodeId="ns=1;i=6014" BrowseName="1:InterfaceVersion" DataType="ns=1;i=3064" AccessLevel="1">
+		<DisplayName>InterfaceVersion</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+			<Reference ReferenceType="HasModellingRule">i=80</Reference>
+		</References>
+	</UAVariable>
+	<UAObject NodeId="ns=1;i=5001" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<!-- Tagtable & datablock dataType definition-->
+	<UADataType NodeId="ns=1;i=3001" BrowseName="1:BYTE">
+		<DisplayName>BYTE</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=3</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3002" BrowseName="1:WORD">
+		<DisplayName>WORD</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3003" BrowseName="1:DWORD">
+		<DisplayName>DWORD</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=7</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3004" BrowseName="1:LWORD">
+		<DisplayName>LWORD</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=9</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3005" BrowseName="1:S5TIME">
+		<DisplayName>S5TIME</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3006" BrowseName="1:TIME">
+		<DisplayName>TIME</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=6</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3007" BrowseName="1:LTIME">
+		<DisplayName>LTIME</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=8</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3008" BrowseName="1:DATE">
+		<DisplayName>DATE</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3011" BrowseName="1:DT">
+		<DisplayName>DT</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=3</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3009" BrowseName="1:TOD">
+		<DisplayName>TOD</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=7</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3010" BrowseName="1:LTOD">
+		<DisplayName>LTOD</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=9</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3067" BrowseName="1:POINTER">
+		<DisplayName>POINTER</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=3</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3065" BrowseName="1:ANY">
+		<DisplayName>ANY</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3066</Reference>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=3</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3066" BrowseName="1:REMOTE">
+		<DisplayName>REMOTE</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3012" BrowseName="1:CHAR">
+		<DisplayName>CHAR</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=3</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3013" BrowseName="1:WCHAR">
+		<DisplayName>WCHAR</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3014" BrowseName="1:STRING">
+		<DisplayName>STRING</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=12</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3015" BrowseName="1:TIMER">
+		<DisplayName>TIMER</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3016" BrowseName="1:COUNTER">
+		<DisplayName>COUNTER</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3019" BrowseName="1:BLOCK_DB">
+		<DisplayName>BLOCK_DB</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3018" BrowseName="1:BLOCK_FB">
+		<DisplayName>BLOCK_FB</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3017" BrowseName="1:BLOCK_FC">
+		<DisplayName>BLOCK_FC</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3020" BrowseName="1:BLOCK_SDB">
+		<DisplayName>BLOCK_SDB</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3024" BrowseName="1:HW_ANY">
+		<DisplayName>HW_ANY</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3034</Reference>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3035</Reference>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3033</Reference>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3034" BrowseName="1:HW_IO">
+		<DisplayName>HW_IO</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3037</Reference>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3036</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3035" BrowseName="1:HW_IOSYSTEM">
+		<DisplayName>HW_IOSYSTEM</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3037" BrowseName="1:HW_MODULE">
+		<DisplayName>HW_MODULE</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3036" BrowseName="1:HW_SUBMODULE">
+		<DisplayName>HW_SUBMODULE</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3039</Reference>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3040</Reference>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3041</Reference>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3042</Reference>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3058</Reference>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3038</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3039" BrowseName="1:HW_IEPORT">
+		<DisplayName>HW_IEPORT</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3040" BrowseName="1:HW_HSC">
+		<DisplayName>HW_HSC</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3041" BrowseName="1:HW_PWM">
+		<DisplayName>HW_PWM</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3042" BrowseName="1:HW_PTO">
+		<DisplayName>HW_PTO</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3058" BrowseName="1:PORT">
+		<DisplayName>PORT</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3038" BrowseName="1:HW_INTERFACE">
+		<DisplayName>HW_INTERFACE</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3044</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3033" BrowseName="1:HW_DEVICE">
+		<DisplayName>HW_DEVICE</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3045</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3044" BrowseName="1:HW_DPMASTER">
+		<DisplayName>HW_DPMASTER</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3045" BrowseName="1:HW_DPSLAVE">
+		<DisplayName>HW_DPSLAVE</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3026" BrowseName="1:AOM_IDENT">
+		<DisplayName>AOM_IDENT</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3046</Reference>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=7</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3046" BrowseName="1:EVENT_ANY">
+		<DisplayName>EVENT_ANY</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3047</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3047" BrowseName="1:EVENT_ATT">
+		<DisplayName>EVENT_ATT</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3048</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3048" BrowseName="1:EVENT_HWINT">
+		<DisplayName>EVENT_HWINT</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3027" BrowseName="1:OB_ANY">
+		<DisplayName>OB_ANY</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3051</Reference>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3049</Reference>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3055</Reference>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3053</Reference>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3057</Reference>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3056</Reference>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3050</Reference>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3052</Reference>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=4</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3051" BrowseName="1:OB_CYCLIC">
+		<DisplayName>OB_CYCLIC</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3049" BrowseName="1:OB_DELAY">
+		<DisplayName>OB_DELAY</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3055" BrowseName="1:OB_DIAG">
+		<DisplayName>OB_DIAG</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3053" BrowseName="1:OB_PCYCLE">
+		<DisplayName>OB_PCYCLE</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3057" BrowseName="1:OB_STARTUP">
+		<DisplayName>OB_STARTUP</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3056" BrowseName="1:OB_TIMEERROR">
+		<DisplayName>OB_TIMEERROR</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3050" BrowseName="1:OB_TOD">
+		<DisplayName>OB_TOD</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3052" BrowseName="1:OB_ATT">
+		<DisplayName>OB_ATT</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3054</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3054" BrowseName="1:OB_HWINT">
+		<DisplayName>OB_HWINT</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3028" BrowseName="1:RTM">
+		<DisplayName>RTM</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3029" BrowseName="1:PIP">
+		<DisplayName>PIP</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3030" BrowseName="1:CONN_ANY">
+		<DisplayName>CONN_ANY</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3060</Reference>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3059</Reference>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3060" BrowseName="1:CONN_OUC">
+		<DisplayName>CONN_OUC</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3059" BrowseName="1:CONN_PRG">
+		<DisplayName>CONN_PRG</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3031" BrowseName="1:CONN_R_ID">
+		<DisplayName>CONN_R_ID</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=7</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3032" BrowseName="1:DB_ANY">
+		<DisplayName>DB_ANY</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3062</Reference>
+			<Reference ReferenceType="HasSubtype">ns=1;i=3061</Reference>
+			<Reference ReferenceType="HasSubtype" IsForward="false">i=5</Reference>
+		</References>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3062" BrowseName="1:DB_DYN">
+		<DisplayName>DB_DYN</DisplayName>
+	</UADataType>
+	<UADataType NodeId="ns=1;i=3061" BrowseName="1:DB_WWW">
+		<DisplayName>DB_WWW</DisplayName>
+	</UADataType>
+	<!-- Datablock datatype definition -->
+	<UADataType NodeId="ns=1;s=DT_CREF" BrowseName="1:CREF">
+		<DisplayName>CREF</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_CREF</Reference>
+		</References>
+		<Definition Name="1:CREF">
+			<Field DataType="BYTE" Name="BLOCK_TYPE" />
+			<Field DataType="UINT" Name="CB_NUMBER" />
+			<Field DataType="UDINT" Name="OFFSET" />
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_CREF" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_DTL" BrowseName="1:DTL">
+		<DisplayName>DTL</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_DTL</Reference>
+		</References>
+		<Definition Name="1:DTL">
+			<Field DataType="UINT" Name="YEAR" />
+			<Field DataType="USINT" Name="MONTH" />
+			<Field DataType="USINT" Name="DAY" />
+			<Field DataType="USINT" Name="WEEKDAY" />
+			<Field DataType="USINT" Name="HOUR" />
+			<Field DataType="USINT" Name="MINUTE" />
+			<Field DataType="USINT" Name="SECOND" />
+			<Field DataType="UDINT" Name="NANOSECOND" />
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_DTL" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_IEC_COUNTER" BrowseName="1:IEC_COUNTER">
+		<DisplayName>IEC_COUNTER</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_IEC_COUNTER</Reference>
+		</References>
+		<Definition Name="1:IEC_COUNTER">
+			<Field DataType="BOOL" Name="CU" />
+			<Field DataType="BOOL" Name="CD" />
+			<Field DataType="BOOL" Name="R" />
+			<Field DataType="BOOL" Name="LD" />
+			<Field DataType="BOOL" Name="QU" />
+			<Field DataType="BOOL" Name="QD" />
+			<Field DataType="INT" Name="PV" />
+			<Field DataType="INT" Name="CV" />
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_IEC_COUNTER" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_IEC_DCOUNTER" BrowseName="1:IEC_DCOUNTER">
+		<DisplayName>IEC_DCOUNTER</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_IEC_DCOUNTER</Reference>
+		</References>
+		<Definition Name="1:IEC_DCOUNTER">
+			<Field DataType="BOOL" Name="CU" />
+			<Field DataType="BOOL" Name="CD" />
+			<Field DataType="BOOL" Name="R" />
+			<Field DataType="BOOL" Name="LD" />
+			<Field DataType="BOOL" Name="QU" />
+			<Field DataType="BOOL" Name="QD" />
+			<Field DataType="DINT" Name="PV" />
+			<Field DataType="DINT" Name="CV" />
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_IEC_DCOUNTER" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_IEC_LCOUNTER" BrowseName="1:IEC_LCOUNTER">
+		<DisplayName>IEC_LCOUNTER</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_IEC_LCOUNTER</Reference>
+		</References>
+		<Definition Name="1:IEC_LCOUNTER">
+			<Field DataType="BOOL" Name="CU" />
+			<Field DataType="BOOL" Name="CD" />
+			<Field DataType="BOOL" Name="R" />
+			<Field DataType="BOOL" Name="LD" />
+			<Field DataType="BOOL" Name="QU" />
+			<Field DataType="BOOL" Name="QD" />
+			<Field DataType="LINT" Name="PV" />
+			<Field DataType="LINT" Name="CV" />
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_IEC_LCOUNTER" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_IEC_LTIMER" BrowseName="1:IEC_LTIMER">
+		<DisplayName>IEC_LTIMER</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_IEC_LTIMER</Reference>
+		</References>
+		<Definition Name="1:IEC_LTIMER">
+			<Field DataType="LTIME" Name="PT" />
+			<Field DataType="LTIME" Name="ET" />
+			<Field DataType="BOOL" Name="IN" />
+			<Field DataType="BOOL" Name="Q" />
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_IEC_LTIMER" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_IEC_SCOUNTER" BrowseName="1:IEC_SCOUNTER">
+		<DisplayName>IEC_SCOUNTER</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_IEC_SCOUNTER</Reference>
+		</References>
+		<Definition Name="1:IEC_SCOUNTER">
+			<Field DataType="BOOL" Name="CU" />
+			<Field DataType="BOOL" Name="CD" />
+			<Field DataType="BOOL" Name="R" />
+			<Field DataType="BOOL" Name="LD" />
+			<Field DataType="BOOL" Name="QU" />
+			<Field DataType="BOOL" Name="QD" />
+			<Field DataType="SINT" Name="PV" />
+			<Field DataType="SINT" Name="CV" />
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_IEC_SCOUNTER" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_IEC_TIMER" BrowseName="1:IEC_TIMER">
+		<DisplayName>IEC_TIMER</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_IEC_TIMER</Reference>
+		</References>
+		<Definition Name="1:IEC_TIMER">
+			<Field DataType="TIME" Name="PT" />
+			<Field DataType="TIME" Name="ET" />
+			<Field DataType="BOOL" Name="IN" />
+			<Field DataType="BOOL" Name="Q" />
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_IEC_TIMER" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_IEC_UCOUNTER" BrowseName="1:IEC_UCOUNTER">
+		<DisplayName>IEC_UCOUNTER</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_IEC_UCOUNTER</Reference>
+		</References>
+		<Definition Name="1:IEC_UCOUNTER">
+			<Field DataType="BOOL" Name="CU" />
+			<Field DataType="BOOL" Name="CD" />
+			<Field DataType="BOOL" Name="R" />
+			<Field DataType="BOOL" Name="LD" />
+			<Field DataType="BOOL" Name="QU" />
+			<Field DataType="BOOL" Name="QD" />
+			<Field DataType="UINT" Name="PV" />
+			<Field DataType="UINT" Name="CV" />
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_IEC_UCOUNTER" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_IEC_UDCOUNTER" BrowseName="1:IEC_UDCOUNTER">
+		<DisplayName>IEC_UDCOUNTER</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_IEC_UDCOUNTER</Reference>
+		</References>
+		<Definition Name="1:IEC_UDCOUNTER">
+			<Field DataType="BOOL" Name="CU" />
+			<Field DataType="BOOL" Name="CD" />
+			<Field DataType="BOOL" Name="R" />
+			<Field DataType="BOOL" Name="LD" />
+			<Field DataType="BOOL" Name="QU" />
+			<Field DataType="BOOL" Name="QD" />
+			<Field DataType="UDINT" Name="PV" />
+			<Field DataType="UDINT" Name="CV" />
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_IEC_UDCOUNTER" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_IEC_ULCOUNTER" BrowseName="1:IEC_ULCOUNTER">
+		<DisplayName>IEC_ULCOUNTER</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_IEC_ULCOUNTER</Reference>
+		</References>
+		<Definition Name="1:IEC_ULCOUNTER">
+			<Field DataType="BOOL" Name="CU" />
+			<Field DataType="BOOL" Name="CD" />
+			<Field DataType="BOOL" Name="R" />
+			<Field DataType="BOOL" Name="LD" />
+			<Field DataType="BOOL" Name="QU" />
+			<Field DataType="BOOL" Name="QD" />
+			<Field DataType="ULINT" Name="PV" />
+			<Field DataType="ULINT" Name="CV" />
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_IEC_ULCOUNTER" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_IEC_USCOUNTER" BrowseName="1:IEC_USCOUNTER">
+		<DisplayName>IEC_USCOUNTER</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_IEC_USCOUNTER</Reference>
+		</References>
+		<Definition Name="1:IEC_USCOUNTER">
+			<Field DataType="BOOL" Name="CU" />
+			<Field DataType="BOOL" Name="CD" />
+			<Field DataType="BOOL" Name="R" />
+			<Field DataType="BOOL" Name="LD" />
+			<Field DataType="BOOL" Name="QU" />
+			<Field DataType="BOOL" Name="QD" />
+			<Field DataType="USINT" Name="PV" />
+			<Field DataType="USINT" Name="CV" />
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_IEC_USCOUNTER" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_NREF" BrowseName="1:NREF">
+		<DisplayName>NREF</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_NREF</Reference>
+		</References>
+		<Definition Name="1:NREF">
+			<Field DataType="BYTE" Name="AREA" />
+			<Field DataType="UINT" Name="DB_NUMBER" />
+			<Field DataType="UDINT" Name="OFFSET" />
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_NREF" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<!-- Additional datatype definition -->
+	<UADataType NodeId="ns=1;s=DT_TCON_PARAM" BrowseName="1:TCON_Param">
+		<DisplayName>TCON_Param</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_TCON_PARAM</Reference>
+		</References>
+		<Definition Name="1:TCON_Param">
+			<Field Name="BLOCK_LENGTH" DataType="UINT"/>
+			<Field Name="ID" DataType="CONN_OUC"/>
+			<Field Name="CONNECTION_TYPE" DataType="USINT"/>
+			<Field Name="ACTIVE_EST" DataType="BOOL"/>
+			<Field Name="LOCAL_DEVICE_ID" DataType="USINT"/>
+			<Field Name="LOCAL_TSAP_ID_LEN" DataType="USINT"/>
+			<Field Name="REM_SUBNET_ID_LEN" DataType="USINT"/>
+			<Field Name="REM_STADDR_LEN" DataType="USINT"/>
+			<Field Name="REM_TSAP_ID_LEN" DataType="USINT"/>
+			<Field Name="NEXT_STADDR_LEN" DataType="USINT"/>
+			<Field Name="LOCAL_TSAP_ID" DataType="BYTE" ValueRank="1" ArrayDimensions="16"/>
+			<Field Name="REM_SUBNET_ID" DataType="USINT" ValueRank="1" ArrayDimensions="6"/>
+			<Field Name="REM_STADDR" DataType="USINT" ValueRank="1" ArrayDimensions="6"/>
+			<Field Name="REM_TSAP_ID" DataType="BYTE" ValueRank="1" ArrayDimensions="16"/>
+			<Field Name="NEXT_STADDR" DataType="BYTE" ValueRank="1" ArrayDimensions="6"/>
+			<Field Name="SPARE" DataType="WORD"/>
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_TCON_PARAM" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_TCON_IP_V4" BrowseName="1:TCON_IP_v4">
+		<DisplayName>TCON_IP_v4</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_TCON_IP_V4</Reference>
+		</References>
+		<Definition Name="1:TCON_IP_v4">
+			<Field Name="InterfaceId" DataType="HW_ANY"/>
+			<Field Name="ID" DataType="CONN_OUC"/>
+			<Field Name="ConnectionType" DataType="BYTE"/>
+			<Field Name="ActiveEstablished" DataType="BOOL"/>
+			<Field Name="RemoteAddress" DataType="IP_V4"/>
+			<Field Name="RemotePort" DataType="UINT"/>
+			<Field Name="LocalPort" DataType="UINT"/>
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_TCON_IP_V4" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_TCON_IP_V4_SEC" BrowseName="1:TCON_IP_V4_SEC">
+		<DisplayName>TCON_IP_V4_SEC</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_TCON_IP_V4_SEC</Reference>
+		</References>
+		<Definition Name="1:TCON_IP_V4_SEC">
+			<Field Name="ConnPara" DataType="TCON_IP_V4" />
+			<Field Name="ActivateSecureConn" DataType="BOOL" />
+			<Field Name="TLSServerReqClientCert" DataType="BOOL" />
+			<Field Name="ExtTLSCapabilities" DataType="WORD" />
+			<Field Name="TLSServerCertRef" DataType="UDINT" />
+			<Field Name="TLSClientCertRef" DataType="UDINT" />
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_TCON_IP_V4_SEC" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_TCON_QDN" BrowseName="1:TCON_QDN">
+		<DisplayName>TCON_QDN</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_TCON_QDN</Reference>
+		</References>
+		<Definition Name="1:TCON_QDN">
+			<Field Name="InterfaceId" DataType="HW_ANY" />
+			<Field Name="ID" DataType="CONN_OUC" />
+			<Field Name="ConnectionType" DataType="BYTE" />
+			<Field Name="ActiveEstablished" DataType="BOOL" />
+			<Field Name="RemoteQDN" DataType="STRING" />
+			<Field Name="RemotePort" DataType="UINT" />
+			<Field Name="LocalPort" DataType="UINT" />
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_TCON_QDN" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_TCON_QDN_SEC" BrowseName="1:TCON_QDN_SEC">
+		<DisplayName>TCON_QDN_SEC</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_TCON_QDN_SEC</Reference>
+		</References>
+		<Definition Name="1:TCON_QDN_SEC">
+			<Field Name="ConnPara" DataType="TCON_QDN" />
+			<Field Name="ActivateSecureConn" DataType="BOOL" />
+			<Field Name="TLSServerReqClientCert" DataType="BOOL" />
+			<Field Name="ExtTLSCapabilities" DataType="WORD" />
+			<Field Name="TLSServerCertRef" DataType="UDINT" />
+			<Field Name="TLSClientCertRef" DataType="UDINT" />
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_TCON_QDN_SEC" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_IP_V4" BrowseName="1:IP_V4">
+		<DisplayName>IP_V4</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_IP_V4</Reference>
+		</References>
+		<Definition Name="1:IP_V4">
+			<Field Name="ADDR" DataType="BYTE" ValueRank="1" ArrayDimensions="4"/>
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_IP_V4" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_IF_CONF_V4" BrowseName="1:IF_CONF_v4">
+		<DisplayName>IF_CONF_v4</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_IF_CONF_V4</Reference>
+		</References>
+		<Definition Name="1:IF_CONF_v4">
+			<Field Name="Id" DataType="UINT"/>
+			<Field Name="Length" DataType="UINT"/>
+			<Field Name="Mode" DataType="UINT"/>
+			<Field Name="InterfaceAddress" DataType="IP_V4"/>
+			<Field Name="SubnetMask" DataType="IP_V4"/>
+			<Field Name="DefaultRouter" DataType="IP_V4"/>
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_IF_CONF_V4" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_GEOADDR" BrowseName="1:GEOADDR">
+		<DisplayName>GEOADDR</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_GEOADDR</Reference>
+		</References>
+		<Definition Name="1:GEOADDR">
+			<Field Name="HWTYPE" DataType="UINT"/>
+			<Field Name="AREA" DataType="UINT"/>
+			<Field Name="IOSYSTEM" DataType="UINT"/>
+			<Field Name="STATION" DataType="UINT"/>
+			<Field Name="SLOT" DataType="UINT"/>
+			<Field Name="SUBSLOT" DataType="UINT"/>
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_GEOADDR" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<UADataType NodeId="ns=1;s=DT_TADDR_PARAM" BrowseName="1:TADDR_PARAM">
+		<DisplayName>TADDR_Param</DisplayName>
+		<References>
+			<Reference ReferenceType="HasSubtype" IsForward="false">ns=1;i=3500</Reference>
+			<Reference ReferenceType="HasEncoding">ns=2;s=Binary_DT_TADDR_PARAM</Reference>
+		</References>
+		<Definition Name="1:TADDR_Param">
+			<Field Name="REM_IP_ADDR" DataType="USINT" ValueRank="1" ArrayDimensions="4" />
+			<Field Name="REM_PORT_NR" DataType="UINT" />
+			<Field Name="RESERVED" DataType="WORD" />
+		</Definition>
+	</UADataType>
+	<UAObject NodeId="ns=2;s=Binary_DT_TADDR_PARAM" BrowseName="Default Binary">
+		<DisplayName>Default Binary</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=76</Reference>
+		</References>
+	</UAObject>
+	<!-- Definition of the Server Interface -->
+	<UAObject NodeId="ns=1;s=UserModelledInterfaces" BrowseName="1:UserModelledInterfaces">
+		<DisplayName>UserModelledInterfaces</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=61</Reference>
+			<Reference ReferenceType="Organizes" IsForward="false">i=85</Reference>
+		</References>
+	</UAObject>
+	<UAObject NodeId="ns=2;s={insert_interfaceName}" BrowseName="2:{insert_interfaceName}">
+		<DisplayName>{insert_interfaceName}</DisplayName>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">ns=1;i=1004</Reference>
+			<Reference ReferenceType="Organizes" IsForward="false">ns=1;s=UserModelledInterfaces</Reference>
+			<Reference ReferenceType="Organizes">ns=2;s=Counters</Reference>
+			<Reference ReferenceType="Organizes">ns=2;s=Inputs</Reference>
+			<Reference ReferenceType="Organizes">ns=2;s=Outputs</Reference>
+			<Reference ReferenceType="Organizes">ns=2;s=Memory</Reference>
+			<Reference ReferenceType="Organizes">ns=2;s=DataBlocksGlobal</Reference>
+			<Reference ReferenceType="Organizes">ns=2;s=DataBlocksInstance</Reference>
+			<Reference ReferenceType="Organizes">ns=2;s=Timers</Reference>
+		</References>
+	</UAObject>
+	<UAObject NodeId="ns=2;s=Counters" BrowseName="2:Counters">
+		<DisplayName>Counters</DisplayName>
+		<Description>Holding all counters.</Description>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=61</Reference>
+		</References>
+	</UAObject>
+	<UAObject NodeId="ns=2;s=Inputs" BrowseName="2:Inputs">
+		<DisplayName>Inputs</DisplayName>
+		<Description>Holding all global inputs.</Description>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=61</Reference>
+		</References>
+	</UAObject>
+	<UAObject NodeId="ns=2;s=Memory" BrowseName="2:Memory">
+		<DisplayName>Memory</DisplayName>
+		<Description>Holding all global memory (bit, byte, words, ...).</Description>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=61</Reference>
+		</References>
+	</UAObject>
+	<UAObject NodeId="ns=2;s=Outputs" BrowseName="2:Outputs">
+		<DisplayName>Outputs</DisplayName>
+		<Description>Holding all global outputs.</Description>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=61</Reference>
+		</References>
+	</UAObject>
+	<UAObject NodeId="ns=2;s=DataBlocksGlobal" BrowseName="2:DataBlocksGlobal">
+		<DisplayName>DataBlocksGlobal</DisplayName>
+		<Description>Holding all global available datablocks.</Description>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=61</Reference>
+		</References>
+	</UAObject>
+	<UAObject NodeId="ns=2;s=DataBlocksInstance" BrowseName="2:DataBlocksInstance">
+		<DisplayName>DataBlocksInstance</DisplayName>
+		<Description>Holding all instance datablocks.</Description>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=61</Reference>
+		</References>
+	</UAObject>
+	<UAObject NodeId="ns=2;s=Timers" BrowseName="2:Timers">
+		<DisplayName>Timers</DisplayName>
+		<Description>Holding all global timers.</Description>
+		<References>
+			<Reference ReferenceType="HasTypeDefinition">i=61</Reference>
+		</References>
+	</UAObject>
+</UANodeSet>

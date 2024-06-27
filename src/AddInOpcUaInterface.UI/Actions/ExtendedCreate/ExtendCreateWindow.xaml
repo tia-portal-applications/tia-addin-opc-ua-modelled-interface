@@ -1,0 +1,162 @@
+﻿<Window x:Class="AddInOPCUAInterface.UI.ExtendCreateWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AddInOPCUAInterface.UI"
+        xmlns:base="clr-namespace:AddInOPCUAInterface.UI"
+        mc:Ignorable="d"
+        Title="ExtendCreateWindow" Height="350" Width="600" 
+        Background="#FFCCCCCC" WindowStyle="None" ResizeMode="NoResize" 
+        BorderThickness="1,1,1,1" BorderBrush="Black">
+    <Grid>
+        <Border BorderBrush="#00000000" Background="#FFB2B2B2" HorizontalAlignment="Center" Height="50" Margin="0,0,0,0" VerticalAlignment="Bottom" Width="600"/>
+        <Border BorderThickness="0" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Margin="0,0,0,0" Width="600" Background="#FF1C1C1C" MouseLeftButtonDown="MoveWindow"/>
+        <Border BorderThickness="0" HorizontalAlignment="Left" Height="4" VerticalAlignment="Top" Margin="0,0,0,0" Width="600" Background="#FF6A6A6A" MouseLeftButtonDown="MoveWindow"/>
+        <Border BorderThickness="0" HorizontalAlignment="Left" Height="10" VerticalAlignment="Bottom" Margin="0,0,0,0" Width="600" Background="#FF1C1C1C" />
+        <Border BorderThickness="0" HorizontalAlignment="Left" Height="4" VerticalAlignment="Bottom" Margin="0,0,0,6" Width="600" Background="#FF6A6A6A" />
+
+        <Label Content="Extend create: Custom user modelled interface" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="350" Foreground="White" FontFamily="Siemens TIA Portal Basic" FontWeight="Bold" FontSize="14" MouseLeftButtonDown="MoveWindow"/>
+        <Button Content="X" HorizontalAlignment="Left" Height="23" Margin="567,1,0,0" VerticalAlignment="Top" Width="30" Background="Transparent" Foreground="White" BorderThickness="2,0,0,0" FontFamily="Siemens Sans" FontSize="16" Click="btn_CloseWindow_Click" BorderBrush="White"/>
+        <Button x:Name="btn_Create" HorizontalAlignment="Right" Margin="0,0,20,20" VerticalAlignment="Bottom" Click="btn_Create_Click" Width="80" FontFamily="Siemens TIA Portal Basic">
+            <StackPanel Orientation="Horizontal" Width="70">
+                <Image Height="15" Width="10" Source="/AddInOPCUAInterface.UI;component/Resources/ServerInterfaceIcon.png"/>
+                <TextBlock Text="Create" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
+            </StackPanel>
+        </Button>
+        <TabControl x:Name="myTabs" SelectionChanged="Tab_Selection_Changed" FontStyle="Normal" Background="Transparent" VerticalAlignment="Top" Margin="0,30,0,0" Height="268">
+            <TabItem Header="General" Background="Transparent">
+                <Grid Background="Transparent">
+                    
+                    <Label Content="Insert the name of the new server interface" HorizontalAlignment="Left" Margin="25,25,0,0" VerticalAlignment="Top" FontFamily="Siemens TIA Portal Basic"/>
+                    <TextBox x:Name="txt_InterfaceName" HorizontalAlignment="Left" Margin="25,55,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="245" TextChanged="txt_InterfaceName_TextChanged" Background="#FFEAEAEA" PreviewKeyDown="txt_InterfaceName_PreviewKeyDown"/>
+                    
+                    <Label Content="Namespace URI" HorizontalAlignment="Left" Margin="25,85,0,0" VerticalAlignment="Top" FontFamily="Siemens TIA Portal Basic"/>
+                    <TextBox x:Name="txt_NamespaceURI" HorizontalAlignment="Left" Margin="25,115,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="245" TextChanged="txt_NamespaceURI_TextChanged" Background="#FFEAEAEA"/>
+                    <Label Content="Select a directory to store the XML file of the server" HorizontalAlignment="Left" Margin="25,145,0,0" VerticalAlignment="Top" FontFamily="Siemens TIA Portal Basic"/>
+                    <TextBox x:Name="txt_Path" HorizontalAlignment="Left" Margin="25,175,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="450" TextChanged="txt_Path_TextChanged" Background="#FFEAEAEA"/>
+                    <Button Content="Set file path" HorizontalAlignment="Right" Margin="450,175,20,0" VerticalAlignment="Top" Click="btn_SelectFolder_Click" Width="80" FontFamily="Siemens TIA Portal Basic"/>
+
+                    <Label x:Name="Error_NameExists" Content="An interface with the same name already exists" HorizontalAlignment="Left" Margin="280,52,0,0" VerticalAlignment="Top" FontFamily="Siemens TIA Portal Basic" Foreground="Red" Visibility="Hidden"/>
+                    <Label Content="i" HorizontalAlignment="Left" Margin="270,52,0,0" VerticalAlignment="Top" ToolTip="Ctrl + Tab for suggestions, Ctrl + Left/Right to navigate existing interfaces" FontFamily="Cascadia Code ExtraLight" />
+                </Grid>
+
+            </TabItem>
+            <TabItem Header="Access Level (I)" Background="Transparent">
+                <Grid Background="Transparent">
+
+                    <Label Content="Inputs" HorizontalAlignment="Left" Margin="25,25,0,0" VerticalAlignment="Top" FontStyle="Italic" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Not Accessible          Read Only              Write Only             Read/Write          Keep project's access levels" HorizontalAlignment="Left" Margin="25,45,0,0" VerticalAlignment="Top" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <Slider x:Name="Sld_AL_Inputs" Maximum ="4"  HorizontalAlignment="Left" Margin="65,65,0,0" VerticalAlignment="Top" Width="400" Cursor="Hand" SmallChange="1" TickPlacement="TopLeft" ValueChanged="Slider_Inputs_ValueChanged"/>
+
+                    <Label Content="Memory" HorizontalAlignment="Left" Margin="25,95,0,0" VerticalAlignment="Top" FontStyle="Italic" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Not Accessible          Read Only              Write Only             Read/Write          Keep project's access levels" HorizontalAlignment="Left" Margin="25,115,0,0" VerticalAlignment="Top" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <Slider x:Name="Sld_AL_Memory" Maximum ="4"  HorizontalAlignment="Left" Margin="65,135,0,0" VerticalAlignment="Top" Width="400" Cursor="Hand" SmallChange="1" TickPlacement="TopLeft" ValueChanged="Slider_Memory_ValueChanged"/>
+
+                    <Label Content="Outputs" HorizontalAlignment="Left" Margin="25,165,0,0" VerticalAlignment="Top" FontStyle="Italic" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Not Accessible          Read Only              Write Only             Read/Write          Keep project's access levels" HorizontalAlignment="Left" Margin="25,185,0,0" VerticalAlignment="Top" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <Slider x:Name="Sld_AL_Outputs" Maximum ="4"  HorizontalAlignment="Left" Margin="65,205,0,0" VerticalAlignment="Top" Width="400" Cursor="Hand" SmallChange="1" TickPlacement="TopLeft" ValueChanged="Slider_Outputs_ValueChanged"/>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Access Level (II)" Background="Transparent">
+                <Grid Background="Transparent">
+
+                    <Label Content="Counters" HorizontalAlignment="Left" Margin="25,25,0,0" VerticalAlignment="Top" FontStyle="Italic" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Not Accessible          Read Only              Write Only             Read/Write          Keep project's access levels" HorizontalAlignment="Left" Margin="25,45,0,0" VerticalAlignment="Top" FontStyle="Normal" Grid.ColumnSpan="2" FontFamily="Siemens TIA Portal Basic"/>
+                    <Slider x:Name="Sld_AL_Counters" Maximum ="4"  HorizontalAlignment="Left" Margin="65,65,0,0" VerticalAlignment="Top" Width="400" Cursor="Hand" SmallChange="1" TickPlacement="TopLeft" ValueChanged="Slider_Counters_ValueChanged" Grid.ColumnSpan="2"/>
+
+                    <Label Content="Timers" HorizontalAlignment="Left" Margin="25,95,0,0" VerticalAlignment="Top" FontStyle="Italic" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Not Accessible          Read Only              Write Only             Read/Write          Keep project's access levels" HorizontalAlignment="Left" Margin="25,115,0,0" VerticalAlignment="Top" FontStyle="Normal" Grid.ColumnSpan="2" FontFamily="Siemens TIA Portal Basic"/>
+                    <Slider x:Name="Sld_AL_Timers" Maximum ="4"  HorizontalAlignment="Left" Margin="65,135,0,0" VerticalAlignment="Top" Width="400" Cursor="Hand" SmallChange="1" TickPlacement="TopLeft" ValueChanged="Slider_Timers_ValueChanged" Grid.ColumnSpan="2"/>
+
+                    <Label Content="Global Data blocks" HorizontalAlignment="Left" Margin="25,165,0,0" VerticalAlignment="Top" FontStyle="Italic" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Not Accessible          Read Only              Write Only             Read/Write          Keep project's access levels" HorizontalAlignment="Left" Margin="25,185,0,0" VerticalAlignment="Top" FontStyle="Normal" Grid.ColumnSpan="2" FontFamily="Siemens TIA Portal Basic"/>
+                    <Slider x:Name="Sld_AL_GlobalDBs" Maximum ="4"  HorizontalAlignment="Left" Margin="65,205,0,0" VerticalAlignment="Top" Width="400" Cursor="Hand" SmallChange="1" TickPlacement="TopLeft" ValueChanged="Slider_GlobalDBs_ValueChanged" Grid.ColumnSpan="2"/>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Access Level (III)" Background="Transparent">
+                <Grid Background="Transparent">
+
+                    <Label Content="Intance Data blocks" HorizontalAlignment="Left" Margin="25,25,0,0" VerticalAlignment="Top" FontStyle="Italic" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Not Accessible          Read Only              Write Only             Read/Write          Keep project's access levels" HorizontalAlignment="Left" Margin="25,45,0,0" VerticalAlignment="Top" FontStyle="Normal" Grid.ColumnSpan="2" FontFamily="Siemens TIA Portal Basic"/>
+                    <Slider x:Name="Sld_AL_InstanceDBs" Maximum ="4"  HorizontalAlignment="Left" Margin="65,65,0,0" VerticalAlignment="Top" Width="400" Cursor="Hand" SmallChange="1" TickPlacement="TopLeft" ValueChanged="Slider_InstanceDBs_ValueChanged" Grid.ColumnSpan="2"/>
+
+                    <Label Content="Safety Global Data blocks" HorizontalAlignment="Left" Margin="25,95,0,0" VerticalAlignment="Top" FontStyle="Italic" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Not Accessible          Read Only              Write Only             Read/Write          Keep project's access levels" HorizontalAlignment="Left" Margin="25,115,0,0" VerticalAlignment="Top" FontStyle="Normal" Grid.ColumnSpan="2" FontFamily="Siemens TIA Portal Basic"/>
+                    <Slider x:Name="Sld_AL_SafetyGlobalDBs" Maximum ="4"  HorizontalAlignment="Left" Margin="65,135,0,0" VerticalAlignment="Top" Width="400" Cursor="Hand" SmallChange="1" TickPlacement="TopLeft" ValueChanged="Slider_SafetyGlobalDBs_ValueChanged" Grid.ColumnSpan="2"/>
+
+                    <Label Content="Safety Intance Data blocks" HorizontalAlignment="Left" Margin="25,165,0,0" VerticalAlignment="Top" FontStyle="Italic" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Not Accessible          Read Only              Write Only             Read/Write          Keep project's access levels" HorizontalAlignment="Left" Margin="25,185,0,0" VerticalAlignment="Top" FontStyle="Normal" Grid.ColumnSpan="2" FontFamily="Siemens TIA Portal Basic"/>
+                    <Slider x:Name="Sld_AL_SafetyInstanceDBs" Maximum ="4"  HorizontalAlignment="Left" Margin="65,205,0,0" VerticalAlignment="Top" Width="400" Cursor="Hand" SmallChange="1" TickPlacement="TopLeft" ValueChanged="Slider_SafetyInstanceDBs_ValueChanged" Grid.ColumnSpan="2"/>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Other settings" Background="Transparent">
+                <Grid Background="Transparent">
+
+                    <Label Content="Select the following settings that will optimize the server interface and OPC UA communication" HorizontalAlignment="Left" Margin="25,25,0,0" VerticalAlignment="Top" Width="492" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+
+                    <Label Content="Optimize the server interface (This feature is not currently implemented)" ToolTip="Optimize = Not include child elements from Arrays, Structs and UDTs"  HorizontalAlignment="Left" Margin="25,55,0,0" VerticalAlignment="Top" FontFamily="Siemens TIA Portal Basic" Opacity="0.7" />
+                    <CheckBox x:Name="CheckBox_NotOptimized_Data" Content="No" HorizontalAlignment="Left" Margin="25,85,0,0" VerticalAlignment="Top" Checked="CheckBox_NotOptimize_Data_Checked" FontFamily="Siemens TIA Portal Basic" IsEnabled="False"/>
+                    <CheckBox x:Name="CheckBox_Optimized_Data" Content="Yes" HorizontalAlignment="Left" Margin="85,85,0,0" VerticalAlignment="Top" Checked="CheckBox_Optimize_Data_Checked" FontFamily="Siemens TIA Portal Basic" IsEnabled="False"/>
+
+                    <Label Content="Use string (default) or numeric identifiers (This feature is not currently implemented)" HorizontalAlignment="Left" Margin="25,115,0,0" VerticalAlignment="Top" FontFamily="Siemens TIA Portal Basic" Opacity="0.7" />
+                    <CheckBox x:Name="CheckBox_String_Id" Content="Strings" HorizontalAlignment="Left" Margin="25,145,0,0" VerticalAlignment="Top" FontFamily="Siemens TIA Portal Basic" IsEnabled="False"/>
+                    <CheckBox x:Name="CheckBox_Numeric_Id" Content="Numeric" HorizontalAlignment="Left" Margin="85,145,0,0" VerticalAlignment="Top" FontFamily="Siemens TIA Portal Basic" IsEnabled="False"/>
+
+                    <Label Content="Keep empty data blocks"  HorizontalAlignment="Left" Margin="25,175,0,0" VerticalAlignment="Top" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <CheckBox x:Name="CheckBox_NoKeepEmpty_DBs" Content="No" HorizontalAlignment="Left" Margin="25,205,0,0" VerticalAlignment="Top" Checked="CheckBox_NoKeepEmpty_DBs_Checked" FontFamily="Siemens TIA Portal Basic"/>
+                    <CheckBox x:Name="CheckBox_KeepEmpty_DBs" Content="Yes" HorizontalAlignment="Left" Margin="85,205,0,0" VerticalAlignment="Top" Checked="CheckBox_KeepEmpty_DBs_Checked" FontFamily="Siemens TIA Portal Basic"/>
+
+                    <Label Content="Preserve the folder structure of the project"  HorizontalAlignment="Left" Margin="300,175,0,0" VerticalAlignment="Top" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <CheckBox x:Name="CheckBox_NoFolderStructure" Content="No" HorizontalAlignment="Left" Margin="300,205,0,0" VerticalAlignment="Top" Checked="CheckBox_NoFolderStrucutre_Checked" FontFamily="Siemens TIA Portal Basic"/>
+                    <CheckBox x:Name="CheckBox_KeepFolderStructure" Content="Yes" HorizontalAlignment="Left" Margin="360,205,0,0" VerticalAlignment="Top" Checked="CheckBox_KeepFolderStrucutre_Checked" FontFamily="Siemens TIA Portal Basic"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Summary" Background="Transparent">
+                <Grid Background="Transparent">
+
+                    <Label Content="Interface Name: " HorizontalAlignment="Left" Margin="25,25,0,0" VerticalAlignment="Top" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label x:Name="txt_Summary_interfaceName" Content="___" HorizontalAlignment="Left" Margin="145,25,0,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Namespace URI: " HorizontalAlignment="Left" Margin="25,45,0,0" VerticalAlignment="Top" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label x:Name="txt_Summary_namespaceUri" Content="___" HorizontalAlignment="Left" Margin="145,45,0,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Export path: " HorizontalAlignment="Left" Margin="25,65,0,0" VerticalAlignment="Top" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label x:Name="txt_Summary_exportPath" Content="___" HorizontalAlignment="Left" Margin="145,65,0,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Siemens TIA Portal Basic"/>
+
+                    <Label Content="Inputs AccessLevel: " HorizontalAlignment="Left" Margin="25,85,0,0" VerticalAlignment="Top" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label x:Name="txt_Summary_InputsAccessLevel" Content="___" HorizontalAlignment="Left" Margin="145,85,0,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Memory AccessLevel: " HorizontalAlignment="Left" Margin="25,105,0,0" VerticalAlignment="Top" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label x:Name="txt_Summary_MemoryAccessLevel" Content="___" HorizontalAlignment="Left" Margin="145,105,0,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Outputs AccessLevel: " HorizontalAlignment="Left" Margin="25,125,0,0" VerticalAlignment="Top" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label x:Name="txt_Summary_OutputsAccessLevel" Content="___" HorizontalAlignment="Left" Margin="145,125,0,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Counters AccessLevel: " HorizontalAlignment="Left" Margin="25,145,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label x:Name="txt_Summary_CountersAccessLevel" Content="___" HorizontalAlignment="Left" Margin="145,145,0,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Timers AccessLevel: " HorizontalAlignment="Left" Margin="25,165,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label x:Name="txt_Summary_TimersAccessLevel" Content="___" HorizontalAlignment="Left" Margin="145,165,0,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Siemens TIA Portal Basic"/>
+
+                    <Label Content="Global DBs AccessLevel: " HorizontalAlignment="Left" Margin="280,105,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label x:Name="txt_Summary_GlobalDBsAccessLevel" Content="___" HorizontalAlignment="Left" Margin="455,105,0,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Instance DBs AccessLevel: " HorizontalAlignment="Left" Margin="280,125,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label x:Name="txt_Summary_InstanceDBsAccessLevel" Content="___" HorizontalAlignment="Left" Margin="455,125,0,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Safety Global DBs AccessLevel: " HorizontalAlignment="Left" Margin="280,145,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label x:Name="txt_Summary_SafetyGlobalDBsAccessLevel" Content="___" HorizontalAlignment="Left" Margin="455,145,0,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Safety Instance DBs AccessLevel: " HorizontalAlignment="Left" Margin="280,165,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label x:Name="txt_Summary_SafetyInstanceDBsAccessLevel" Content="___" HorizontalAlignment="Left" Margin="455,165,0,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Siemens TIA Portal Basic"/>
+
+                    <Label Content="Optimized Interface: " HorizontalAlignment="Left" Margin="25,185,0,0" VerticalAlignment="Top" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label x:Name="txt_Summary_Optimized" Content="___" HorizontalAlignment="Left" Margin="145,185,0,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="NodeId Identifier: " HorizontalAlignment="Left" Margin="280,185,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label x:Name="txt_Summary_NodeIdIdentifier" Content="___" HorizontalAlignment="Left" Margin="455,185,0,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Keep empty DBs: " HorizontalAlignment="Left" Margin="25,205,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label x:Name="txt_Summary_KeepEmptyDBs" Content="___" HorizontalAlignment="Left" Margin="145,205,0,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label Content="Keep folder structure: " HorizontalAlignment="Left" Margin="280,205,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" FontStyle="Normal" FontFamily="Siemens TIA Portal Basic"/>
+                    <Label x:Name="txt_Summary_KeepFolderStructure" Content="___" HorizontalAlignment="Left" Margin="455,205,0,0" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Siemens TIA Portal Basic"/>
+
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>

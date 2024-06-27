@@ -1,0 +1,36 @@
+﻿<PackageConfiguration xmlns="http://www.siemens.com/automation/Openness/AddIn/Publisher/V19">
+  <Author>&lt;SIEMENS AG - DI FA S SUP SPH COM&gt;</Author>
+  <AddInVersion>V19</AddInVersion>
+  <Description>Automatically create user modelled interfaces for OPC UA servers.</Description>
+  <DisplayInMultiuser />
+  
+  <Product>
+    <Name>OPC UA - User modelled interface</Name>
+    <Id>tia_add_in_opc_ua_interface</Id>
+    <Version>1.0.0</Version>
+  </Product>
+
+  <FeatureAssembly>
+    <AssemblyInfo>
+      <Assembly>AddInOpcUaInterface.dll</Assembly>
+    </AssemblyInfo>
+  </FeatureAssembly>
+
+  <AdditionalAssemblies>
+	  <AssemblyInfo>
+		  <Assembly>AddInOPCUAInterface.UI.dll</Assembly>
+	  </AssemblyInfo>
+  </AdditionalAssemblies>
+
+  <!--Please check required permissions-->
+  <RequiredPermissions>
+    <TIAPermissions>
+      <TIA.ReadWrite/>
+    </TIAPermissions>
+	<UnrestrictedPermissions>
+		<System.UnrestrictedAccess>
+			<JustificationComment>Needed for the execution of the "OPC UA - User Modelled Interface" Add-In</JustificationComment>
+		</System.UnrestrictedAccess>
+	</UnrestrictedPermissions>
+  </RequiredPermissions>
+</PackageConfiguration>
