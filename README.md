@@ -1,12 +1,12 @@
 # OPC UA - User modelled interface - V1.0.0
 
 ## Description
-This Add-In is designed to automate the creation of OPC UA server interfaces by emulating the "default SIMATIC server interface" found on S7-1500 PLCs. 
+This Add-In is designed to replicate the “Default SIMATIC Server Interface”, found in S7-1500 PLCs, as a user modelled interface using Openness. 
 
 The main goals of this Add-In are:
 
 - Enhanced performance: Replace the default SIMATIC server interface with modelled interfaces that offer improved performance, 5 to 6 times faster, when accessing data through the read, write, and subscribe services.
-- Automatic interface generation for S7-1200 and S7-1500 R/H PLCs: Create server interfaces for S7-1200 and S7-1500 R/H PLCs, which do not include the default SIMATIC server interface.
+- Automatic interface generation for S7-1200 and S7-1500 R/H PLCs: Create server interfaces for S7-1200 and S7-1500 R/H PLCs, which do not support the default SIMATIC server interface.
 - Customization to fit project needs: Provide flexibility by allowing customization of the server interface to meet specific project requirements. With the "Extend create" option, users can modify certain parameters of the server interface and adapt it to their needs.
 
 ## Table of contents
@@ -19,11 +19,19 @@ The main goals of this Add-In are:
 
 <a name="instalation"></a>
 ## Instalation
-[Only for GitHub piblication]
+
+Follow these steps to carry out the instalation process:
+
+1. Download the repository to the local machine.
+2. Open Visual Studio, selecting the option: "Run as Administrator".
+3. Ensure that all necessary references are included in the project **AddinOpcUaInterface**. If any references are missing, select the Openness DLL files from TIA Portal version V19 as your reference source.
+4. Build the solution. The post-build event command will automatically transfer the .addin file to the **C:\Program Files\Siemens\Automation\Portal V19\AddIn** directory.
+
+**NOTE:** If TIA Portal version V17 or V18 is being used, please refer to the instructions described in [Chapter 4](#tia-portal-version).
 
 <a name="usage"></a>
 ## Usage
-To use the Add-In, copy the **OpcUa-UserModelledInterface.addin** file to the following directory: **C:\Program Files\Siemens\Automation\Portal V19\AddIns**. 
+To use the Add-In in TIA Portal, make sure that the **OpcUa-UserModelledInterface.addin** file is located in the following directory: **C:\Program Files\Siemens\Automation\Portal V19\AddIns**. 
 
 Then, proceed with the following steps:
 
@@ -59,7 +67,7 @@ The "Extend create" option allows users to customize the interface according to 
 
 <a name="how-it-works"></a>
 ## How it works
-The program utilizes the Openness API to access information stored in TIA Portal. To create a user modeled interface, the Add-In follows these steps:
+The Add-In utilizes the Openness API to access information stored in the TIA Portal project. To create a user modeled interface, the Add-In follows these steps:
 1. Imports an XML base template of the server as an XDocument.
 2. Scans through all system and user datatypes in the project and includes them in the XDocument as UADataTypes and UAObjects.
 3. Browses through the project's tag tables and adds all Tags to the server interface.
@@ -112,20 +120,22 @@ The Add-In is designed to run on TIA Portal V19, but it can be adapted to run on
 <a name="features"></a>
 ## Features
 
-### Features included in version 1.0.0
+### Features included in this version of the Add-In
 - "Create" and "Extend create" actions have been implemented.
 - Access level filters: Safety parameters are set to read-only by default.
 - Optimization of the server interface: The Add-In currently operates in "optimize" mode by default, excluding children nodes from UDTs, structs, arrays, etc.
-- Removal of empty data blocks: To reduce the number of meaningless nodes.
-- Folder structure management: Users can choose to keep or exclude the folder structure in the project.
+- Removal of empty data blocks: To reduce the number of nodes.
+- Folder structure management: Users can choose to keep or exclude the folder structure of the project.
 - Log file: Maintains a record of nodes that have not been added to the server interface.
 
-### Expected features in version 2.0.0
-- Addition of the "Not optimize" option: Version 2.0.0 aims to introduce the "Not optimized" approach as the default setting.
-- Enhanced customization of the optimize mode: Instead of optimizing every element, users will have the ability to individually choose which elements need to be optimized (e.g., arrays, structs, UDTs, etc.).
-- Option to select between string or numeric identifiers for NodeIds.
-- For UDTs defined in a library, include the version as part of the node's description.
-- Configuration of the "Extend create" parameters through an XML file instead of the GUI.
+### Limitations
+
+Some of the Add-In's current limitations are listed below:
+- It is not possible to use the Add-In without the "optimize" mode.
+- NodeIDs cannot be configured with numeric identifiers.
+- Function Blocks instantiated within other Function Blocks are modelled as "UAObjects" instead of "UAVariables". Therefore, the variables contained inside nested FBs are not accessible via the generated interface. 
+
+**DISCLAIMER:** This Add-In is designed to serve as a starting point for users to build upon. Users are encouraged to expand upon this basic version by implementing additional functionalities according to their specific requirements.
 
 # Reference links
 
