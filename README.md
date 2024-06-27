@@ -1,13 +1,13 @@
 # OPC UA - User modelled interface - V1.0.0
 
 ## Description
-This Add-In has been developed to streamline the process of generating OPC UA server interfaces. By browsing through the TIA Portal project, it automatically includes all variables that are marked as accessible via OPC UA, reducing the time and effort required to create user modelled server interfaces. 
+This Add-In has been developed to streamline the creation of user-modeled interfaces for OPC UA servers. By browsing through the TIA Portal project, it incorporates all variables that are accessible via OPC UA and arranges them in a structured manner, eliminating the need for manual configuration and significantly reducing the time and effort required to create these server interfaces.
 
-The main goals of this Add-In are:
+The main goals of the Add-In are:
 
-- Enhanced performance: Replace the default SIMATIC server interface with modelled interfaces that offer improved performance. With modelled interfaces, OPC UA clients can create monitored items and access data (using read or write services) up to 6 times faster.
-- Automatic interface generation for S7-1200 and S7-1500 R/H PLCs: Create server interfaces for S7-1200 and S7-1500 R/H PLCs, which do not support the default SIMATIC server interface.
-- Customization to fit project needs: Provide flexibility by allowing customization of the server interface to meet specific project requirements. With the "Extend create" option, users can modify certain parameters of the server interface and adapt it to their needs.
+- **Enhanced performance:** Replace the default SIMATIC server interface with modelled interfaces that offer improved performance. With modelled interfaces, OPC UA clients can create monitored items and access data (using read or write services) up to 6 times faster.
+- **Automatic interface generation for S7-1200 and S7-1500 R/H PLCs:** Create server interfaces for S7-1200 and S7-1500 R/H PLCs, which do not support the default SIMATIC server interface.
+- **Customization to fit project needs:** Provide flexibility by allowing customization of the server interface to meet specific project requirements. With the "Extend create" option, users can modify certain parameters of the server interface and adapt it to their needs.
 
 ## Table of contents
 
@@ -67,7 +67,7 @@ The "Extend create" option allows users to customize the interface according to 
 
 <a name="how-it-works"></a>
 ## How it works
-The Add-In utilizes the Openness API to access information stored in the TIA Portal project. To create a user modeled interface, the Add-In follows these steps:
+The Add-In utilizes the Openness API to access information stored in the TIA Portal project. To create a user-modelled interface, the Add-In follows these steps:
 1. Imports an XML base template of the server as an XDocument.
 2. Scans through all system and user datatypes in the project and includes them in the XDocument as UADataTypes and UAObjects.
 3. Browses through the project's tag tables and adds all Tags to the server interface.
