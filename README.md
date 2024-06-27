@@ -1,26 +1,26 @@
 # OPC UA - User modelled interface - V1.0.0
 
 ## Description
-This Add-In is designed to replicate the “Default SIMATIC Server Interface”, found in S7-1500 PLCs, as a user modelled interface using Openness. 
+This Add-In has been developed to streamline the process of generating OPC UA server interfaces. By browsing through the TIA Portal project, it automatically includes all variables that are marked as accessible via OPC UA, reducing the time and effort required to create user modelled server interfaces. 
 
 The main goals of this Add-In are:
 
-- Enhanced performance: Replace the default SIMATIC server interface with modelled interfaces that offer improved performance, 5 to 6 times faster, when accessing data through the read, write, and subscribe services.
+- Enhanced performance: Replace the default SIMATIC server interface with modelled interfaces that offer improved performance. With modelled interfaces, OPC UA clients can create monitored items and access data (using read or write services) up to 6 times faster.
 - Automatic interface generation for S7-1200 and S7-1500 R/H PLCs: Create server interfaces for S7-1200 and S7-1500 R/H PLCs, which do not support the default SIMATIC server interface.
 - Customization to fit project needs: Provide flexibility by allowing customization of the server interface to meet specific project requirements. With the "Extend create" option, users can modify certain parameters of the server interface and adapt it to their needs.
 
 ## Table of contents
 
-1. [Instalation](#instalation)
+1. [Installation](#installation)
 2. [Usage](#usage)
 3. [How it works](#how-it-works)
 4. [Tia Portal version](#tia-portal-version)
 5. [Features](#features)
 
-<a name="instalation"></a>
-## Instalation
+<a name="installation"></a>
+## Installation
 
-Follow these steps to carry out the instalation process:
+Follow these steps to carry out the installation process:
 
 1. Download the repository to the local machine.
 2. Open Visual Studio, selecting the option: "Run as Administrator".
