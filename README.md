@@ -13,9 +13,9 @@ The main goals of the Add-In are:
 
 1. [Installation](#installation)
 2. [Usage](#usage)
-3. [How it works](#how-it-works)
-4. [Tia Portal version](#tia-portal-version)
-5. [Features](#features)
+3. [Features](#features)
+4. [How it works](#how-it-works)
+5. [Tia Portal version](#tia-portal-version)
 
 <a name="installation"></a>
 ## Installation
@@ -56,8 +56,8 @@ The "Create" option enables users to recreate the default SIMATIC server interfa
 ### Extend create
 The "Extend create" option allows users to customize the interface according to their specific requirements. Some of the options offered by this action include:
 - Setting filters to define the access levels of nodes within the server's AddressSpace.
-- Optimizing the server interface: Exclude children nodes from UDTs, structs, arrays, etc. In large projects, the number of nodes  can be significantly reduced to fit the server's maximum node limit. - There are currently some [limitations](#limitations) regarding this feature.
-- Choosing between strings or numeric identifiers for node identification: While the default SIMATIC server interface uses strings, numeric identifiers offer improved performance in terms of server storage and communication. - There are currently some [limitations](#limitations) regarding this feature.
+- Optimizing the server interface: Exclude children nodes from UDTs, structs, arrays, etc. In large projects, the number of nodes  can be significantly reduced to fit the server's maximum node limit. - There are currently some [limitations](#features) regarding this feature.
+- Choosing between strings or numeric identifiers for node identification: While the default SIMATIC server interface uses strings, numeric identifiers offer improved performance in terms of server storage and communication. - There are currently some [limitations](#features) regarding this feature.
 - Removing empty data blocks: This option enables the removal of data blocks that do not contain any accessible variables via OPC UA, thus reducing the number of nodes in the server's AddressSpace.
 - Preserving the folder structure of the project: Folders present in the project can be included in the server interface. Maintaining the folder structure allows for easier browsing of the AddressSpace, although it increases the number of nodes.
 
