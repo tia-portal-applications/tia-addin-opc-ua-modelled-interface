@@ -1,7 +1,7 @@
 # OPC UA - User modelled interface - V1.0.0
 
 ## Description
-This Add-In has been developed to streamline the creation of user-modeled interfaces for OPC UA servers. By browsing through the TIA Portal project, it incorporates all variables that are accessible via OPC UA and arranges them in a structured manner, eliminating the need for manual configuration and significantly reducing the time and effort required to create these server interfaces.
+This Add-In has been developed to streamline the creation of user-modeled interfaces for OPC UA servers. By browsing through the TIA Portal project, it incorporates all variables that are accessible via OPC UA and arranges them in a structured manner, eliminating the need for manual configuration and significantly reducing the time and effort required.
 
 The main goals of the Add-In are:
 
@@ -56,14 +56,34 @@ The "Create" option enables users to recreate the default SIMATIC server interfa
 ### Extend create
 The "Extend create" option allows users to customize the interface according to their specific requirements. Some of the options offered by this action include:
 - Setting filters to define the access levels of nodes within the server's AddressSpace.
-- Optimizing the server interface: Exclude children nodes from UDTs, structs, arrays, etc. In large projects, the number of nodes  can be significantly reduced to fit the server's maximum node limit.
-- Choosing between strings or numeric identifiers for node identification: While the default SIMATIC server interface uses strings, numeric identifiers offer improved performance in terms of server storage and communication.
+- Optimizing the server interface: Exclude children nodes from UDTs, structs, arrays, etc. In large projects, the number of nodes  can be significantly reduced to fit the server's maximum node limit. - There are currently some [limitations](#limitations) regarding this feature.
+- Choosing between strings or numeric identifiers for node identification: While the default SIMATIC server interface uses strings, numeric identifiers offer improved performance in terms of server storage and communication. - There are currently some [limitations](#limitations) regarding this feature.
 - Removing empty data blocks: This option enables the removal of data blocks that do not contain any accessible variables via OPC UA, thus reducing the number of nodes in the server's AddressSpace.
 - Preserving the folder structure of the project: Folders present in the project can be included in the server interface. Maintaining the folder structure allows for easier browsing of the AddressSpace, although it increases the number of nodes.
 
 <div style="text-align:center">
     <img src="media/extend_create.png" alt="Extend create GUI" width="450" />
 </div>
+
+<a name="features"></a>
+## Features
+
+### Features included in this version of the Add-In
+- "Create" and "Extend create" actions have been implemented.
+- Access level filters: Safety parameters are set to read-only by default.
+- Optimization of the server interface: The Add-In currently operates in "optimize" mode by default, excluding children nodes from UDTs, structs, arrays, etc.
+- Removal of empty data blocks: To reduce the number of nodes.
+- Folder structure management: Users can choose to keep or exclude the folder structure of the project.
+- Log file: Maintains a record of nodes that have not been added to the server interface.
+
+<a name="limitations"></a>
+### Limitations
+Some of the Add-In's current limitations are listed below:
+- It is not possible to use the Add-In without the "optimize" mode.
+- NodeIDs cannot be configured with numeric identifiers.
+- Function Blocks instantiated within other Function Blocks are modelled as "UAObjects" instead of "UAVariables". Therefore, the variables contained inside nested FBs are not accessible via the generated interface. 
+
+**DISCLAIMER:** This Add-In is designed to serve as a starting point for users to build upon. Users are encouraged to expand upon this basic version by implementing additional functionalities according to their specific requirements.
 
 <a name="how-it-works"></a>
 ## How it works
@@ -116,26 +136,6 @@ The Add-In is designed to run on TIA Portal V19, but it can be adapted to run on
                 <System.Security.Permissions.SecurityPermission.UnmanagedCode/>
             </SecurityPermissions>
         </RequiredPermissions>
-
-<a name="features"></a>
-## Features
-
-### Features included in this version of the Add-In
-- "Create" and "Extend create" actions have been implemented.
-- Access level filters: Safety parameters are set to read-only by default.
-- Optimization of the server interface: The Add-In currently operates in "optimize" mode by default, excluding children nodes from UDTs, structs, arrays, etc.
-- Removal of empty data blocks: To reduce the number of nodes.
-- Folder structure management: Users can choose to keep or exclude the folder structure of the project.
-- Log file: Maintains a record of nodes that have not been added to the server interface.
-
-### Limitations
-
-Some of the Add-In's current limitations are listed below:
-- It is not possible to use the Add-In without the "optimize" mode.
-- NodeIDs cannot be configured with numeric identifiers.
-- Function Blocks instantiated within other Function Blocks are modelled as "UAObjects" instead of "UAVariables". Therefore, the variables contained inside nested FBs are not accessible via the generated interface. 
-
-**DISCLAIMER:** This Add-In is designed to serve as a starting point for users to build upon. Users are encouraged to expand upon this basic version by implementing additional functionalities according to their specific requirements.
 
 # Reference links
 
