@@ -102,7 +102,9 @@ The Add-In utilizes the Openness API to access information stored in the TIA Por
 ## TIA Portal version
 
 The Add-In is designed to run on TIA Portal V19, but it can be adapted to run on TIA Portal version V17 and V18. To do so:
-- Update the references of the project **AddinOpcUaInterface**. Use the Openness DLL files from TIA Portal versions V17 or V18 as your reference source. Openness has backward compatibility, meaning that an Add-In built with DLL files from V17 will be able to run on TIA Portal V17 and above.
+- Update the references of the project **AddinOpcUaInterface**. Use the Openness DLL files from TIA Portal versions V17 or V18 as your reference source. 
+
+    **NOTE**: Openness has backward compatibility. This means that an Add-In built with the DLL files from TIA Portal V17 can also run on TIA Portal V18, V19 and future versions.
 - Change the post-build event command to: 
     ```
     copy "$(ProjectDir)AddInPublisherConfig.xml" "$(TargetDir)AddInPublisherConfig.xml" /Y 
