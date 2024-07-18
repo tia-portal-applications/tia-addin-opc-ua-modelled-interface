@@ -88,7 +88,7 @@ Some of the Add-In's current limitations are listed below:
 <a name="how-it-works"></a>
 ## How it works
 The Add-In utilizes the Openness API to access information stored in the TIA Portal project. To create a user-modelled interface, the Add-In follows these steps:
-1. Imports an XML base template of the server as an XDocument.
+1. Imports an XML base template of the server interface as an XDocument.
 2. Scans through all system and user datatypes in the project and includes them in the XDocument as UADataTypes and UAObjects.
 3. Browses through the project's tag tables and adds all Tags to the server interface.
 4. Repeats the previous step with the Global and Instance data blocks that are accessible via OPC UA.
@@ -102,12 +102,14 @@ The Add-In utilizes the Openness API to access information stored in the TIA Por
 ## TIA Portal version
 
 The Add-In is designed to run on TIA Portal V19, but it can be adapted to run on TIA Portal version V17 and V18. To do so:
-- Update the references of the project **AddinOpcUaInterface**. Use the Openness DLL files from TIA Portal versions V17 or V18 as your reference source.
+- Update the references of the project **AddinOpcUaInterface**. Use the Openness DLL files from TIA Portal versions V17 or V18 as your reference source. Openness has backward compatibility, meaning that an Add-In built with DLL files from V17 will be able to run on TIA Portal V17 and above.
 - Change the post-build event command to: 
     ```
     copy "$(ProjectDir)AddInPublisherConfig.xml" "$(TargetDir)AddInPublisherConfig.xml" /Y 
-    "C:\Program Files\Siemens\Automation\Portal V19\PublicAPI\V17.AddIn\Siemens.Engineering.AddIn.Publisher.exe" -f "$(TargetDir)AddInPublisherConfig.xml" -l "$(TargetDir)PostBuildLog.txt" -v -c -o "C:\Program Files\Siemens\Automation\Portal V19\AddIns\OpcUa-UserModelledInterface.addin"
+    "C:\Program Files\Siemens\Automation\Portal V1X\PublicAPI\V1X.AddIn\Siemens.Engineering.AddIn.Publisher.exe" -f "$(TargetDir)AddInPublisherConfig.xml" -l "$(TargetDir)PostBuildLog.txt" -v -c -o "C:\Program Files\Siemens\Automation\Portal V1X\AddIns\OpcUa-UserModelledInterface.addin"
     ```
+    **NOTE**: Replace the placeholder "Portal V1X" with the specific version of TIA Portal installed on your machine. For example, if TIA Portal V18 is installed, replace "Portal V1X" with "Portal V18". Similarly, update "V1X.AddIn" to match the version of the Openness DLL files selected in the previous step. If the selected DLL files are those from TIA Portal V17, change "V1X.AddIn" to "V17.AddIn".
+
 - Replace "UnrestrictedPermissions" with "SecurityPermissions" in the **AddInPublisherConfig.xml** file.
 
     Before:
