@@ -14,6 +14,6 @@ All changes to the project are documented in this file.
 ### Fixed
 - Crash when processing arrays with variable limits. An exception is now added, and a message is displayed in the log file to inform the user that the array has not been included in the server interface.
 
-    Example: `Array [*] of ...`
+    Example: `Array [*] of Bool`.
 
-- Crash caused by unsupported data types inside structs. Unsupported data types were omitted in V1.0.0, but caused the add-in to crash when they were inside a struct.
+- Crash caused by unsupported data types inside structs. Unsupported data types were omitted in V1.0.0, but caused the add-in to crash when they were located inside a struct.
