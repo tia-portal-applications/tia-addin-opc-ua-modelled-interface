@@ -129,25 +129,75 @@ The Add-In is designed to run on TIA Portal V19, but it can be adapted to run on
     ```
     **NOTE**: Replace the placeholder "Portal V1X" with the specific version of TIA Portal installed on your machine. For example, if TIA Portal V18 is installed, replace "Portal V1X" with "Portal V18". Similarly, update "V1X.AddIn" to match the version of the Openness DLL files selected in the previous step. If the selected DLL files are those from TIA Portal V17, change "V1X.AddIn" to "V17.AddIn".
 
-- Replace "UnrestrictedPermissions" with "SecurityPermissions" in the **AddInPublisherConfig.xml** file.
+- Replace the content in the **AddInPublisherConfig.xml** file.
 
-    Before:
+    For TIA V19:
 
-        <RequiredPermissions>
-            <TIAPermissions>
+        <PackageConfiguration xmlns="http://www.siemens.com/automation/Openness/AddIn/Publisher/V19">
+            <Author>&lt;SIEMENS AG - DI FA S SUP SPH COM&gt;</Author>
+            <AddInVersion>V19</AddInVersion>
+            <Description>Automatically create user modelled interfaces for OPC UA servers.</Description>
+            <DisplayInMultiuser />
+            
+            <Product>
+                <Name>OPC UA - User modelled interface</Name>
+                <Id>tia_add_in_opc_ua_interface</Id>
+                <Version>1.1.0</Version>
+            </Product>
+
+            <FeatureAssembly>
+                <AssemblyInfo>
+                <Assembly>AddInOpcUaInterface.dll</Assembly>
+                </AssemblyInfo>
+            </FeatureAssembly>
+
+            <AdditionalAssemblies>
+                <AssemblyInfo>
+                    <Assembly>AddInOPCUAInterface.UI.dll</Assembly>
+                </AssemblyInfo>
+            </AdditionalAssemblies>
+
+            <!--Please check required permissions-->
+            <RequiredPermissions>
+                <TIAPermissions>
                 <TIA.ReadWrite/>
-            </TIAPermissions>
-            <UnrestrictedPermissions>
-                <System.UnrestrictedAccess>
-                    <JustificationComment>
-                        Needed for the execution of the "OPC UA - User Modelled Interface" Add-In
-                    </JustificationComment>
-                </System.UnrestrictedAccess>
-            </UnrestrictedPermissions>
-        </RequiredPermissions>
-    After:
+                </TIAPermissions>
+                <UnrestrictedPermissions>
+                    <System.UnrestrictedAccess>
+                        <JustificationComment>Needed for the execution of the "OPC UA - User Modelled Interface" Add-In</JustificationComment>
+                    </System.UnrestrictedAccess>
+                </UnrestrictedPermissions>
+            </RequiredPermissions>
+        </PackageConfiguration>
+    
+    For TIA V18:
 
-        <RequiredPermissions>
+        <PackageConfiguration xmlns="http://www.siemens.com/automation/Openness/AddIn/Publisher/V18">
+            <Author>&lt;SIEMENS AG - DI FA S SUP SPH COM&gt;</Author>
+            <AddInVersion>V18</AddInVersion>
+            <Description>Automatically create user modelled interfaces for OPC UA servers.</Description>
+            <DisplayInMultiuser />
+            
+            <Product>
+                <Name>OPC UA - User modelled interface</Name>
+                <Id>tia_add_in_opc_ua_interface</Id>
+                <Version>1.1.0</Version>
+            </Product>
+
+            <FeatureAssembly>
+                <AssemblyInfo>
+                <Assembly>AddInOpcUaInterface.dll</Assembly>
+                </AssemblyInfo>
+            </FeatureAssembly>
+
+            <AdditionalAssemblies>
+                <AssemblyInfo>
+                    <Assembly>AddInOPCUAInterface.UI.dll</Assembly>
+                </AssemblyInfo>
+            </AdditionalAssemblies>
+
+            <!--Please check required permissions-->
+            <RequiredPermissions>
             <TIAPermissions>
                 <TIA.ReadWrite/>
             </TIAPermissions>
@@ -158,6 +208,47 @@ The Add-In is designed to run on TIA Portal V19, but it can be adapted to run on
                 <System.Security.Permissions.MediaPermission/>
             </SecurityPermissions>
         </RequiredPermissions>
+        </PackageConfiguration>
+
+    For TIA V17:
+
+        <PackageConfiguration xmlns="http://www.siemens.com/automation/Openness/AddIn/Publisher/V17">
+            <Author>&lt;SIEMENS AG - DI FA S SUP SPH COM&gt;</Author>
+            <AddInVersion>V17</AddInVersion>
+            <Description>Automatically create user modelled interfaces for OPC UA servers.</Description>
+            <DisplayInMultiuser />
+            
+            <Product>
+                <Name>OPC UA - User modelled interface</Name>
+                <Id>tia_add_in_opc_ua_interface</Id>
+                <Version>1.1.0</Version>
+            </Product>
+
+            <FeatureAssembly>
+                <AssemblyInfo>
+                <Assembly>AddInOpcUaInterface.dll</Assembly>
+                </AssemblyInfo>
+            </FeatureAssembly>
+
+            <AdditionalAssemblies>
+                <AssemblyInfo>
+                    <Assembly>AddInOPCUAInterface.UI.dll</Assembly>
+                </AssemblyInfo>
+            </AdditionalAssemblies>
+
+            <!--Please check required permissions-->
+            <RequiredPermissions>
+            <TIAPermissions>
+                <TIA.ReadWrite/>
+            </TIAPermissions>
+            <SecurityPermissions>
+                <System.Security.Permissions.SecurityPermission.UnmanagedCode/>
+                <System.Security.Permissions.FileDialogPermission/>
+                <System.Security.Permissions.UIPermission/>
+                <System.Security.Permissions.MediaPermission/>
+            </SecurityPermissions>
+        </RequiredPermissions>
+        </PackageConfiguration>
 
 # Reference links
 
