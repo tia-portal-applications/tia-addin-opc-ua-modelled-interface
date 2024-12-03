@@ -4,7 +4,7 @@
   <strong>What's new with V1.1.0</strong>
   <ul>
     <li><strong>Software Units</strong>: A new <a href="#create-server-interface-for-sw-units">action</a> allows the creation of user-modeled interfaces for Software Units.</li>
-    <li><strong>Multi-dimensional arrays</strong>: Support for arrays with multiple dimensions</li>
+    <li><strong>Multi-dimensional arrays</strong>: Support for arrays with multiple dimensions.</li>
   </ul>
 </div>
 
