@@ -16,4 +16,4 @@ All changes to the project are documented in this file.
 
     Example: `Array [*] of Bool`.
 
-- Crash caused by unsupported data types inside structs. Unsupported data types were omitted in V1.0.0, but caused the add-in to crash when they were located inside a struct.
+- Crash caused by unsupported data types inside structs. Unsupported data types were omitted in V1.0.0, but caused the add-in to crash when they were located inside structs.
