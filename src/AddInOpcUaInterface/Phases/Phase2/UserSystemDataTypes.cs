@@ -32,10 +32,10 @@ namespace AddInOpcUaInterface
         /// It also calls the method that creates the system and user data type XElements.
         /// </summary>
         /// <param name="typeGroup"></param>
-        public static void GetUserSystemDataTypeElements(PlcTypeSystemGroup typeGroup)
+        public static void GetUserSystemDataTypeElements(PlcTypeSystemGroup typeGroup, bool isSwUnit)
         {
             #region COLLECT SYSTEM AND USER DATA TYPES
-
+                       
             string phase = "Collect names";
 
             // Iterate through all system data types and store their names in a List<string>
@@ -46,7 +46,12 @@ namespace AddInOpcUaInterface
                 PlcTypeComposition sysTypes = sysGroup.Types;
                 foreach (PlcStruct plcStruct in sysTypes)
                 {
-                    SystemDataTypes.Add(plcStruct.Name);
+                    // Data Types defined in a Software Unit need to be preceeded by the name of the Software Unit
+                    if (isSwUnit)
+                    {
+                        SystemDataTypes.Add(ProjectFields.SelectedSoftwareUnit.Name + "." + plcStruct.Name);
+                    }
+                    else { SystemDataTypes.Add(plcStruct.Name); }
                 }
             }
 
@@ -56,18 +61,23 @@ namespace AddInOpcUaInterface
 
             foreach (PlcStruct plcStruct in Types)
             {
-                UserDataTypes.Add(plcStruct.Name);
+                // Data Types defined in a Software Unit need to be preceeded by the name of the Software Unit
+                if (isSwUnit)
+                { 
+                    UserDataTypes.Add(ProjectFields.SelectedSoftwareUnit.Name + "." + plcStruct.Name);
+                }
+                else { UserDataTypes.Add(plcStruct.Name); }
             }
             foreach (PlcTypeUserGroup userGroup in Groups)
             {
-                IterateThroughUserGroups(userGroup, phase);
+                IterateThroughUserGroups(userGroup, phase, isSwUnit);
             }
             #endregion
 
             #region CREATE NEW XELEMENTS FOR SYSTEM AND USER DATA TYPES
 
             phase = "Create XElements";
-
+            
             // Iterate through all system data types and stores their names in a List<string>.
             sysGroupComposition = typeGroup.SystemTypeGroups;
 
@@ -76,7 +86,7 @@ namespace AddInOpcUaInterface
                 PlcTypeComposition sysTypes = sysGroup.Types;
                 foreach (PlcStruct plcStruct in sysTypes)
                 {
-                    NewXElement(plcStruct, "ns=1;i=3500");
+                    NewXElement(plcStruct, "ns=1;i=3500", isSwUnit);
                 }
             }
 
@@ -86,11 +96,11 @@ namespace AddInOpcUaInterface
 
             foreach (PlcStruct plcStruct in Types)
             {
-                NewXElement(plcStruct, "ns=1;i=3400");
+                NewXElement(plcStruct, "ns=1;i=3400", isSwUnit);
             }
             foreach (PlcTypeUserGroup userGroup in Groups)
             {
-                IterateThroughUserGroups(userGroup, phase);
+                IterateThroughUserGroups(userGroup, phase, isSwUnit);
             }
             #endregion
         }
@@ -100,7 +110,7 @@ namespace AddInOpcUaInterface
         /// </summary>
         /// <param name="userGroup">The current folder being processed.</param>
         /// <param name="phase">Indicates the current phase, distinguishing between "Collect" and "Create" phases.</param>
-        private static void IterateThroughUserGroups(PlcTypeUserGroup userGroup, string phase)
+        private static void IterateThroughUserGroups(PlcTypeUserGroup userGroup, string phase, bool isSwUnit)
         {
             PlcTypeUserGroupComposition Groups = userGroup.Groups;
             PlcTypeComposition Types = userGroup.Types;
@@ -109,19 +119,23 @@ namespace AddInOpcUaInterface
             {
                 if (phase == "Collect names")
                 {
-                    // Collect user data types
-                    UserDataTypes.Add(plcStruct.Name);
+                    // Data Types defined in a Software Unit need to be preceeded by the name of the Software Unit
+                    if (isSwUnit)
+                    {
+                        UserDataTypes.Add(ProjectFields.SelectedSoftwareUnit.Name + "." + plcStruct.Name);
+                    }
+                    else { UserDataTypes.Add(plcStruct.Name); }
                 }
                 else if (phase == "Create XElements")
                 {
                     // Create XElements from user/system data types
-                    NewXElement(plcStruct, "ns=1;i=3400");
+                    NewXElement(plcStruct, "ns=1;i=3400", isSwUnit);
                 }
             }
 
             foreach (PlcTypeUserGroup subuserGroup in Groups)
             {
-                IterateThroughUserGroups(subuserGroup, phase);
+                IterateThroughUserGroups(subuserGroup, phase, isSwUnit);
             }
         }
 
@@ -131,7 +145,7 @@ namespace AddInOpcUaInterface
         /// </summary>
         /// <param name="dataType"></param>
         /// <param name="parentNodeId">Parent node for the user/system data types: SimaticStructures (ns=1;s=3400) or SimaticSystemStructures (ns=1;s=3500)</param>
-        private static void NewXElement(PlcStruct dataType, string parentNodeId)
+        private static void NewXElement(PlcStruct dataType, string parentNodeId, bool isSwUnit)
         {
             #region EXPORT USER DATA TYPE FROM TIA'S PROJECT AND IMPORT IT AS AN XDOCUMENT
 
@@ -166,6 +180,12 @@ namespace AddInOpcUaInterface
             XElement attributeList  = inputElement.Element("SW.Types.PlcStruct").Element("AttributeList");
             string dataTypeName = attributeList.Element("Name")?.Value;
 
+            if(isSwUnit)
+            {
+                // Data Types defined in a Software Unit need to be preceeded by the name of the Software Unit
+                dataTypeName = ProjectFields.SelectedSoftwareUnit.Name + "." + dataTypeName;               
+            }
+
             // Access the "Sections" XElement within the "Interface" element
             XElement Sections = (XElement)attributeList.Element("Interface").FirstNode;
             // Extract the namespace associated with the "Sections" element
@@ -175,13 +195,18 @@ namespace AddInOpcUaInterface
 
             IEnumerable<XElement> members = section.Elements(_swNamespace + "Member");
             IEnumerable<XElement> fields = ProcessFields(members, dataTypeName);
-
+            
             if (fields != null)
             {
                 CreateDataTypeElement(dataTypeName, fields, parentNodeId);
             }
             else
             {
+                // If the data type is unknown, the variable is not added to the project
+                LogMessages.PublishLog("                   " 
+                                     + $@"MISSING DATA TYPE: The UDT/SDT ""{dataTypeName}"" has not been included "
+                                     + $@"in the server interface.");
+
                 RemovedDataTypes.Add(dataTypeName);
             }
             #endregion
@@ -225,13 +250,13 @@ namespace AddInOpcUaInterface
                 bool isArray = dataType.StartsWith("Array");
                 if (isArray)
                 {
-                    int arrayDimensions = GetArrayDimensions(dataType);
+                    (string arrayDimensions, string valueRank) = GetArrayDimensions(dataType);
                     string arrayElementType = GetArrayElementType(dataType);
 
                     // Add attributes for array handling
                     field.SetAttributeValue("DataType", arrayElementType);
                     field.SetAttributeValue("ArrayDimensions", arrayDimensions);
-                    field.SetAttributeValue("ValueRank", 1);
+                    field.SetAttributeValue("ValueRank", valueRank);
 
                     // New data type. Example: Array [0..1] of Bool --> Bool
                     dataType = arrayElementType;
@@ -245,18 +270,38 @@ namespace AddInOpcUaInterface
                 }
                 else
                 {
-                    // Remove the number inside brackets if there is any. Example: STRING [32] or WSTRING[32]
-                    dataType = Regex.Replace(dataType, @"\s*\[\d+\]", string.Empty);
-                    if (InterfaceTemplate.TemplateDataTypes.Contains(dataType.ToUpper()) || dataType.StartsWith("Struct"))
+                    // Handle Software Unit data types that reference a type defined in the device (PLC)
+                    if (ProjectFields.IsSoftwareUnit)
                     {
-                        field.SetAttributeValue("DataType", dataType.ToUpper());
+                        if (dataType.StartsWith(ProjectFields.SelectedSoftwareUnit.Name))
+                        {
+                            dataType = dataType.Substring(ProjectFields.SelectedSoftwareUnit.Name.Length + 1);
+                        }
+                    }
+
+                    isUserSystemDataTypes = UserDataTypes.Contains(dataType) || SystemDataTypes.Contains(dataType);
+
+                    if (isUserSystemDataTypes)
+                    {
+                        field.Attribute("DataType").Value = $"ns=2;s=DT_{dataType}";
                     }
                     else
                     {
-                        // If the data type is unknown, the variable is not added to the project
-                        LogMessages.PublishLog($@"MISSING DATA TYPE: The UDT/SDT ""{parentElement}"" has not been included " 
-                                             + $@"in the server interface as the data type ""{dataType}"" is not contemplated in the Add-In.");
-                        return null;
+
+                        // Remove the number inside brackets if there is any. Example: STRING [32] or WSTRING[32]
+                        dataType = Regex.Replace(dataType, @"\s*\[\d+\]", string.Empty);
+                        if (InterfaceTemplate.TemplateDataTypes.Contains(dataType.ToUpper()) || dataType.StartsWith("Struct"))
+                        {
+                            field.SetAttributeValue("DataType", dataType.ToUpper());
+                        }
+                        else
+                        {
+                            // If the data type is unknown, the variable is not added to the project
+                            LogMessages.PublishLog($@"MISSING DATA TYPE: The field ""{parentElement + "." + field.Attribute("Name").Value}"" has not been included "
+                                                 + $@"in the server interface as the data type ""{dataType}"" is not contemplated in the Add-In.");
+
+                            return null;
+                        }
                     }
                 }
 
@@ -272,8 +317,22 @@ namespace AddInOpcUaInterface
                     // Create new XElements for the stuct's children
                     IEnumerable<XElement> structChilds = field.Elements(_swNamespace + "Member");
                     IEnumerable<XElement> structFields = ProcessFields(structChilds, parentElement + "." + structName);
-                    CreateStructElements(structName, parentElement, structFields);
+
+                    if (structFields != null)
+                    {
+                        CreateStructElements(structName, parentElement, structFields);
+                    }
+                    else
+                    {
+                        // If the struct has an invalid data type, it is not created
+                        LogMessages.PublishLog(("                   "
+                                            + $@"The struct ""{parentElement.Replace($@"""", String.Empty) + "." + structName}"" "
+                                            + $@"has not been included in the server interface."));
+
+                        return null;
+                    }
                 }
+
                 field.RemoveNodes();
             }
             return fields;
@@ -284,30 +343,52 @@ namespace AddInOpcUaInterface
         /// </summary>
         /// <param name="arrayType"></param>
         /// <returns></returns>
-        private static int GetArrayDimensions(string arrayDataType)
+        private static (string, string) GetArrayDimensions(string arrayDataType)
         {
-            // Array dimensions = arrayEndIndex - arrayStartIndex + 1
             int arrayStartIndex;
             int arrayEndIndex;
+            List<int> dimensions = new List<int>();
 
-            // Array Start Index
-            int positionFrom = arrayDataType.LastIndexOf($@"Array[") + $@"Array[".Length;
-            int positionTo = arrayDataType.LastIndexOf($@"..");
-            // The start index can be given by an integer or by a user constant (string)
-            string substringStartIndex = arrayDataType.Substring(positionFrom, positionTo - positionFrom);
-            if (int.TryParse(substringStartIndex, out arrayStartIndex)) { }
-            else { arrayStartIndex = UserConstants.UserConstantValues[substringStartIndex];}
+            // Extract the dimension definitions
+            int positionFrom = arrayDataType.IndexOf("[") + 1;
+            int positionTo = arrayDataType.IndexOf("]");
+            string dimensionsString = arrayDataType.Substring(positionFrom, positionTo - positionFrom);
+            string[] dimensionRanges = dimensionsString.Split(',');
 
-            // Array End Index
-            positionFrom = arrayDataType.LastIndexOf($@"..") + $@"..".Length;
-            positionTo = arrayDataType.LastIndexOf($@"] of");
-            // The end index can be given by an integer or by a user constant (string)
-            string substringEndIndex = arrayDataType.Substring(positionFrom, positionTo - positionFrom);
-            if (int.TryParse(substringEndIndex, out arrayEndIndex)) { }
-            else { arrayEndIndex = UserConstants.UserConstantValues[substringEndIndex]; }
+            foreach (string range in dimensionRanges)
+            {
+                string trimmedRange = range.Trim();
+                int rangePositionFrom = trimmedRange.IndexOf("..") + 2;
+                int rangePositionTo = trimmedRange.IndexOf("..");
+                string substringStartIndex = trimmedRange.Substring(0, rangePositionTo);
+                string substringEndIndex = trimmedRange.Substring(rangePositionFrom);
 
-            int arrayDimensions = arrayEndIndex - arrayStartIndex + 1;
-            return arrayDimensions;
+                if (int.TryParse(substringStartIndex, out arrayStartIndex)) { }
+                else
+                {
+                    if (substringStartIndex.StartsWith("_."))
+                    {
+                        substringStartIndex = substringStartIndex.Substring(2);
+                    }
+                    arrayStartIndex = UserConstants.UserConstantValues[substringStartIndex];
+                }
+
+                if (int.TryParse(substringEndIndex, out arrayEndIndex)) { }
+                else
+                {
+                    if (substringEndIndex.StartsWith("_."))
+                    {
+                        substringEndIndex = substringEndIndex.Substring(2);
+                    }
+                    arrayEndIndex = UserConstants.UserConstantValues[substringEndIndex];
+                }
+
+                // Array dimensions = arrayEndIndex - arrayStartIndex + 1
+                int arrayDimension = arrayEndIndex - arrayStartIndex + 1;
+                dimensions.Add(arrayDimension);
+            }
+
+            return (string.Join(",", dimensions), dimensionRanges.Count().ToString());
         }
 
         /// <summary>

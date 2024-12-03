@@ -15,13 +15,14 @@ using Siemens.Engineering;
 using AddInOpcUaInterface.Other;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Siemens.Engineering.SW.Units;
 
 namespace AddInOpcUaInterface.Phases
 {
     internal static class ProjectFields
     {
         public static DeviceItem SelectedDevice;
-
+        
         public static SoftwareContainer SoftwareContainer;
 
         public static PlcSoftware Software;
@@ -37,6 +38,11 @@ namespace AddInOpcUaInterface.Phases
         public static PlcBlockGroup BlockGroup;       
         public static PlcTypeSystemGroup TypeGroup;
 
+        // Sowtware Units
+        public static bool IsSoftwareUnit;
+        public static PlcUnit SelectedSoftwareUnit;
+        public static PlcTypeSystemGroup SoftwareUnitTypeGroup;
+        
         /// <summary>
         /// Retrieves all relevant fields from the TIA Portal project.
         /// </summary>
@@ -62,7 +68,7 @@ namespace AddInOpcUaInterface.Phases
                     SimaticInterfaces = ServerInterfaceGroup.SimaticInterfaces;     // Note: Simatic Interfaces are purple
                     if (ServerInterfaces != null)
                     {
-                        // Discover all available Tag Tables and Blocks
+                        // Discover all available Tag Tables, Data Types and Blocks
                         TagTableGroup = Software.TagTableGroup;
                         BlockGroup = Software.BlockGroup;
                         TypeGroup = Software.TypeGroup;
@@ -94,6 +100,68 @@ namespace AddInOpcUaInterface.Phases
         }
 
         /// <summary>
+        /// Retrieves all relevant fields from the selected Software Unit.
+        /// </summary>
+        /// <param name="menuSelectionProvider">Software Unit selected when calling the Add-In.</param>
+        public static void AccessSoftwareUnitFields(MenuSelectionProvider<PlcUnit> menuSelectionProvider)
+        {
+            // Working with a Software Unit
+            IsSoftwareUnit = true;
+
+            // Define the Software Unit selected from the project tree
+            SelectedSoftwareUnit = menuSelectionProvider.GetSelection<PlcUnit>().FirstOrDefault();
+
+            // Define the device and software container where the Software Unit is located
+            SoftwareContainer = SelectedSoftwareUnit.Parent.Parent.Parent.Parent as SoftwareContainer;
+            SelectedDevice = SoftwareContainer.Parent as DeviceItem;
+            if (SoftwareContainer != null)
+            {
+                Software = SoftwareContainer.Software as PlcSoftware;
+                Provider = Software.GetService<OpcUaProvider>();
+
+                if (Provider != null)
+                {
+                    CommGroup = Provider.CommunicationGroup;
+                    ServerInterfaceGroup = CommGroup.ServerInterfaceGroup;
+                    ServerInterfaces = ServerInterfaceGroup.ServerInterfaces;       // Note: Server Interfaces are blue
+                    SimaticInterfaces = ServerInterfaceGroup.SimaticInterfaces;     // Note: Simatic Interfaces are purple
+                    if (ServerInterfaces != null)
+                    {
+                        // Discover all available Tag Tables, Data Types and Blocks in the Software Container
+                        TagTableGroup = SelectedSoftwareUnit.TagTableGroup;
+                        BlockGroup = SelectedSoftwareUnit.BlockGroup;
+                        SoftwareUnitTypeGroup = SelectedSoftwareUnit.TypeGroup;
+
+                        // System blocks: Program Resources and S7 Safety in the Software Container
+                        SystemBlockGroupComposition = SelectedSoftwareUnit.BlockGroup.SystemBlockGroups;
+
+                        // Discover all Data Types in the device
+                        TypeGroup = Software.TypeGroup;                                             
+                    }
+                    else
+                    {
+                        DisplayMessage.ErrorMessage("The Add-In cannot be executed on the selected device.");
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        DisplayCustomErrorMessage();
+                    }
+                    catch
+                    {
+                        DisplayMessage.ErrorMessage("The Add-In cannot be executed on the selected device.");
+                    }
+                }
+            }
+            else
+            {
+                DisplayMessage.ErrorMessage("The Add-In cannot be executed on the selected device.");
+            }             
+        }
+
+        /// <summary>
         /// Displays a custom error message with a recommended action for each specific HW.
         /// </summary>
         public static void DisplayCustomErrorMessage()
@@ -108,7 +176,8 @@ namespace AddInOpcUaInterface.Phases
             // Identify the CPU family and display the required firmware update
             if (typeName.Contains("CPU 12"))
             {
-                DisplayMessage.ErrorMessage(errorMessage + " Consider updating it to FW V4.4 or higher");
+                DisplayMessage.ErrorMessage(errorMessage + " Consider updating it to FW V4.4 or higher." 
+                    + " For S7-1200 G2 CPUs, refer to the available documentation for further details.");
             }
             else if (typeName.Contains("H") || typeName.Contains("R"))
             {

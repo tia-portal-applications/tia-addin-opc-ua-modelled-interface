@@ -62,7 +62,18 @@ namespace AddInOpcUaInterface.Phases.Phase4
                 foreach (XElement member in members)
                 {
                     string variableName = member.Attribute("Name").Value.Replace("\"", string.Empty);
-                    string nodeId = '"' + blockName + $@""".""" + variableName + '"';
+                    string nodeId;
+
+                    // In Software Units, NodeIds are preceeded by the name of the Software Unit 
+                    if (ProjectFields.IsSoftwareUnit) 
+                    { 
+                        nodeId = '"' + ProjectFields.SelectedSoftwareUnit.Name + "." + blockName + $@""".""" + variableName + '"'; 
+                    }
+                    else 
+                    { 
+                        nodeId = '"' + blockName + $@""".""" + variableName + '"'; 
+                    }
+
                     string dataType = member.Attribute("Datatype").Value.Replace("\"", string.Empty);
 
                     IEnumerable<XElement> attributes = member.Elements(_swNamespace + "AttributeList").Elements(_swNamespace + "BooleanAttribute");
@@ -91,13 +102,18 @@ namespace AddInOpcUaInterface.Phases.Phase4
                     bool isArray = dataType.StartsWith("Array");
                     if (isArray)
                     {
-                        int arrayDimensions = GetArrayDimensions(dataType);
+                        if (dataType.Contains("[*]"))
+                        {
+                            LogMessages.PublishLog($@"UNSUPPORTED DATA TYPE: Arrays with variable limits, such as ""{dataType}"" are not supported.");
+                            continue;   //exits the current iteration of the foreach loop
+                        }
+                        (string arrayDimensions, string valueRank) = GetArrayDimensions(dataType);
                         string arrayElementType = GetArrayElementType(dataType);
 
                         // Add attributes for array handling
                         variableElement.SetAttributeValue("DataType", arrayElementType);
                         variableElement.SetAttributeValue("ArrayDimensions", arrayDimensions);
-                        variableElement.SetAttributeValue("ValueRank", 1);
+                        variableElement.SetAttributeValue("ValueRank", valueRank);
                     }
 
                     // If these three conditions are true, the variable is not ExternalAccessible or ExternalWritable
@@ -108,7 +124,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
                     {
                         continue;
                     }
-
+                    
                     // Detect if the data type is known
                     dataType = variableElement.Attribute("DataType").Value.Replace("\"", string.Empty);
                     bool isRemovedDataType = UserSystemDataTypes.RemovedDataTypes.Contains(dataType);
@@ -125,47 +141,65 @@ namespace AddInOpcUaInterface.Phases.Phase4
                     }
                     else
                     {
-                        // Remove the number inside brackets. Example: STRING [32] or WSTRING[32]
-                        dataType = System.Text.RegularExpressions.Regex.Replace(dataType, @"\s*\[\d+\]", string.Empty);
-                        if (InterfaceTemplate.TemplateDataTypes.Contains(dataType.ToUpper()) || dataType.StartsWith("Struct"))
+                        // Handle Software Unit data types that reference a type defined in the device (PLC)
+                        if (ProjectFields.IsSoftwareUnit)
                         {
-                            variableElement.SetAttributeValue("DataType", dataType.ToUpper());
+                            if (dataType.StartsWith(ProjectFields.SelectedSoftwareUnit.Name))
+                            {
+                                dataType = dataType.Substring(ProjectFields.SelectedSoftwareUnit.Name.Length + 1);
+                            }
                         }
 
+                        isUserSystemDataType = UserSystemDataTypes.UserDataTypes.Contains(dataType) || UserSystemDataTypes.SystemDataTypes.Contains(dataType);
+
+                        if (isUserSystemDataType)
+                        {
+                            variableElement.SetAttributeValue("DataType", $"ns=2;s=DT_{dataType}");
+                        }
                         else
                         {
-                            // If the data type is unknown, the variable is trated as a multi-instance object
-                            // ATENTION! Users must review the log file to check if these are indied multi-instance objects and not just data types that are not added yet
-                            if (!UaObjectTypes.Contains(dataType))
+                            // Remove the number inside brackets. Example: STRING [32] or WSTRING[32]
+                            dataType = System.Text.RegularExpressions.Regex.Replace(dataType, @"\s*\[\d+\]", string.Empty);
+                            if (InterfaceTemplate.TemplateDataTypes.Contains(dataType.ToUpper()) || dataType.StartsWith("Struct"))
                             {
-                                UaObjectTypes.Add(dataType);
-
-                                // Code to make the message a bit easier to read 
-                                int numberOfDots = 30 - dataType.Length;
-                                string dots = string.Empty;
-                                if (numberOfDots > 0)
-                                {
-                                    dots = new string('.', numberOfDots);
-                                }
-                                LogMessages.PublishLog($@"CHECK: ""{dataType}"" has been treated as a multi-instance object instead of a data type.{dots}If ""{dataType}"" is a data type, add it to the InterfaceTemplate.xml file and rebuild the project.");
+                                variableElement.SetAttributeValue("DataType", dataType.ToUpper());
                             }
 
-                            XElement uaObjectElement =
-                            new XElement(AddInFields.RootNameSpace + "UAObject",
-                                new XAttribute("NodeId", $"ns=2;s={nodeId}"),
-                                new XAttribute("BrowseName", $"2:{variableName}"),
-                                new XElement(AddInFields.RootNameSpace + "DisplayName", variableName),
-                                new XElement(AddInFields.RootNameSpace + "References",
-                                    new XElement(AddInFields.RootNameSpace + "Reference", $"ns=2;s={parent}",
-                                        new XAttribute("ReferenceType", "HasComponent"),
-                                        new XAttribute("IsForward", "false")),
-                                    new XElement(AddInFields.RootNameSpace + "Reference", "i=58",
-                                        new XAttribute("ReferenceType", "HasTypeDefinition"))
-                                )
-                            );
+                            else
+                            {
+                                // If the data type is unknown, the variable is trated as a multi-instance object
+                                // ATENTION! Users must review the log file to check if these are indied multi-instance objects and not just data types that are not added yet
+                                if (!UaObjectTypes.Contains(dataType))
+                                {
+                                    UaObjectTypes.Add(dataType);
 
-                            XElementDataBlocks.Add(uaObjectElement);
-                            continue;
+                                    // Code to make the message a bit easier to read 
+                                    int numberOfDots = 30 - dataType.Length;
+                                    string dots = string.Empty;
+                                    if (numberOfDots > 0)
+                                    {
+                                        dots = new string('.', numberOfDots);
+                                    }
+                                    LogMessages.PublishLog($@"CHECK: ""{dataType}"" has been treated as a multi-instance object instead of a data type.{dots}If ""{dataType}"" is a data type, add it to the InterfaceTemplate.xml file and rebuild the project.");
+                                }
+
+                                XElement uaObjectElement =
+                                new XElement(AddInFields.RootNameSpace + "UAObject",
+                                    new XAttribute("NodeId", $"ns=2;s={nodeId}"),
+                                    new XAttribute("BrowseName", $"2:{variableName}"),
+                                    new XElement(AddInFields.RootNameSpace + "DisplayName", variableName),
+                                    new XElement(AddInFields.RootNameSpace + "References",
+                                        new XElement(AddInFields.RootNameSpace + "Reference", $"ns=2;s={parent}",
+                                            new XAttribute("ReferenceType", "HasComponent"),
+                                            new XAttribute("IsForward", "false")),
+                                        new XElement(AddInFields.RootNameSpace + "Reference", "i=58",
+                                            new XAttribute("ReferenceType", "HasTypeDefinition"))
+                                    )
+                                );
+
+                                XElementDataBlocks.Add(uaObjectElement);
+                                continue;
+                            }
                         }
                     }
 
@@ -178,7 +212,19 @@ namespace AddInOpcUaInterface.Phases.Phase4
                         variableElement.SetAttributeValue("DataType", $"ns=2;s=DT_{blockName + "." + structName}");
                         IEnumerable<XElement> submembers = member.Elements(_swNamespace + "Member");
                         IEnumerable<XElement> subfields = ProcessFields(submembers, blockName + "." + structName);
-                        CreateStructElements(structName, blockName, subfields);
+
+                        if (subfields != null) 
+                        {
+                            CreateStructElements(structName, blockName, subfields);
+                        }
+                        else 
+                        {
+                            // If the struct has an invalid data type, it is not created
+                            LogMessages.PublishLog($@"MISSING DATA TYPE: The struct ""{parent.Replace($@"""", String.Empty) + "." + structName}"" has not been included "
+                            + $@"in the server interface as the data type of one or more fields is not contemplated in the Add-In.");
+
+                            continue;
+                        }
                     }
 
                     XElement uaDataTypeElement = variableElement;
@@ -327,30 +373,52 @@ namespace AddInOpcUaInterface.Phases.Phase4
         /// </summary>
         /// <param name="arrayType"></param>
         /// <returns></returns>
-        private static int GetArrayDimensions(string arrayDataType)
+        private static (string, string) GetArrayDimensions(string arrayDataType)
         {
-            // Array dimensions = arrayEndIndex - arrayStartIndex + 1
             int arrayStartIndex;
             int arrayEndIndex;
+            List<int> dimensions = new List<int>();
 
-            // Array Start Index
-            int positionFrom = arrayDataType.LastIndexOf($@"Array[") + $@"Array[".Length;
-            int positionTo = arrayDataType.LastIndexOf($@"..");
-            // The start index can be given by an integer or by a user constant (string)
-            string substringStartIndex = arrayDataType.Substring(positionFrom, positionTo - positionFrom);
-            if (int.TryParse(substringStartIndex, out arrayStartIndex)) { }
-            else { arrayStartIndex = UserConstants.UserConstantValues[substringStartIndex]; }
+            // Extract the dimension definitions
+            int positionFrom = arrayDataType.IndexOf("[") + 1;
+            int positionTo = arrayDataType.IndexOf("]");
+            string dimensionsString = arrayDataType.Substring(positionFrom, positionTo - positionFrom);
+            string[] dimensionRanges = dimensionsString.Split(',');
 
-            // Array End Index
-            positionFrom = arrayDataType.LastIndexOf($@"..") + $@"..".Length;
-            positionTo = arrayDataType.LastIndexOf($@"] of");
-            // The end index can be given by an integer or by a user constant (string)
-            string substringEndIndex = arrayDataType.Substring(positionFrom, positionTo - positionFrom);
-            if (int.TryParse(substringEndIndex, out arrayEndIndex)) { }
-            else { arrayEndIndex = UserConstants.UserConstantValues[substringEndIndex]; }
+            foreach (string range in dimensionRanges)
+            {
+                string trimmedRange = range.Trim();
+                int rangePositionFrom = trimmedRange.IndexOf("..") + 2;
+                int rangePositionTo = trimmedRange.IndexOf("..");
+                string substringStartIndex = trimmedRange.Substring(0, rangePositionTo);
+                string substringEndIndex = trimmedRange.Substring(rangePositionFrom);
 
-            int arrayDimensions = arrayEndIndex - arrayStartIndex + 1;
-            return arrayDimensions;
+                if (int.TryParse(substringStartIndex, out arrayStartIndex)) { }
+                else
+                {
+                    if (substringStartIndex.StartsWith("_."))
+                    {
+                        substringStartIndex = substringStartIndex.Substring(2);
+                    }
+                    arrayStartIndex = UserConstants.UserConstantValues[substringStartIndex];
+                }
+
+                if (int.TryParse(substringEndIndex, out arrayEndIndex)) { }
+                else
+                {
+                    if (substringEndIndex.StartsWith("_."))
+                    {
+                        substringEndIndex = substringEndIndex.Substring(2);
+                    }
+                    arrayEndIndex = UserConstants.UserConstantValues[substringEndIndex];
+                }
+
+                // Array dimensions = arrayEndIndex - arrayStartIndex + 1
+                int arrayDimension = arrayEndIndex - arrayStartIndex + 1;
+                dimensions.Add(arrayDimension);
+            }
+
+            return (string.Join(",", dimensions), dimensionRanges.Count().ToString());
         }
 
         /// <summary>
@@ -468,13 +536,18 @@ namespace AddInOpcUaInterface.Phases.Phase4
                 string dataType = field.Attribute("DataType").Value.Replace("\"", string.Empty);
                 if (dataType.StartsWith("Array"))
                 {
-                    int arrayDimensions = GetArrayDimensions(dataType);
+                    if (dataType.Contains("[*]"))
+                        {
+                        LogMessages.PublishLog($@"UNSUPPORTED DATA TYPE: Arrays with variable limits, such as ""{dataType}"" are not supported.");
+                        continue;   //exits the current iteration of the foreach loop
+                    }
+                    (string arrayDimensions, string valueRank) = GetArrayDimensions(dataType);
                     string arrayElementType = GetArrayElementType(dataType);
 
                     // Add attributes for array handling
                     field.SetAttributeValue("DataType", arrayElementType);
                     field.SetAttributeValue("ArrayDimensions", arrayDimensions);
-                    field.SetAttributeValue("ValueRank", 1);
+                    field.SetAttributeValue("ValueRank", valueRank);
                 }
 
                 // Differentiate built-in data types from user-defined data types
@@ -489,7 +562,14 @@ namespace AddInOpcUaInterface.Phases.Phase4
                     // Example: STRING [32] or WSTRING[32]
                     // Remove the number inside brackets
                     dataType = System.Text.RegularExpressions.Regex.Replace(dataType, @"\[\d+\]", string.Empty);
-                    field.Attribute("DataType").Value = dataType.ToUpper();
+                    if (InterfaceTemplate.TemplateDataTypes.Contains(dataType.ToUpper()) || dataType.StartsWith("Struct"))
+                    {
+                        field.Attribute("DataType").Value = dataType.ToUpper();
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
 
                 // Handle structs
@@ -503,7 +583,18 @@ namespace AddInOpcUaInterface.Phases.Phase4
                     // Create new XElements
                     IEnumerable<XElement> submembers = field.Elements(_swNamespace + "Member");
                     IEnumerable<XElement> subfields = ProcessFields(submembers, parent + "." + structName);
-                    CreateStructElements(structName, parent, subfields);
+                    if (subfields != null)
+                    {
+                        CreateStructElements(structName, parent, subfields);
+                    }
+                    else
+                    {
+                        // If the struct has an invalid data type, it is not created
+                        LogMessages.PublishLog($@"MISSING DATA TYPE: The struct ""{parent.Replace($@"""", String.Empty) + "." + structName}"" has not been included "
+                        + $@"in the server interface as the data type of one or more fields is not contemplated in the Add-In.");
+
+                        return null;
+                    }
                 }
 
                 field.RemoveNodes();

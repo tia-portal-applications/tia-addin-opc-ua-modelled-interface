@@ -1,4 +1,12 @@
-# OPC UA - User modelled interface - V1.0.0
+# OPC UA - User modelled interface - V1.1.0
+
+<div style="border: 1px solid gray; padding: 10px">
+  <strong>What's new with V1.1.0</strong>
+  <ul>
+    <li><strong>Software Units</strong>: A new <a href="#create-server-interface-for-sw-units">action</a> allows the creation of user-modeled interfaces for Software Units.</li>
+    <li><strong>Multi-dimensional arrays</strong>: Support for arrays with multiple dimensions</li>
+  </ul>
+</div>
 
 ## Description
 This Add-In has been developed to streamline the creation of user-modeled interfaces for OPC UA servers. By browsing through the TIA Portal project, it incorporates all variables that are accessible via OPC UA and arranges them in a structured manner, eliminating the need for manual configuration and significantly reducing the time and effort required.
@@ -63,6 +71,13 @@ The "Extend create" option allows users to customize the interface according to 
 
 <div style="text-align:center">
     <img src="media/extend_create.png" alt="Extend create GUI" width="450" />
+</div>
+
+### Create server interface for SW Units
+The "Create server interface for SW Units" action allows the creation of user-modeled interfaces for Software Units. To launch this action, right-click on the desired Software Unit and select "Create server interface for SW Unit".
+
+<div style="text-align:center">
+    <img src="media/create_sw_units.png" alt="Create server interface for SW Unit" width="450" />
 </div>
 
 <a name="features"></a>
