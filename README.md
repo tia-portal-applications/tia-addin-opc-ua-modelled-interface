@@ -80,6 +80,8 @@ The "Create server interface for SW Units" action allows the creation of user-mo
     <img src="media/create_sw_units.png" alt="Create server interface for SW Unit" width="450" />
 </div>
 
+**NOTE:** This option can only be executed with the .dll from TIA Portal V19.
+
 <a name="features"></a>
 ## Features
 
@@ -117,7 +119,7 @@ The Add-In utilizes the Openness API to access information stored in the TIA Por
 ## TIA Portal version
 
 The Add-In is designed to run on TIA Portal V19, but it can be adapted to run on TIA Portal version V17 and V18. To do so:
-- Update the references of the project **AddinOpcUaInterface**. Use the Openness DLL files from TIA Portal versions V17 or V18 as your reference source. 
+- Update the references of the project **AddinOpcUaInterface**. Use the Openness DLL file "Siemens.Engineering.Addin" from TIA Portal versions V17 or V18 as your reference source. 
 
     **NOTE**: Openness has backward compatibility. This means that an Add-In built with the DLL files from TIA Portal V17 can also run on TIA Portal V18, V19 and future versions.
 - Change the post-build event command to: 
@@ -147,12 +149,13 @@ The Add-In is designed to run on TIA Portal V19, but it can be adapted to run on
 
         <RequiredPermissions>
             <TIAPermissions>
-                <TIA.ReadOnly/>
+                <TIA.ReadWrite/>
             </TIAPermissions>
             <SecurityPermissions>
-                <System.Security.Permissions.UIPermission/>
-                <System.Security.Permissions.FileIOPermission/>
                 <System.Security.Permissions.SecurityPermission.UnmanagedCode/>
+                <System.Security.Permissions.FileDialogPermission/>
+                <System.Security.Permissions.UIPermission/>
+                <System.Security.Permissions.MediaPermission/>
             </SecurityPermissions>
         </RequiredPermissions>
 

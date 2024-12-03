@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Siemens.Engineering.CrossReference;
 using Siemens.Engineering.SW.Tags;
 using AddInOpcUaInterface.Other;
 using Siemens.Engineering;

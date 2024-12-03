@@ -17,7 +17,6 @@ using Siemens.Engineering;
 using Siemens.Engineering.AddIn;
 using Siemens.Engineering.AddIn.Cax.Workflow;
 using Siemens.Engineering.AddIn.Menu;
-using Siemens.Engineering.Cax;
 using Siemens.Engineering.Compiler;
 using Siemens.Engineering.Hmi.Tag;
 using Siemens.Engineering.HW;

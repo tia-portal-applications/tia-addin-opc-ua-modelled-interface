@@ -4,6 +4,8 @@ All changes to the project are documented in this file.
 ## [V1.1.0] - 2024/12/02
 ### Added
 - **Software Units**: A new action allows the creation of user-modeled interfaces for Software Units. To launch this action, right-click on the desired Software Unit and select "Create server interface for SW Unit".
+
+    NOTE: This option can only be executed with the .dll from TIA Portal V19.
 - **Multi-dimensional arrays**: Support for arrays with multiple dimensions, valueRank >= 1.
 
     Example: `Array [0..5, 2..3, 1..10] of Bool`.
