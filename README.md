@@ -206,6 +206,7 @@ The Add-In is designed to run on TIA Portal V19, but it can be adapted to run on
                 <System.Security.Permissions.FileDialogPermission/>
                 <System.Security.Permissions.UIPermission/>
                 <System.Security.Permissions.MediaPermission/>
+                <System.Security.Permissions.FileIOPermission/>
             </SecurityPermissions>
         </RequiredPermissions>
         </PackageConfiguration>
@@ -246,6 +247,7 @@ The Add-In is designed to run on TIA Portal V19, but it can be adapted to run on
                 <System.Security.Permissions.FileDialogPermission/>
                 <System.Security.Permissions.UIPermission/>
                 <System.Security.Permissions.MediaPermission/>
+                <System.Security.Permissions.FileIOPermission/>
             </SecurityPermissions>
         </RequiredPermissions>
         </PackageConfiguration>
