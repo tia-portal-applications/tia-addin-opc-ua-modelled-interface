@@ -7,7 +7,7 @@
   <Product>
     <Name>OPC UA - User modelled interface</Name>
     <Id>tia_add_in_opc_ua_interface</Id>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
   </Product>
 
   <FeatureAssembly>

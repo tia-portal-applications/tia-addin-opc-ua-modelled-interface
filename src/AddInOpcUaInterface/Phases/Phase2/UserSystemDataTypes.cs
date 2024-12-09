@@ -289,7 +289,7 @@ namespace AddInOpcUaInterface
                     {
 
                         // Remove the number inside brackets if there is any. Example: STRING [32] or WSTRING[32]
-                        dataType = Regex.Replace(dataType, @"\s*\[\d+\]", string.Empty);
+                        dataType = Regex.Replace(dataType, @"\s*\[.*?\]", string.Empty);
                         if (InterfaceTemplate.TemplateDataTypes.Contains(dataType.ToUpper()) || dataType.StartsWith("Struct"))
                         {
                             field.SetAttributeValue("DataType", dataType.ToUpper());

@@ -1,10 +1,11 @@
-# OPC UA - User modelled interface - V1.1.0
+# OPC UA - User modelled interface - V1.1.1
 
 <div style="border: 1px solid gray; padding: 10px">
-  <strong>What's new with V1.1.0</strong>
+  <strong>What's new with V1.1.1</strong>
   <ul>
     <li><strong>Software Units</strong>: A new <a href="#create-server-interface-for-sw-units">action</a> allows the creation of user-modeled interfaces for Software Units.</li>
     <li><strong>Multi-dimensional arrays</strong>: Support for arrays with multiple dimensions.</li>
+    <li><strong>Strings of length defined by Constant</strong>: Strings where the length is defined by a constant are now supported.</li>
   </ul>
 </div>
 

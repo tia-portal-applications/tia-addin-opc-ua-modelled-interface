@@ -159,7 +159,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
                         else
                         {
                             // Remove the number inside brackets. Example: STRING [32] or WSTRING[32]
-                            dataType = System.Text.RegularExpressions.Regex.Replace(dataType, @"\s*\[\d+\]", string.Empty);
+                            dataType = System.Text.RegularExpressions.Regex.Replace(dataType, @"\s*\[.*?\]", string.Empty);
                             if (InterfaceTemplate.TemplateDataTypes.Contains(dataType.ToUpper()) || dataType.StartsWith("Struct"))
                             {
                                 variableElement.SetAttributeValue("DataType", dataType.ToUpper());
@@ -561,7 +561,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
                 {
                     // Example: STRING [32] or WSTRING[32]
                     // Remove the number inside brackets
-                    dataType = System.Text.RegularExpressions.Regex.Replace(dataType, @"\[\d+\]", string.Empty);
+                    dataType = System.Text.RegularExpressions.Regex.Replace(dataType, @"\[.*?\]", string.Empty);
                     if (InterfaceTemplate.TemplateDataTypes.Contains(dataType.ToUpper()) || dataType.StartsWith("Struct"))
                     {
                         field.Attribute("DataType").Value = dataType.ToUpper();

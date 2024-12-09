@@ -1,6 +1,13 @@
 # Changelog
 All changes to the project are documented in this file.
 
+## [V1.1.1] - 2024/12/09
+### Added
+- **Strings of length defined by Constant**: Strings where the length is defined by a constant are now supported. In previous versions, they were handled as an unknown data type.
+
+    Example: `String [CONST]`.
+
+
 ## [V1.1.0] - 2024/12/02
 ### Added
 - **Software Units**: A new action allows the creation of user-modeled interfaces for Software Units. To launch this action, right-click on the desired Software Unit and select "Create server interface for SW Unit".
