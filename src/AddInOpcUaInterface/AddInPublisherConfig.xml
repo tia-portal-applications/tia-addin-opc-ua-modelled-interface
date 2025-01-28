@@ -1,5 +1,5 @@
 ﻿<PackageConfiguration xmlns="http://www.siemens.com/automation/Openness/AddIn/Publisher/V19">
-  <Author>&lt;SIEMENS AG - DI FA S SUP SPH COM&gt;</Author>
+  <Author>SIEMENS - SIMATIC Systems Support</Author>
   <AddInVersion>V19</AddInVersion>
   <Description>Automatically create user modelled interfaces for OPC UA servers.</Description>
   <DisplayInMultiuser />
