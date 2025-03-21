@@ -42,6 +42,7 @@ namespace AddInOpcUaInterface.Phases
         public static bool IsSoftwareUnit;
         public static PlcUnit SelectedSoftwareUnit;
         public static PlcTypeSystemGroup SoftwareUnitTypeGroup;
+        public static string SoftwareUnitNamespace;
         
         /// <summary>
         /// Retrieves all relevant fields from the TIA Portal project.

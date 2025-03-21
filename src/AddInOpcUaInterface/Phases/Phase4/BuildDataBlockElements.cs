@@ -64,10 +64,17 @@ namespace AddInOpcUaInterface.Phases.Phase4
                     string variableName = member.Attribute("Name").Value.Replace("\"", string.Empty);
                     string nodeId;
 
-                    // In Software Units, NodeIds are preceeded by the name of the Software Unit 
+                    // In Software Units, NodeIds are preceded by the namespace of the Software Unit 
                     if (ProjectFields.IsSoftwareUnit) 
                     { 
-                        nodeId = '"' + ProjectFields.SelectedSoftwareUnit.Name + "." + blockName + $@""".""" + variableName + '"'; 
+                        if (ProjectFields.SoftwareUnitNamespace == string.Empty)
+                        {
+                            nodeId = '"' + blockName + $@""".""" + variableName + '"';
+                        }
+                        else
+                        {
+                            nodeId = '"' + ProjectFields.SoftwareUnitNamespace + "." + blockName + $@""".""" + variableName + '"';
+                        }
                     }
                     else 
                     { 

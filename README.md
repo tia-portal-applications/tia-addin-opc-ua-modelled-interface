@@ -1,4 +1,4 @@
-# OPC UA - User modelled interface - V1.1.1
+# OPC UA - User modelled interface - V1.1.2
 
 <div style="border: 1px solid gray; padding: 10px">
   <strong>What's new with V1.1.1</strong>
@@ -6,6 +6,10 @@
     <li><strong>Software Units</strong>: A new <a href="#create-server-interface-for-sw-units">action</a> allows the creation of user-modeled interfaces for Software Units.</li>
     <li><strong>Multi-dimensional arrays</strong>: Support for arrays with multiple dimensions.</li>
     <li><strong>Strings of length defined by Constant</strong>: Strings where the length is defined by a constant are now supported.</li>
+  </ul>
+  <strong>What's new with V1.1.2</strong>
+  <ul>
+    <li><strong>Software Units bug fix</strong>: Variables in Global and Instance DBs are now preceded by the namespace instead of the SW Unit name.</li>
   </ul>
 </div>
 

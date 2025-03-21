@@ -182,6 +182,15 @@ namespace AddInOpcUaInterface.Phases
             else { return; }
             #endregion
 
+            #region CHECK THE NAMESPACE OF THE DATA BLOCK (ONLY FOR SW UNITS)
+
+            // In Software Units, datablocks can be assigned to a specific namespace
+            if (ProjectFields.IsSoftwareUnit)
+            {
+                ProjectFields.SoftwareUnitNamespace = attributeList.Element("Namespace").Value;
+            }
+            #endregion
+
             #region CREATE THE DATA BLOCK GLOBAL OBJECT FOR THE SERVER INTERFACE
 
             string blockName = block.Name;

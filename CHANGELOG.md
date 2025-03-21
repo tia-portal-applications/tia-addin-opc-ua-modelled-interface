@@ -1,6 +1,13 @@
 # Changelog
 All changes to the project are documented in this file.
 
+## [V1.1.2] - 2025/03/20
+### Fixed
+- **Software Units**: Variables in Global and Instance DBs are now preceded by the namespace instead of the SW Unit name.
+
+    Add-In versions < V1.1.2: `"SwUnitName.DbName"."Variable"`.
+    Add-In versions >= V1.1.2: `"DbNamespace.DbName"."Variable"`.
+
 ## [V1.1.1] - 2024/12/09
 ### Added
 - **Strings of length defined by Constant**: Strings where the length is defined by a constant are now supported. In previous versions, they were handled as an unknown data type.
