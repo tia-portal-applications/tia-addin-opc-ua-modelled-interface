@@ -113,8 +113,26 @@ namespace AddInOpcUaInterface.Phases
             SelectedSoftwareUnit = menuSelectionProvider.GetSelection<PlcUnit>().FirstOrDefault();
 
             // Define the device and software container where the Software Unit is located
-            SoftwareContainer = SelectedSoftwareUnit.Parent.Parent.Parent.Parent as SoftwareContainer;
-            SelectedDevice = SoftwareContainer.Parent as DeviceItem;
+            try
+            {
+                // Case for TIA V20
+                // Navigate up the hierarchy to get the DeviceItem from the SoftwareUnit
+                SelectedDevice = SelectedSoftwareUnit.Parent.Parent as DeviceItem;
+                
+                // Retrieve the SoftwareContainer from the selected device
+                SoftwareContainer =
+                ((IEngineeringServiceProvider)SelectedDevice).GetService<SoftwareContainer>();
+            }
+            catch
+            {
+                // Case for TIA V19
+                // Navigate up the hierarchy to get the SoftwareContainer from the SoftwareUnit
+                SoftwareContainer = SelectedSoftwareUnit.Parent.Parent.Parent.Parent as SoftwareContainer;
+                
+                // Retrieve the DeviceItem from the SoftwareContainer
+                SelectedDevice = SoftwareContainer.Parent as DeviceItem;
+            }
+            
             if (SoftwareContainer != null)
             {
                 Software = SoftwareContainer.Software as PlcSoftware;

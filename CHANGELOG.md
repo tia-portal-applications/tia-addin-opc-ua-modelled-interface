@@ -1,6 +1,10 @@
 # Changelog
 All changes to the project are documented in this file.
 
+## [V1.1.3] - 2025/07/03
+### Added
+- **Software Units for TIA Portal V20**: User-modeled interfaces for Software Units are now supported for TIA Portal V20.
+
 ## [V1.1.2] - 2025/03/20
 ### Fixed
 - **Software Units**: Variables in Global and Instance DBs are now preceded by the namespace instead of the SW Unit name.

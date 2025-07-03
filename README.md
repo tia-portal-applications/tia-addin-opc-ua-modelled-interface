@@ -1,4 +1,4 @@
-# OPC UA - User modelled interface - V1.1.2
+# OPC UA - User modelled interface - V1.1.3
 
 <div style="border: 1px solid gray; padding: 10px">
   <strong>What's new with V1.1.1</strong>
@@ -7,10 +7,7 @@
     <li><strong>Multi-dimensional arrays</strong>: Support for arrays with multiple dimensions.</li>
     <li><strong>Strings of length defined by Constant</strong>: Strings where the length is defined by a constant are now supported.</li>
   </ul>
-  <strong>What's new with V1.1.2</strong>
-  <ul>
-    <li><strong>Software Units bug fix</strong>: Variables in Global and Instance DBs are now preceded by the namespace instead of the SW Unit name.</li>
-  </ul>
+  <strong>Check what's new in <a href="changelog.md">V1.1.2 and V1.1.3</a></strong>
 </div>
 
 ## Description
