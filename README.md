@@ -7,7 +7,7 @@
     <li><strong>Multi-dimensional arrays</strong>: Support for arrays with multiple dimensions.</li>
     <li><strong>Strings of length defined by Constant</strong>: Strings where the length is defined by a constant are now supported.</li>
   </ul>
-  <strong>Check what's new in <a href="changelog.md">V1.1.2 and V1.1.3</a></strong>
+  <strong>Check what's new in <a href="CHANGELOG.md">V1.1.2 and V1.1.3</a></strong>
 </div>
 
 ## Description
