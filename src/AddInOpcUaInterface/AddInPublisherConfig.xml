@@ -1,13 +1,13 @@
-﻿<PackageConfiguration xmlns="http://www.siemens.com/automation/Openness/AddIn/Publisher/V19">
+﻿<PackageConfiguration xmlns="http://www.siemens.com/automation/Openness/AddIn/Publisher/V21">
   <Author>SIEMENS - SIMATIC Systems Support</Author>
-  <AddInVersion>V19</AddInVersion>
+  <AddInVersion>V21</AddInVersion>
   <Description>Automatically create user modelled interfaces for OPC UA servers.</Description>
   <DisplayInMultiuser />
   
   <Product>
     <Name>OPC UA - User modelled interface</Name>
     <Id>tia_add_in_opc_ua_interface</Id>
-    <Version>1.1.3</Version>
+    <Version>2.0</Version>
   </Product>
 
   <FeatureAssembly>

@@ -25,39 +25,40 @@ namespace AddInOpcUaInterface.Phases
         /// <param name="file"></param>
         public static void ImportTemplate(Stream file)
         {
+            var ctx = AddInExecutionContext.Current;
             var fileContent = new StreamReader(file).ReadToEnd();
 
             fileContent = fileContent.Replace("{insert_Date}", System.DateTime.Now.ToString("yyyy-MM-ddTHH:MM:ss"));
-            fileContent = fileContent.Replace("{insert_namespaceUri}", AddInFields.InterfaceURI);
-            fileContent = fileContent.Replace("{insert_interfaceName}", AddInFields.InterfaceName);
-            AddInFields.OpcUaInterface = XDocument.Parse(fileContent);
+            fileContent = fileContent.Replace("{insert_namespaceUri}", ctx.InterfaceURI);
+            fileContent = fileContent.Replace("{insert_interfaceName}", ctx.InterfaceName);
+            ctx.OpcUaInterface = XDocument.Parse(fileContent);
 
-            AddInFields.RootNameSpace   = AddInFields.OpcUaInterface.Root.Name.NamespaceName;
-            AddInFields.RootNameSpaceSi = AddInFields.OpcUaInterface.Root.GetNamespaceOfPrefix("si");
+            ctx.RootNameSpace = ctx.OpcUaInterface.Root.Name.NamespaceName;
+            ctx.RootNameSpaceSi = ctx.OpcUaInterface.Root.GetNamespaceOfPrefix("si");
         }
 
         /// <summary>
         /// Counts the number of nodes in the InterfaceTemplate.xml file.
         /// </summary>
-        /// <param name="opcuaInterface">XDocument with the contents of the InterfaceTemplate.xml file</param>
         /// <returns>The number of nodes defined in the xml template.</returns>
         public static int GetTotalInterfaceElements()
         {
-            XDocument opcuaTemplate = AddInFields.OpcUaInterface;
+            var ctx = AddInExecutionContext.Current;
+            XDocument opcuaTemplate = ctx.OpcUaInterface;
             int totalInterfaceElements = 0;
-            
+
             // The template for the interface is composed of: UADataTypes, UAVariables, UAObjectTypes, UAObjects
-            IEnumerable<XElement> uaDataTypes = opcuaTemplate.Root.Elements(AddInFields.RootNameSpace + "UADataType");
+            IEnumerable<XElement> uaDataTypes = opcuaTemplate.Root.Elements(ctx.RootNameSpace + "UADataType");
             totalInterfaceElements += uaDataTypes.Count();
-            IEnumerable<XElement> uaVariables = opcuaTemplate.Root.Elements(AddInFields.RootNameSpace + "UAVariable");
+            IEnumerable<XElement> uaVariables = opcuaTemplate.Root.Elements(ctx.RootNameSpace + "UAVariable");
             totalInterfaceElements += uaVariables.Count();
-            IEnumerable<XElement> uaObjectTypes = opcuaTemplate.Root.Elements(AddInFields.RootNameSpace + "UAObjectType");
+            IEnumerable<XElement> uaObjectTypes = opcuaTemplate.Root.Elements(ctx.RootNameSpace + "UAObjectType");
             totalInterfaceElements += uaObjectTypes.Count();
-            IEnumerable<XElement> uaObjects = opcuaTemplate.Root.Elements(AddInFields.RootNameSpace + "UAObject");
+            IEnumerable<XElement> uaObjects = opcuaTemplate.Root.Elements(ctx.RootNameSpace + "UAObject");
             totalInterfaceElements += uaObjects.Count();
 
             // Store the aliases of data types for later use
-            IEnumerable<XElement> aliases = opcuaTemplate.Root.Element(AddInFields.RootNameSpace + "Aliases").Elements(AddInFields.RootNameSpace + "Alias");
+            IEnumerable<XElement> aliases = opcuaTemplate.Root.Element(ctx.RootNameSpace + "Aliases").Elements(ctx.RootNameSpace + "Alias");
             GetTemplateAliases(aliases);
 
             return totalInterfaceElements;

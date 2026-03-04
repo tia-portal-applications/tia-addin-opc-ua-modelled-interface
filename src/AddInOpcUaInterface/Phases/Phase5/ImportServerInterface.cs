@@ -21,29 +21,30 @@ namespace AddInOpcUaInterface.Phases
         /// <param name="stopwatch"></param>
         public static void Import(Stopwatch stopwatch)
         {
+            var ctx = AddInExecutionContext.Current;
             try
             {
-                ServerInterface serverInterface = ProjectFields.ServerInterfaces.Create(AddInFields.InterfaceName);
+                ServerInterface serverInterface = ctx.GetServerInterfaces().Create(ctx.InterfaceName);
                 serverInterface.Author = "Siemens Add-In";
                 try
                 {
-                    serverInterface.Import(new FileInfo(AddInFields.FilePath));
+                    serverInterface.Import(new FileInfo(ctx.FilePath));
 
                     // Get the elapsed time in milliseconds
                     stopwatch.Stop();
                     double elapsedSeconds = stopwatch.Elapsed.TotalSeconds;
 
-                    string numberDefaultNodes = AddInFields.NumberDefaultNodes.ToString();
-                    string numberUserSystemDataTypes = AddInFields.NumberUserSystemDataTypes.ToString();
-                    string numberTags = AddInFields.NumberTags.ToString();
-                    string numberGlobalDBs = AddInFields.NumberGlobalDBs.ToString();
-                    string numberInstanceDBs = AddInFields.NumberInstanceDBs.ToString();
+                    string numberDefaultNodes = ctx.NumberDefaultNodes.ToString();
+                    string numberUserSystemDataTypes = ctx.NumberUserSystemDataTypes.ToString();
+                    string numberTags = ctx.NumberTags.ToString();
+                    string numberGlobalDBs = ctx.NumberGlobalDBs.ToString();
+                    string numberInstanceDBs = ctx.NumberInstanceDBs.ToString();
 
-                    int totalInterfaceElements = AddInFields.NumberDefaultNodes + AddInFields.NumberUserSystemDataTypes + AddInFields.NumberTags
-                                               + AddInFields.NumberGlobalDBs + AddInFields.NumberInstanceDBs;
+                    int totalInterfaceElements = ctx.NumberDefaultNodes + ctx.NumberUserSystemDataTypes + ctx.NumberTags
+                                               + ctx.NumberGlobalDBs + ctx.NumberInstanceDBs;
 
                     SummaryWindow summaryWindow = new SummaryWindow();
-                    summaryWindow.SetSummary(AddInFields.InterfaceName, elapsedSeconds, totalInterfaceElements);
+                    summaryWindow.SetSummary(ctx.InterfaceName, elapsedSeconds, totalInterfaceElements);
                     summaryWindow.SetNumberNodes(numberDefaultNodes, numberUserSystemDataTypes, numberTags, numberGlobalDBs, numberInstanceDBs);
                     summaryWindow.ShowDialog();
                 }

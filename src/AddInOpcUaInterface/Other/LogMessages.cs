@@ -20,7 +20,8 @@ namespace AddInOpcUaInterface.Other
         /// <param name="interfaceName"></param>
         public static void CreateLogFile()
         {
-            _logFilePath = AddInFields.FilePath.Replace(".xml", "_log.txt");
+            var ctx = AddInExecutionContext.Current;
+            _logFilePath = ctx.FilePath.Replace(".xml", "_log.txt");
             try
             {
                 // Check if the file exists
@@ -32,11 +33,11 @@ namespace AddInOpcUaInterface.Other
 
                 // Create the file and write the initial content
                 File.WriteAllText(_logFilePath, "Add-In logs."
-                    + Environment.NewLine + $@"Server interface: {AddInFields.InterfaceName}"
+                    + Environment.NewLine + $@"Server interface: {ctx.InterfaceName}"
                     + Environment.NewLine + $@"Creation date: {System.DateTime.Now.ToString("yyyy-MM-dd THH:MM:ss")}"
                     + Environment.NewLine + Environment.NewLine);
             }
-            catch 
+            catch
             {
                 DisplayMessage.ErrorMessage("Unexpected error ocurred while creating the log file.");
             }
@@ -46,7 +47,7 @@ namespace AddInOpcUaInterface.Other
         /// Publishes a new log entry in the log file.
         /// </summary>
         /// <param name="message">Message for the new log entry.</param>
-        public static void PublishLog(string message) 
+        public static void PublishLog(string message)
         {
             _numberOfLog += 1;
             try
@@ -56,7 +57,7 @@ namespace AddInOpcUaInterface.Other
             catch
             {
                 DisplayMessage.ErrorMessage("Unexpected error ocurred while adding a new entry to the log file.");
-            } 
+            }
         }
     }
 }

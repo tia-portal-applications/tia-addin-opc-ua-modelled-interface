@@ -20,6 +20,9 @@ namespace AddInOpcUaInterface.Phases
         /// <param name="tagTableGroup"></param>
         public static void GetUserConstants(PlcTagTableGroup tagTableGroup)
         {
+            // Start empty before entering the loop
+            UserConstantValues.Clear();
+
             foreach (PlcTagTable table in tagTableGroup.TagTables)
             {
                 foreach (PlcUserConstant userConstant in table.UserConstants)

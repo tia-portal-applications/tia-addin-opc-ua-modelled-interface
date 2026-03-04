@@ -17,12 +17,17 @@ namespace AddInOpcUaInterface.Phases
     {
         public static List<XElement> XElementTags = new List<XElement>();
 
+        public static void ResetTagElements()
+        { XElementTags.Clear(); }
+
         /// <summary>
         /// Browses all tag tables in the project and creates an XElement for each tag.
         /// </summary>
         /// <param name="tagTableGroup"></param>
         public static void GetTagElements(PlcTagTableGroup tagTableGroup)
         {
+            var ctx = AddInExecutionContext.Current;
+
             foreach (PlcTagTable table in tagTableGroup.TagTables)
             {
                 foreach (PlcTag tag in table.Tags)
@@ -55,19 +60,19 @@ namespace AddInOpcUaInterface.Phases
                         parentNodeId = "ns=2;s=Inputs";
 
                         // Only for the "Extend Create" case. An Access Level of 4 implies keeping the project's access level
-                        if (AddInFields.InputsAccessLevel != 4)
+                        if (ctx.InputsAccessLevel != 4)
                         {
-                            accessLevel = GetExtendedAccessLevel(accessLevel, AddInFields.InputsAccessLevel, tag.Name);
-                        } 
+                            accessLevel = GetExtendedAccessLevel(accessLevel, ctx.InputsAccessLevel, tag.Name);
+                        }
                     }
                     else if (logicalAddress.Contains("%M"))
                     {
                         parentNodeId = "ns=2;s=Memory";
 
                         // Only for the "Extend Create" case. An Access Level of 4 implies keeping the project's access level
-                        if (AddInFields.MemoryAccessLevel != 4)
+                        if (ctx.MemoryAccessLevel != 4)
                         {
-                            accessLevel = GetExtendedAccessLevel(accessLevel, AddInFields.MemoryAccessLevel, tag.Name);
+                            accessLevel = GetExtendedAccessLevel(accessLevel, ctx.MemoryAccessLevel, tag.Name);
                         }
                     }
                     else if (logicalAddress.Contains("%Q"))
@@ -75,9 +80,9 @@ namespace AddInOpcUaInterface.Phases
                         parentNodeId = "ns=2;s=Outputs";
 
                         // Only for the "Extend Create" case. An Access Level of 4 implies keeping the project's access level
-                        if (AddInFields.OutputsAccessLevel != 4)
+                        if (ctx.OutputsAccessLevel != 4)
                         {
-                            accessLevel = GetExtendedAccessLevel(accessLevel, AddInFields.OutputsAccessLevel, tag.Name);
+                            accessLevel = GetExtendedAccessLevel(accessLevel, ctx.OutputsAccessLevel, tag.Name);
                         }
                     }
                     else if (logicalAddress.Contains("C"))
@@ -85,9 +90,9 @@ namespace AddInOpcUaInterface.Phases
                         parentNodeId = "ns=2;s=Counters";
 
                         // Only for the "Extend Create" case. An Access Level of 4 implies keeping the project's access level
-                        if (AddInFields.CountersAccessLevel != 4)
+                        if (ctx.CountersAccessLevel != 4)
                         {
-                            accessLevel = GetExtendedAccessLevel(accessLevel, AddInFields.CountersAccessLevel, tag.Name);
+                            accessLevel = GetExtendedAccessLevel(accessLevel, ctx.CountersAccessLevel, tag.Name);
                         }
                     }
                     else if (logicalAddress.Contains("T"))
@@ -95,10 +100,10 @@ namespace AddInOpcUaInterface.Phases
                         parentNodeId = "ns=2;s=Timers";
 
                         // Only for the "Extend Create" case. An Access Level of 4 implies keeping the project's access level
-                        if (AddInFields.TimersAccessLevel != 4)
+                        if (ctx.TimersAccessLevel != 4)
                         {
-                            accessLevel = GetExtendedAccessLevel(accessLevel, AddInFields.TimersAccessLevel, tag.Name);
-                        }  
+                            accessLevel = GetExtendedAccessLevel(accessLevel, ctx.TimersAccessLevel, tag.Name);
+                        }
                     }
 
                     // If a variable is not accessible with OPC UA, it must not be included in the server interface
@@ -110,29 +115,29 @@ namespace AddInOpcUaInterface.Phases
 
                     // If the name of a Tag contains a '.' it must be mapped to the project's variable between brackets
                     string mapping = displayName;
-                    if (mapping.Contains('.'))  { mapping = $@"""{mapping}"""; }
+                    if (mapping.Contains('.')) { mapping = $@"""{mapping}"""; }
 
                     XElement uaTagElement =
-                    new XElement(AddInFields.RootNameSpace + "UAVariable",
+                    new XElement(ctx.RootNameSpace + "UAVariable",
                         new XAttribute("NodeId", $@"ns=2;s=""{displayName}"""),
                         new XAttribute("BrowseName", $"2:{displayName}"),
                         new XAttribute("DataType", dataType),
                         new XAttribute("AccessLevel", accessLevel),
-                        new XElement(AddInFields.RootNameSpace + "DisplayName", displayName),
-                        new XElement(AddInFields.RootNameSpace + "References",
-                            new XElement(AddInFields.RootNameSpace + "Reference", parentNodeId,
+                        new XElement(ctx.RootNameSpace + "DisplayName", displayName),
+                        new XElement(ctx.RootNameSpace + "References",
+                            new XElement(ctx.RootNameSpace + "Reference", parentNodeId,
                                 new XAttribute("ReferenceType", "HasComponent"),
                                 new XAttribute("IsForward", "false")),
-                            new XElement(AddInFields.RootNameSpace + "Reference", "i=63",
+                            new XElement(ctx.RootNameSpace + "Reference", "i=63",
                                 new XAttribute("ReferenceType", "HasTypeDefinition"))
                         ),
-                        new XElement(AddInFields.RootNameSpace + "Extensions",
-                                new XElement(AddInFields.RootNameSpace + "Extension",
-                                    new XElement(AddInFields.RootNameSpaceSi + "VariableMapping", mapping)
+                        new XElement(ctx.RootNameSpace + "Extensions",
+                                new XElement(ctx.RootNameSpace + "Extension",
+                                    new XElement(ctx.RootNameSpaceSi + "VariableMapping", mapping)
                                 )
                             )
                     );
-                    
+
                     XElementTags.Add(uaTagElement);
                 }
             }
@@ -173,7 +178,7 @@ namespace AddInOpcUaInterface.Phases
         {
             //Define the Access Level of the tag
             //"Not Accessible"/"Read only"/"Write only"/"Read Write"/"Project's access levels"
-            
+
             if (projectAccessLevel == extendedAccessLevel) { return projectAccessLevel; }
             else
             {
@@ -199,14 +204,14 @@ namespace AddInOpcUaInterface.Phases
                     // Example: Project access level = Read only; Extended access level = Read/Write
                     accessLevel = 0;
                     // Convert the project's access level to string
-                    if (AddInFields.AccessLevelDictionary.TryGetValue(projectAccessLevel, out string projectAccessLevelStr))
+                    if (AddInExecutionContext.Current.AccessLevelDictionary.TryGetValue(projectAccessLevel, out string projectAccessLevelStr))
                     {
-                        if (AddInFields.AccessLevelDictionary.TryGetValue(extendedAccessLevel, out string extendedAccessLevelStr))
+                        if (AddInExecutionContext.Current.AccessLevelDictionary.TryGetValue(extendedAccessLevel, out string extendedAccessLevelStr))
                         {
                             LogMessages.PublishLog($@"ACCESS LEVEL MISMATCH: The tag ""{tagName}"" has not been added to the "
                                          + $@"server interface as its access level in the project ({projectAccessLevelStr}) is "
                                          + $@"not compatible with the selected access level ({extendedAccessLevelStr}).");
-                        }    
+                        }
                     }
                 }
                 return accessLevel;

@@ -14,7 +14,6 @@ using System.Xml.Linq;
 using AddInOpcUaInterface.Other;
 using AddInOpcUaInterface.Phases.Phase4;
 using Siemens.Engineering;
-using Siemens.Engineering.Hmi.Tag;
 using Siemens.Engineering.Multiuser;
 using Siemens.Engineering.SW.Blocks;
 using Siemens.Engineering.SW.Blocks.Interface;
@@ -27,6 +26,11 @@ namespace AddInOpcUaInterface.Phases
     {
         private static int _numberOfProcessedDBs = 0;
 
+        public static void ResetDatablockElements()
+        {
+            _numberOfProcessedDBs = 0;
+        }
+
         /// <summary>
         /// Browses through all the project's data blocks.
         /// </summary>
@@ -37,12 +41,12 @@ namespace AddInOpcUaInterface.Phases
             foreach (PlcBlock block in blockGroup.Blocks)
             {
                 //Only process Datablocks
-                if (block.ProgrammingLanguage == ProgrammingLanguage.DB && AddInFields.InstanceDBsAccessLevel != 0)
+                if (block.ProgrammingLanguage == ProgrammingLanguage.DB && AddInExecutionContext.Current.InstanceDBsAccessLevel != 0)
                 {
                     NewDataBlockElement(block, parentFolder, false);
                 }
                 //Only process failsafe Datablocks
-                if (block.ProgrammingLanguage == ProgrammingLanguage.F_DB && AddInFields.SafetyInstanceDBsAccessLevel != 0)
+                if (block.ProgrammingLanguage == ProgrammingLanguage.F_DB && AddInExecutionContext.Current.SafetyInstanceDBsAccessLevel != 0)
                 {
                     NewDataBlockElement(block, parentFolder, true);
                 }
@@ -60,22 +64,22 @@ namespace AddInOpcUaInterface.Phases
         /// <param name="parentFolder"></param>
         public static void IterateThroughBlockGroups(PlcBlockGroup blockGroup, string parentFolder)
         {
-            if (AddInFields.KeepFolderStructure)
+            if (AddInExecutionContext.Current.KeepFolderStructure)
             {
                 // Replicate the folder structure of the project
                 string folderName = blockGroup.Name;
                 string fullPathName = parentFolder + '.' + folderName;
                 XElement uaObjectElement =
-                    new XElement(AddInFields.RootNameSpace + "UAObject",
+                    new XElement(AddInExecutionContext.Current.RootNameSpace + "UAObject",
                         new XAttribute("NodeId", $"ns=2;s={fullPathName}"),
                         new XAttribute("BrowseName", $"2:{folderName}"),
-                        new XElement(AddInFields.RootNameSpace + "DisplayName", folderName),
-                        new XElement(AddInFields.RootNameSpace + "References",
-                            new XElement(AddInFields.RootNameSpace + "Reference", $"ns=2;s={parentFolder}",
+                        new XElement(AddInExecutionContext.Current.RootNameSpace + "DisplayName", folderName),
+                        new XElement(AddInExecutionContext.Current.RootNameSpace + "References",
+                            new XElement(AddInExecutionContext.Current.RootNameSpace + "Reference", $"ns=2;s={parentFolder}",
                                 new XAttribute("ReferenceType", "HasComponent"),
                                 new XAttribute("IsForward", "false")
                             ),
-                            new XElement(AddInFields.RootNameSpace + "Reference", "i=61",
+                            new XElement(AddInExecutionContext.Current.RootNameSpace + "Reference", "i=61",
                                 new XAttribute("ReferenceType", "HasTypeDefinition")
                             )
                         )
@@ -87,12 +91,12 @@ namespace AddInOpcUaInterface.Phases
             foreach (PlcBlock block in blockGroup.Blocks)
             {
                 //Only process Datablocks
-                if (block.ProgrammingLanguage == ProgrammingLanguage.DB && AddInFields.InstanceDBsAccessLevel != 0)
+                if (block.ProgrammingLanguage == ProgrammingLanguage.DB && AddInExecutionContext.Current.InstanceDBsAccessLevel != 0)
                 {
                     NewDataBlockElement(block, parentFolder, false);
                 }
                 //Only process failsafe Datablocks
-                if (block.ProgrammingLanguage == ProgrammingLanguage.F_DB && AddInFields.SafetyInstanceDBsAccessLevel != 0)
+                if (block.ProgrammingLanguage == ProgrammingLanguage.F_DB && AddInExecutionContext.Current.SafetyInstanceDBsAccessLevel != 0)
                 {
                     NewDataBlockElement(block, parentFolder, true);
                 }
@@ -102,7 +106,7 @@ namespace AddInOpcUaInterface.Phases
                 IterateThroughBlockGroups(userGroup, parentFolder);
             }
         }
-        
+
         /// <summary>
         /// Creates an UAObject to represent the Instance DB in the server interface.
         /// </summary>
@@ -114,7 +118,7 @@ namespace AddInOpcUaInterface.Phases
             // Update display message every 2 datablocks
             if (_numberOfProcessedDBs % 2 == 0)
             {
-                DisplayMessage.ExclusiveAccess.Text = $@"Adding ""Instance"" DBs to the server interface... Count: {_numberOfProcessedDBs}";
+                DisplayMessage.GetExclusiveAccess().Text = $@"Adding ""Instance"" DBs to the server interface... Count: {_numberOfProcessedDBs}";
             }
 
             #region EXPORT DATA BLOCK FROM TIA'S PROJECT
@@ -124,10 +128,11 @@ namespace AddInOpcUaInterface.Phases
             if (isConsistent == false)
             {
                 DisplayMessage.ErrorMessage("Some elements are not consistent. Please compile the project before running the Add-In.");
-            };
+            }
+            ;
 
             // Export the data block as a .txt file
-            string filePath = Path.ChangeExtension(AddInFields.FilePath, ".txt");
+            string filePath = Path.ChangeExtension(AddInExecutionContext.Current.FilePath, ".txt");
             DataBlock db = (DataBlock)block;
 
             try
@@ -160,7 +165,7 @@ namespace AddInOpcUaInterface.Phases
             XElement attributeList = new XElement("Template");
             string dbAccessibleFromOPCUA = "false";
             string typeOfDB = string.Empty;
-            if(inputElement.Element("SW.Blocks.InstanceDB") != null)
+            if (inputElement.Element("SW.Blocks.InstanceDB") != null)
             {
                 attributeList = inputElement.Element("SW.Blocks.InstanceDB").Element("AttributeList");
                 typeOfDB = "Instance DB";
@@ -185,9 +190,9 @@ namespace AddInOpcUaInterface.Phases
             #region CHECK THE NAMESPACE OF THE DATA BLOCK (ONLY FOR SW UNITS)
 
             // In Software Units, datablocks can be assigned to a specific namespace
-            if (ProjectFields.IsSoftwareUnit)
+            if (AddInExecutionContext.Current.IsSoftwareUnit)
             {
-                ProjectFields.SoftwareUnitNamespace = attributeList.Element("Namespace").Value;
+                AddInExecutionContext.Current.SoftwareUnitNamespace = attributeList.Element("Namespace").Value;
             }
             #endregion
 
@@ -197,16 +202,16 @@ namespace AddInOpcUaInterface.Phases
             string nodeId = '"' + blockName + '"';
             // Creating the UAObject element
             XElement uaObjectElement =
-                new XElement(AddInFields.RootNameSpace + "UAObject",
+                new XElement(AddInExecutionContext.Current.RootNameSpace + "UAObject",
                     new XAttribute("NodeId", $"ns=2;s={nodeId}"),
                     new XAttribute("BrowseName", $"2:{blockName}"),
-                    new XElement(AddInFields.RootNameSpace + "DisplayName", blockName),
-                    new XElement(AddInFields.RootNameSpace + "References",
-                        new XElement(AddInFields.RootNameSpace + "Reference", $"ns=2;s={parentFolder}",
+                    new XElement(AddInExecutionContext.Current.RootNameSpace + "DisplayName", blockName),
+                    new XElement(AddInExecutionContext.Current.RootNameSpace + "References",
+                        new XElement(AddInExecutionContext.Current.RootNameSpace + "Reference", $"ns=2;s={parentFolder}",
                             new XAttribute("ReferenceType", "HasComponent"),
                             new XAttribute("IsForward", "false")
                         ),
-                        new XElement(AddInFields.RootNameSpace + "Reference", "i=58",
+                        new XElement(AddInExecutionContext.Current.RootNameSpace + "Reference", "i=58",
                             new XAttribute("ReferenceType", "HasTypeDefinition")
                         )
                     )
@@ -223,7 +228,7 @@ namespace AddInOpcUaInterface.Phases
             #region DELETE DATA BLOCK IF NO VARIABLES ARE ADDED
 
             int newElementsCount = BuildDataBlockElements.XElementDataBlocks.Count();
-            if (currentElementsCount == newElementsCount && AddInFields.KeepEmptyDBs == false) // No new nodes were added to the server interface
+            if (currentElementsCount == newElementsCount && AddInExecutionContext.Current.KeepEmptyDBs == false) // No new nodes were added to the server interface
             {
                 BuildDataBlockElements.XElementDataBlocks.Remove(uaObjectElement);
                 LogMessages.PublishLog($@"EMPTY DB: The Instance DB ""{blockName}"" has not been added to the server interface as it does not contain any variables accesible via OPC UA.");

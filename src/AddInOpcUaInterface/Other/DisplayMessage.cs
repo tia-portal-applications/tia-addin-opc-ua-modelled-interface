@@ -12,8 +12,9 @@ namespace AddInOpcUaInterface.Other
     {
         private static int _oneSecond = 1000;
 
-        private static ExclusiveAccess _exclusiveAccess;    // The exclusiveAccess variable is used to display messages in TIA
-        public static ExclusiveAccess ExclusiveAccess   { get => _exclusiveAccess; set => _exclusiveAccess = value; }
+        private static object _exclusiveAccess;    // Stored as object to satisfy TIA Portal V20+ Publisher
+        public static void SetExclusiveAccess(ExclusiveAccess value) => _exclusiveAccess = value;
+        internal static ExclusiveAccess GetExclusiveAccess() => (ExclusiveAccess)_exclusiveAccess;
 
         /// <summary>
         /// Displays an error message.
@@ -21,10 +22,10 @@ namespace AddInOpcUaInterface.Other
         /// <param name="message">The error message to be displayed.</param>
         public static void ErrorMessage(string message)
         {
-            _exclusiveAccess.Text = "Error!" + Environment.NewLine + Environment.NewLine 
-                                 + message  + Environment.NewLine + Environment.NewLine + Environment.NewLine
+            GetExclusiveAccess().Text = "Error!" + Environment.NewLine + Environment.NewLine
+                                 + message + Environment.NewLine + Environment.NewLine + Environment.NewLine
                                  + "Press Cancel to continue".PadLeft(60);
-            while (_exclusiveAccess.IsCancellationRequested == false)
+            while (GetExclusiveAccess().IsCancellationRequested == false)
             {
                 Thread.Sleep(_oneSecond);
             }
@@ -37,10 +38,10 @@ namespace AddInOpcUaInterface.Other
         /// <param name="message">The success message to be displayed.</param>
         public static void SuccessMessage(string message)
         {
-            _exclusiveAccess.Text = "Task completed successfully!" + Environment.NewLine + Environment.NewLine
-                                 + message  + Environment.NewLine + Environment.NewLine + Environment.NewLine
+            GetExclusiveAccess().Text = "Task completed successfully!" + Environment.NewLine + Environment.NewLine
+                                 + message + Environment.NewLine + Environment.NewLine + Environment.NewLine
                                  + "Press Cancel to continue".PadLeft(60);
-            while (_exclusiveAccess.IsCancellationRequested == false)
+            while (GetExclusiveAccess().IsCancellationRequested == false)
             {
                 Thread.Sleep(_oneSecond);
             }

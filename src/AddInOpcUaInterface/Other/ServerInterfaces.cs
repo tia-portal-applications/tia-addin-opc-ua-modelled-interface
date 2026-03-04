@@ -13,19 +13,17 @@ namespace AddInOpcUaInterface.Phases
 {
     internal static class ServerInterfaces
     {
-        private static string _newestInterface = string.Empty;
-        public static string NewestInterface { get => _newestInterface; }
-
         /// <summary>
-        /// Return a list of strings containing the names of all server interfaces in the project.
-        /// Additionally, it updates the private variable "newestInterface" with the name of the last created interface.
+        /// Return a list of strings containing the names of all server interfaces in the project,
+        /// along with the name of the most recently created interface.
         /// </summary>
         /// <param name="serverInterfaces"></param>
         /// <param name="simaticInterfaces"></param>
-        /// <returns>A list of strings containing the names of all server interfaces.</returns>
-        public static List<string> InterfaceNames(ServerInterfaceComposition serverInterfaces, SimaticInterfaceComposition simaticInterfaces)
+        /// <returns>A tuple containing (list of interface names, name of newest interface).</returns>
+        public static (List<string> Names, string NewestInterface) InterfaceNames(ServerInterfaceComposition serverInterfaces, SimaticInterfaceComposition simaticInterfaces)
         {
             DateTime newestTimeStamp = DateTime.MinValue;
+            string newestInterface = string.Empty;
             List<string> serverInterfaceNames = new List<string>();
 
             // Loop of server interfaces (blue)
@@ -35,7 +33,7 @@ namespace AddInOpcUaInterface.Phases
                 if (newestTimeStamp < serverInterface.CreationTime)
                 {
                     newestTimeStamp = serverInterface.CreationTime;
-                    _newestInterface = serverInterface.Name;
+                    newestInterface = serverInterface.Name;
                 }
             }
 
@@ -46,10 +44,10 @@ namespace AddInOpcUaInterface.Phases
                 if (newestTimeStamp < simaticInterface.CreationTime)
                 {
                     newestTimeStamp = simaticInterface.CreationTime;
-                    _newestInterface = simaticInterface.Name;
+                    newestInterface = simaticInterface.Name;
                 }
             }
-            return serverInterfaceNames;
+            return (serverInterfaceNames, newestInterface);
         }
     }
 }
