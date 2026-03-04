@@ -56,7 +56,7 @@
   <ItemGroup>
     <Compile Include="AddIn.cs" />
     <Compile Include="AddInProvider.cs" />
-    <Compile Include="Other\AddInFields.cs" />
+    <Compile Include="Other\AddInExecutionContext.cs" />
     <Compile Include="Other\DisplayMessage.cs" />
     <Compile Include="Other\LogMessages.cs" />
     <Compile Include="Phases\Phase4\BuildDataBlockElements.cs" />
@@ -64,7 +64,6 @@
     <Compile Include="Phases\Phase4\DataBlocksGlobal.cs" />
     <Compile Include="Phases\Phase5\ImportServerInterface.cs" />
     <Compile Include="Phases\Phase1\InterfaceTemplate.cs" />
-    <Compile Include="Other\ProjectFields.cs" />
     <Compile Include="Other\ServerInterfaces.cs" />
     <Compile Include="Phases\Phase3\Tags.cs" />
     <Compile Include="Phases\Phase2\UserSystemDataTypes.cs" />
@@ -89,7 +88,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(ProjectDir)AddInPublisherConfig.xml" "$(TargetDir)AddInPublisherConfig.xml" /Y 
-"C:\Program Files\Siemens\Automation\Portal V19\PublicAPI\V19.AddIn\Siemens.Engineering.AddIn.Publisher.exe" -f "$(TargetDir)AddInPublisherConfig.xml" -l "$(TargetDir)PostBuildLog.txt" -v -c -o "C:\Program Files\Siemens\Automation\Portal V19\AddIns\OpcUa-UserModelledInterface.addin"
+"C:\Program Files\Siemens\Automation\Portal V20\PublicAPI\V20.AddIn\Siemens.Engineering.AddIn.Publisher.exe" -f "$(TargetDir)AddInPublisherConfig.xml" -l "$(TargetDir)PostBuildLog.txt" -v -c -o "C:\Program Files\Siemens\Automation\Portal V20\AddIns\OpcUa-UserModelledInterface.addin"
 
 </PostBuildEvent>
   </PropertyGroup>

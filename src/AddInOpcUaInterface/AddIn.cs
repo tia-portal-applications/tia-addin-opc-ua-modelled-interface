@@ -74,43 +74,47 @@ namespace AddInOpcUaInterface
         /// <param name="menuSelectionProvider"></param>
         private void OnClickCreate(MenuSelectionProvider<DeviceItem> menuSelectionProvider)
         {
-            try
+            using (var ctx = new AddInExecutionContext())
             {
-                using (ExclusiveAccess exclusiveAccess = _tiaPortal.ExclusiveAccess())
+                try
                 {
-                    // Set the exclusiveAccess variable to display messages
-                    DisplayMessage.ExclusiveAccess = exclusiveAccess;
+                    using (ExclusiveAccess exclusiveAccess = _tiaPortal.ExclusiveAccess())
+                    {
+                        // Set the exclusiveAccess variable to display messages
+                        DisplayMessage.SetExclusiveAccess(exclusiveAccess);
 
-                    // Access fields in the TIA Portal project (selectedDevice, softwareContainer, etc.)
-                    ProjectFields.AccessTIAFields(menuSelectionProvider);
+                        // Access fields in the TIA Portal project (selectedDevice, softwareContainer, etc.)
+                        ctx.AccessTIAFields(menuSelectionProvider);
+                    }
+                    CreateWindow parametrizationWindow = new CreateWindow();
+                    // Read the names of existing server interfaces: prevents users from creating a new server interface with a name that is already in use
+                    var interfaceResult = ServerInterfaces.InterfaceNames(ctx.GetServerInterfaces(), ctx.GetSimaticInterfaces());
+                    UserInputFields.ExistingInterfaceNames = interfaceResult.Names;
+                    UserInputFields.NewestInterface = interfaceResult.NewestInterface;
+
+                    // Open parametrization window for user input
+                    parametrizationWindow.ShowDialog();
+
+                    // Checks if the process has been cancelled by the user
+                    bool stop = UserInputFields.StopApplication;
+                    if (stop) { Environment.Exit(0); }
+
+                    // Get data inserted by the user
+                    ctx.InterfaceName = UserInputFields.InterfaceName;
+                    ctx.InterfaceURI = UserInputFields.URI;
+                    ctx.FilePath = UserInputFields.Path;
+
+                    // Add-In program
+                    using (ExclusiveAccess exclusiveAccess = _tiaPortal.ExclusiveAccess())
+                    {
+                        DisplayMessage.SetExclusiveAccess(exclusiveAccess);
+                        RunAddIn(exclusiveAccess);
+                    }
                 }
-                CreateWindow parametrizationWindow = new CreateWindow();
-                // Read the names of existing server interfaces: prevents users from creating a new server interface with a name that is already in use
-                UserInputFields.ExistingInterfaceNames = ServerInterfaces.InterfaceNames(ProjectFields.ServerInterfaces, ProjectFields.SimaticInterfaces);
-                UserInputFields.NewestInterface = ServerInterfaces.NewestInterface;
-
-                // Open parametrization window for user input
-                parametrizationWindow.ShowDialog();
-
-                // Checks if the process has been cancelled by the user
-                bool stop = UserInputFields.StopApplication;
-                if (stop) { Environment.Exit(0); }
-
-                // Get data inserted by the user
-                AddInFields.InterfaceName = UserInputFields.InterfaceName;
-                AddInFields.InterfaceURI = UserInputFields.URI;
-                AddInFields.FilePath = UserInputFields.Path;
-
-                // Add-In program
-                using (ExclusiveAccess exclusiveAccess = _tiaPortal.ExclusiveAccess())
+                catch (Exception exception)
                 {
-                    DisplayMessage.ExclusiveAccess = exclusiveAccess;
-                    RunAddIn(exclusiveAccess);
+                    DisplayMessage.ErrorMessage($@"Unexpected error ocurred during the execution of the Add-In: {exception}");
                 }
-            }
-            catch (Exception exception)
-            {
-                DisplayMessage.ErrorMessage($@"Unexpected error ocurred during the execution of the Add-In: {exception}");
             }
         }
 
@@ -120,54 +124,58 @@ namespace AddInOpcUaInterface
         /// <param name="menuSelectionProvider"></param>
         private void OnClickExtendCreate(MenuSelectionProvider<DeviceItem> menuSelectionProvider)
         {
-            try
+            using (var ctx = new AddInExecutionContext())
             {
-                using (ExclusiveAccess exclusiveAccess = _tiaPortal.ExclusiveAccess())
+                try
                 {
-                    // Set the exclusiveAccess variable to display messages
-                    DisplayMessage.ExclusiveAccess = exclusiveAccess;
+                    using (ExclusiveAccess exclusiveAccess = _tiaPortal.ExclusiveAccess())
+                    {
+                        // Set the exclusiveAccess variable to display messages
+                        DisplayMessage.SetExclusiveAccess(exclusiveAccess);
 
-                    // Access fields in the TIA Portal project (selectedDevice, softwareContainer, etc.)
-                    ProjectFields.AccessTIAFields(menuSelectionProvider);
+                        // Access fields in the TIA Portal project (selectedDevice, softwareContainer, etc.)
+                        ctx.AccessTIAFields(menuSelectionProvider);
+                    }
+                    ExtendCreateWindow parametrizationWindow = new ExtendCreateWindow();
+                    // Read the names of existing server interfaces: prevents users from creating a new server interface with a name that is already in use
+                    var interfaceResult = ServerInterfaces.InterfaceNames(ctx.GetServerInterfaces(), ctx.GetSimaticInterfaces());
+                    UserInputFields.ExistingInterfaceNames = interfaceResult.Names;
+                    UserInputFields.NewestInterface = interfaceResult.NewestInterface;
+
+                    // Open parametrization window for user input
+                    parametrizationWindow.ShowDialog();
+
+                    // Checks if the process has been cancelled by the user
+                    bool stop = UserInputFields.StopApplication;
+                    if (stop) { Environment.Exit(0); }
+
+                    // Get data inserted by the user
+                    ctx.InterfaceName = UserInputFields.InterfaceName;
+                    ctx.InterfaceURI = UserInputFields.URI;
+                    ctx.FilePath = UserInputFields.Path;
+                    ctx.KeepEmptyDBs = UserInputFields.KeepEmptyDBs;
+                    ctx.KeepFolderStructure = UserInputFields.KeepFolderStructure;
+                    ctx.InputsAccessLevel = UserInputFields.InputsAccessLevel;
+                    ctx.MemoryAccessLevel = UserInputFields.MemoryAccessLevel;
+                    ctx.OutputsAccessLevel = UserInputFields.OutputsAccessLevel;
+                    ctx.CountersAccessLevel = UserInputFields.CountersAccessLevel;
+                    ctx.TimersAccessLevel = UserInputFields.TimersAccessLevel;
+                    ctx.GlobalDBsAccessLevel = UserInputFields.GlobalDBsAccessLevel;
+                    ctx.InstanceDBsAccessLevel = UserInputFields.InstanceDBsAccessLevel;
+                    ctx.SafetyGlobalDBsAccessLevel = UserInputFields.SafetyGlobalDBsAccessLevel;
+                    ctx.SafetyInstanceDBsAccessLevel = UserInputFields.SafetyInstanceDBsAccessLevel;
+
+                    // Add-In program
+                    using (ExclusiveAccess exclusiveAccess = _tiaPortal.ExclusiveAccess())
+                    {
+                        DisplayMessage.SetExclusiveAccess(exclusiveAccess);
+                        RunAddIn(exclusiveAccess);
+                    }
                 }
-                ExtendCreateWindow parametrizationWindow = new ExtendCreateWindow();
-                // Read the names of existing server interfaces: prevents users from creating a new server interface with a name that is already in use
-                UserInputFields.ExistingInterfaceNames = ServerInterfaces.InterfaceNames(ProjectFields.ServerInterfaces, ProjectFields.SimaticInterfaces);
-                UserInputFields.NewestInterface = ServerInterfaces.NewestInterface;
-
-                // Open parametrization window for user input
-                parametrizationWindow.ShowDialog();
-
-                // Checks if the process has been cancelled by the user
-                bool stop = UserInputFields.StopApplication;
-                if (stop) { Environment.Exit(0); }
-
-                // Get data inserted by the user
-                AddInFields.InterfaceName = UserInputFields.InterfaceName;
-                AddInFields.InterfaceURI = UserInputFields.URI;
-                AddInFields.FilePath = UserInputFields.Path;
-                AddInFields.KeepEmptyDBs = UserInputFields.KeepEmptyDBs;
-                AddInFields.KeepFolderStructure = UserInputFields.KeepFolderStructure;
-                AddInFields.InputsAccessLevel = UserInputFields.InputsAccessLevel;
-                AddInFields.MemoryAccessLevel = UserInputFields.MemoryAccessLevel;
-                AddInFields.OutputsAccessLevel = UserInputFields.OutputsAccessLevel;
-                AddInFields.CountersAccessLevel = UserInputFields.CountersAccessLevel;
-                AddInFields.TimersAccessLevel = UserInputFields.TimersAccessLevel;
-                AddInFields.GlobalDBsAccessLevel = UserInputFields.GlobalDBsAccessLevel;
-                AddInFields.InstanceDBsAccessLevel = UserInputFields.InstanceDBsAccessLevel;
-                AddInFields.SafetyGlobalDBsAccessLevel = UserInputFields.SafetyGlobalDBsAccessLevel;
-                AddInFields.SafetyInstanceDBsAccessLevel = UserInputFields.SafetyInstanceDBsAccessLevel;
-
-                // Add-In program
-                using (ExclusiveAccess exclusiveAccess = _tiaPortal.ExclusiveAccess())
+                catch (Exception exception)
                 {
-                    DisplayMessage.ExclusiveAccess = exclusiveAccess;
-                    RunAddIn(exclusiveAccess);
+                    DisplayMessage.ErrorMessage($@"Unexpected error ocurred during the execution of the Add-In: {exception}");
                 }
-            }
-            catch (Exception exception)
-            {
-                DisplayMessage.ErrorMessage($@"Unexpected error ocurred during the execution of the Add-In: {exception}");
             }
         }
 
@@ -177,43 +185,47 @@ namespace AddInOpcUaInterface
         /// <param name="menuSelectionProvider"></param>
         private void OnClickSWUnitCreate(MenuSelectionProvider<PlcUnit> menuSelectionProvider)
         {
-            try
+            using (var ctx = new AddInExecutionContext())
             {
-                using (ExclusiveAccess exclusiveAccess = _tiaPortal.ExclusiveAccess())
+                try
                 {
-                    // Set the exclusiveAccess variable to display messages
-                    DisplayMessage.ExclusiveAccess = exclusiveAccess;
+                    using (ExclusiveAccess exclusiveAccess = _tiaPortal.ExclusiveAccess())
+                    {
+                        // Set the exclusiveAccess variable to display messages
+                        DisplayMessage.SetExclusiveAccess(exclusiveAccess);
 
-                    // Access fields in the TIA Portal project (selectedDevice, softwareContainer, etc.)
-                    ProjectFields.AccessSoftwareUnitFields(menuSelectionProvider);
+                        // Access fields in the TIA Portal project (selectedDevice, softwareContainer, etc.)
+                        ctx.AccessSoftwareUnitFields(menuSelectionProvider);
+                    }
+                    CreateWindow parametrizationWindow = new CreateWindow();
+                    // Read the names of existing server interfaces: prevents users from creating a new server interface with a name that is already in use
+                    var interfaceResult = ServerInterfaces.InterfaceNames(ctx.GetServerInterfaces(), ctx.GetSimaticInterfaces());
+                    UserInputFields.ExistingInterfaceNames = interfaceResult.Names;
+                    UserInputFields.NewestInterface = interfaceResult.NewestInterface;
+
+                    // Open parametrization window for user input
+                    parametrizationWindow.ShowDialog();
+
+                    // Checks if the process has been cancelled by the user
+                    bool stop = UserInputFields.StopApplication;
+                    if (stop) { Environment.Exit(0); }
+
+                    // Get data inserted by the user
+                    ctx.InterfaceName = UserInputFields.InterfaceName;
+                    ctx.InterfaceURI = UserInputFields.URI;
+                    ctx.FilePath = UserInputFields.Path;
+
+                    // Add-In program
+                    using (ExclusiveAccess exclusiveAccess = _tiaPortal.ExclusiveAccess())
+                    {
+                        DisplayMessage.SetExclusiveAccess(exclusiveAccess);
+                        RunAddIn(exclusiveAccess);
+                    }
                 }
-                CreateWindow parametrizationWindow = new CreateWindow();
-                // Read the names of existing server interfaces: prevents users from creating a new server interface with a name that is already in use
-                UserInputFields.ExistingInterfaceNames = ServerInterfaces.InterfaceNames(ProjectFields.ServerInterfaces, ProjectFields.SimaticInterfaces);
-                UserInputFields.NewestInterface = ServerInterfaces.NewestInterface;
-
-                // Open parametrization window for user input
-                parametrizationWindow.ShowDialog();
-
-                // Checks if the process has been cancelled by the user
-                bool stop = UserInputFields.StopApplication;
-                if (stop) { Environment.Exit(0); }
-
-                // Get data inserted by the user
-                AddInFields.InterfaceName = UserInputFields.InterfaceName;
-                AddInFields.InterfaceURI = UserInputFields.URI;
-                AddInFields.FilePath = UserInputFields.Path;
-
-                // Add-In program
-                using (ExclusiveAccess exclusiveAccess = _tiaPortal.ExclusiveAccess())
+                catch (Exception exception)
                 {
-                    DisplayMessage.ExclusiveAccess = exclusiveAccess;
-                    RunAddIn(exclusiveAccess);
+                    DisplayMessage.ErrorMessage($@"Unexpected error ocurred during the execution of the Add-In: {exception}");
                 }
-            }
-            catch (Exception exception)
-            {
-                DisplayMessage.ErrorMessage($@"Unexpected error ocurred during the execution of the Add-In: {exception}");
             }
         }
 
@@ -222,6 +234,8 @@ namespace AddInOpcUaInterface
         /// </summary>
         private void RunAddIn(ExclusiveAccess exclusiveAccess)
         {
+            var ctx = AddInExecutionContext.Current;
+
             // Start timer to measure performance of the Add-In
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -235,28 +249,28 @@ namespace AddInOpcUaInterface
             InterfaceTemplate.ImportTemplate(file);
 
             // Count the number of interface elements included with the template
-            AddInFields.NumberDefaultNodes = InterfaceTemplate.GetTotalInterfaceElements();
+            ctx.NumberDefaultNodes = InterfaceTemplate.GetTotalInterfaceElements();
             #endregion
 
-            if(exclusiveAccess.IsCancellationRequested) { OperationCancelled(exclusiveAccess); }
- 
+            if (exclusiveAccess.IsCancellationRequested) { OperationCancelled(exclusiveAccess); }
+
             #region PHASE 2: ADD DATA TYPES (DT) TO THE SERVER INTERFACE (USER DT, SYSTEM DT, PROGRAM RESOURCES)
-            
             // Read user constants (in case they are used to define array's lengths)
-            UserConstants.GetUserConstants(ProjectFields.TagTableGroup);
-            
+            UserConstants.GetUserConstants(ctx.GetTagTableGroup());
+
             exclusiveAccess.Text = $@"Adding ""User Data Types"" and ""System Data Types"" to the server interface...";
-            
+
             // User DT and System DT from the device
-            UserSystemDataTypes.GetUserSystemDataTypeElements(ProjectFields.TypeGroup, false);
+            UserSystemDataTypes.GetUserSystemDataTypeElements(ctx.GetTypeGroup(), false);
+
             // User DT and System DT from the SoftwareUnit
-            if (ProjectFields.IsSoftwareUnit ) { UserSystemDataTypes.GetUserSystemDataTypeElements(ProjectFields.SoftwareUnitTypeGroup, true); }
-                        
+            if (ctx.IsSoftwareUnit) { UserSystemDataTypes.GetUserSystemDataTypeElements(ctx.GetSoftwareUnitTypeGroup(), true); }
+
             // Add the new User DT and System DT to the root element
-            AddInFields.OpcUaInterface.Root.Add(UserSystemDataTypes.XElementUserSystemDataTypes);
-            
+            ctx.OpcUaInterface.Root.Add(UserSystemDataTypes.XElementUserSystemDataTypes);
+
             // Count the number of new interface elements
-            AddInFields.NumberUserSystemDataTypes = UserSystemDataTypes.XElementUserSystemDataTypes.Count;
+            ctx.NumberUserSystemDataTypes = UserSystemDataTypes.XElementUserSystemDataTypes.Count;
             #endregion
 
             if (exclusiveAccess.IsCancellationRequested) { OperationCancelled(exclusiveAccess); }
@@ -264,50 +278,55 @@ namespace AddInOpcUaInterface
             #region PHASE 3: ADD TAGS FROM TAGTABLES TO THE SERVER INTERFACE
 
             exclusiveAccess.Text = $@"Adding ""Tags"" from tag tables to the server interface...";
-            Tags.GetTagElements(ProjectFields.TagTableGroup);
+            Tags.ResetTagElements();
+            Tags.GetTagElements(ctx.GetTagTableGroup());
 
             // Add the new tag variables to the root element
-            AddInFields.OpcUaInterface.Root.Add(Tags.XElementTags);
+            ctx.OpcUaInterface.Root.Add(Tags.XElementTags);
 
             // Number of interface elements added as tags
-            AddInFields.NumberTags = Tags.XElementTags.Count;
+            ctx.NumberTags = Tags.XElementTags.Count;
             #endregion
 
             if (exclusiveAccess.IsCancellationRequested) { OperationCancelled(exclusiveAccess); }
 
             #region PHASE 4: ADD DATA BLOCKS TO THE SERVER INTERFACE
 
+            BuildDataBlockElements.ResetDatablocksElements();
+
             exclusiveAccess.Text = $@"Adding ""Global"" DBs to the server interface... Count:";
-            DataBlocksGlobal.GetDatablockElements(ProjectFields.BlockGroup);
+            DataBlocksGlobal.ResetDatablockElements();
+            DataBlocksGlobal.GetDatablockElements(ctx.GetBlockGroup());
 
             // Number of Global DB elements added as nodes
-            AddInFields.NumberGlobalDBs = BuildDataBlockElements.XElementDataBlocks.Count;
+            ctx.NumberGlobalDBs = BuildDataBlockElements.XElementDataBlocks.Count;
 
             if (exclusiveAccess.IsCancellationRequested) { OperationCancelled(exclusiveAccess); }
-            
+
             exclusiveAccess.Text = $@"Adding ""Instance"" DBs to the server interface... Count:";
-            DataBlocksInstance.GetDatablockElements(ProjectFields.BlockGroup);
+            DataBlocksInstance.ResetDatablockElements();
+            DataBlocksInstance.GetDatablockElements(ctx.GetBlockGroup());
 
             // Number of Instance DB elements added as nodes
-            AddInFields.NumberInstanceDBs = BuildDataBlockElements.XElementDataBlocks.Count - AddInFields.NumberGlobalDBs;
+            ctx.NumberInstanceDBs = BuildDataBlockElements.XElementDataBlocks.Count - ctx.NumberGlobalDBs;
 
             // Add folders and variables to the root element (from both Global and Instance DBs)
-            AddInFields.OpcUaInterface.Root.Add(BuildDataBlockElements.XElementDataBlocks);
+            ctx.OpcUaInterface.Root.Add(BuildDataBlockElements.XElementDataBlocks);
             #endregion
-            
+
             if (exclusiveAccess.IsCancellationRequested) { OperationCancelled(exclusiveAccess); }
 
             #region PHASE 5: EXPORT THE SERVER INTERFACE AS AN XML FILE AND IMPORT IT INTO THE PROJECT
-            
+
             // Export the server interface to the filePath        
-            AddInFields.OpcUaInterface.Save(AddInFields.FilePath);
+            ctx.OpcUaInterface.Save(ctx.FilePath);
 
             exclusiveAccess.Text = $@"Importing the server interface into the project...";
 
             // Import the server interface into TIA Portal
             ImportServerInterface.Import(stopwatch);
             #endregion
-            
+
         }
 
         /// <summary>

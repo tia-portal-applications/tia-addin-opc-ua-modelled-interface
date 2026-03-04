@@ -18,6 +18,15 @@ namespace AddInOpcUaInterface.Phases.Phase4
         public static List<String> UaObjectTypes = new List<String>();
         public static List<XElement> XElementDataBlocks = new List<XElement>();
 
+        // Convenience accessor for the current execution context
+        private static AddInExecutionContext Ctx => AddInExecutionContext.Current;
+
+        public static void ResetDatablocksElements()
+        {
+            XElementDataBlocks.Clear();
+            UaObjectTypes.Clear();
+        }
+
         /// <summary>
         /// Builds XElements for the variables of Global and Instance DBs.
         /// </summary>
@@ -65,20 +74,20 @@ namespace AddInOpcUaInterface.Phases.Phase4
                     string nodeId;
 
                     // In Software Units, NodeIds are preceded by the namespace of the Software Unit 
-                    if (ProjectFields.IsSoftwareUnit) 
-                    { 
-                        if (ProjectFields.SoftwareUnitNamespace == string.Empty)
+                    if (Ctx.IsSoftwareUnit)
+                    {
+                        if (Ctx.SoftwareUnitNamespace == string.Empty)
                         {
-                            nodeId = '"' + blockName + $@""".""" + variableName + '"';
+                            nodeId = '"' + blockName + @""".""" + variableName + '"';
                         }
                         else
                         {
-                            nodeId = '"' + ProjectFields.SoftwareUnitNamespace + "." + blockName + $@""".""" + variableName + '"';
+                            nodeId = '"' + Ctx.SoftwareUnitNamespace + "." + blockName + @""".""" + variableName + '"';
                         }
                     }
-                    else 
-                    { 
-                        nodeId = '"' + blockName + $@""".""" + variableName + '"'; 
+                    else
+                    {
+                        nodeId = '"' + blockName + @""".""" + variableName + '"';
                     }
 
                     string dataType = member.Attribute("Datatype").Value.Replace("\"", string.Empty);
@@ -99,7 +108,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
                         continue;   //exits the current iteration of the foreach loop
                     }
                     // Create the data block variable XElement
-                    XElement variableElement = new XElement(AddInFields.RootNameSpace + "UAVariable");
+                    XElement variableElement = new XElement(Ctx.RootNameSpace + "UAVariable");
                     variableElement.SetAttributeValue("NodeId", $"ns=2;s={nodeId}");
                     variableElement.SetAttributeValue("BrowseName", $"2:{variableName}");
                     variableElement.SetAttributeValue("AccessLevel", accessLevel);
@@ -131,7 +140,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
                     {
                         continue;
                     }
-                    
+
                     // Detect if the data type is known
                     dataType = variableElement.Attribute("DataType").Value.Replace("\"", string.Empty);
                     bool isRemovedDataType = UserSystemDataTypes.RemovedDataTypes.Contains(dataType);
@@ -149,11 +158,11 @@ namespace AddInOpcUaInterface.Phases.Phase4
                     else
                     {
                         // Handle Software Unit data types that reference a type defined in the device (PLC)
-                        if (ProjectFields.IsSoftwareUnit)
+                        if (Ctx.IsSoftwareUnit)
                         {
-                            if (dataType.StartsWith(ProjectFields.SelectedSoftwareUnit.Name))
+                            if (dataType.StartsWith(Ctx.GetSelectedSoftwareUnit().Name))
                             {
-                                dataType = dataType.Substring(ProjectFields.SelectedSoftwareUnit.Name.Length + 1);
+                                dataType = dataType.Substring(Ctx.GetSelectedSoftwareUnit().Name.Length + 1);
                             }
                         }
 
@@ -191,15 +200,15 @@ namespace AddInOpcUaInterface.Phases.Phase4
                                 }
 
                                 XElement uaObjectElement =
-                                new XElement(AddInFields.RootNameSpace + "UAObject",
+                                new XElement(Ctx.RootNameSpace + "UAObject",
                                     new XAttribute("NodeId", $"ns=2;s={nodeId}"),
                                     new XAttribute("BrowseName", $"2:{variableName}"),
-                                    new XElement(AddInFields.RootNameSpace + "DisplayName", variableName),
-                                    new XElement(AddInFields.RootNameSpace + "References",
-                                        new XElement(AddInFields.RootNameSpace + "Reference", $"ns=2;s={parent}",
+                                    new XElement(Ctx.RootNameSpace + "DisplayName", variableName),
+                                    new XElement(Ctx.RootNameSpace + "References",
+                                        new XElement(Ctx.RootNameSpace + "Reference", $"ns=2;s={parent}",
                                             new XAttribute("ReferenceType", "HasComponent"),
                                             new XAttribute("IsForward", "false")),
-                                        new XElement(AddInFields.RootNameSpace + "Reference", "i=58",
+                                        new XElement(Ctx.RootNameSpace + "Reference", "i=58",
                                             new XAttribute("ReferenceType", "HasTypeDefinition"))
                                     )
                                 );
@@ -220,11 +229,11 @@ namespace AddInOpcUaInterface.Phases.Phase4
                         IEnumerable<XElement> submembers = member.Elements(_swNamespace + "Member");
                         IEnumerable<XElement> subfields = ProcessFields(submembers, blockName + "." + structName);
 
-                        if (subfields != null) 
+                        if (subfields != null)
                         {
                             CreateStructElements(structName, blockName, subfields);
                         }
-                        else 
+                        else
                         {
                             // If the struct has an invalid data type, it is not created
                             LogMessages.PublishLog($@"MISSING DATA TYPE: The struct ""{parent.Replace($@"""", String.Empty) + "." + structName}"" has not been included "
@@ -236,17 +245,17 @@ namespace AddInOpcUaInterface.Phases.Phase4
 
                     XElement uaDataTypeElement = variableElement;
                     uaDataTypeElement.Add(
-                            new XElement(AddInFields.RootNameSpace + "DisplayName", variableName),
-                            new XElement(AddInFields.RootNameSpace + "References",
-                                new XElement(AddInFields.RootNameSpace + "Reference", $"ns=2;s={parent}",
+                            new XElement(Ctx.RootNameSpace + "DisplayName", variableName),
+                            new XElement(Ctx.RootNameSpace + "References",
+                                new XElement(Ctx.RootNameSpace + "Reference", $"ns=2;s={parent}",
                                     new XAttribute("ReferenceType", "HasComponent"),
                                     new XAttribute("IsForward", "false")),
-                                new XElement(AddInFields.RootNameSpace + "Reference", "i=63",
+                                new XElement(Ctx.RootNameSpace + "Reference", "i=63",
                                     new XAttribute("ReferenceType", "HasTypeDefinition"))
                             ),
-                            new XElement(AddInFields.RootNameSpace + "Extensions",
-                                    new XElement(AddInFields.RootNameSpace + "Extension",
-                                        new XElement(AddInFields.RootNameSpaceSi + "VariableMapping", nodeId)
+                            new XElement(Ctx.RootNameSpace + "Extensions",
+                                    new XElement(Ctx.RootNameSpace + "Extension",
+                                        new XElement(Ctx.RootNameSpaceSi + "VariableMapping", nodeId)
                                     )
                                 )
                         );
@@ -261,16 +270,16 @@ namespace AddInOpcUaInterface.Phases.Phase4
                 {
                     // Add folder for "Input", "Output", "InOut" and "Static" variables
                     XElement uaObjectElement =
-                    new XElement(AddInFields.RootNameSpace + "UAObject",
+                    new XElement(Ctx.RootNameSpace + "UAObject",
                         new XAttribute("NodeId", $@"ns=2;s=O_""{blockName}"".""{section.Attribute("Name").Value}"""),
                         new XAttribute("BrowseName", $"2:{section.Attribute("Name").Value}"),
-                        new XElement(AddInFields.RootNameSpace + "DisplayName", section.Attribute("Name").Value),
-                        new XElement(AddInFields.RootNameSpace + "References",
-                            new XElement(AddInFields.RootNameSpace + "Reference", $@"ns=2;s=""{blockName}""",
+                        new XElement(Ctx.RootNameSpace + "DisplayName", section.Attribute("Name").Value),
+                        new XElement(Ctx.RootNameSpace + "References",
+                            new XElement(Ctx.RootNameSpace + "Reference", $@"ns=2;s=""{blockName}""",
                                 new XAttribute("ReferenceType", "HasComponent"),
                                 new XAttribute("IsForward", "false")
                             ),
-                            new XElement(AddInFields.RootNameSpace + "Reference", "i=61",
+                            new XElement(Ctx.RootNameSpace + "Reference", "i=61",
                                 new XAttribute("ReferenceType", "HasTypeDefinition")
                             )
                         )
@@ -316,22 +325,22 @@ namespace AddInOpcUaInterface.Phases.Phase4
             {
                 if (isSafety)
                 {
-                    extendedAccessLevel = AddInFields.SafetyGlobalDBsAccessLevel;
+                    extendedAccessLevel = Ctx.SafetyGlobalDBsAccessLevel;
                 }
                 else
                 {
-                    extendedAccessLevel = AddInFields.GlobalDBsAccessLevel;
+                    extendedAccessLevel = Ctx.GlobalDBsAccessLevel;
                 }
             }
             else
             {
                 if (isSafety)
                 {
-                    extendedAccessLevel = AddInFields.SafetyInstanceDBsAccessLevel;
+                    extendedAccessLevel = Ctx.SafetyInstanceDBsAccessLevel;
                 }
                 else
                 {
-                    extendedAccessLevel = AddInFields.InstanceDBsAccessLevel;
+                    extendedAccessLevel = Ctx.InstanceDBsAccessLevel;
                 }
             }
 
@@ -353,7 +362,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
                 else if (projectAccessLevel == 3 && extendedAccessLevel == 2)
                 {
                     // If the project allow Read/Write access, it is valid to set up a Write-only access level
-                   return 2;
+                    return 2;
                 }
                 else
                 {
@@ -361,9 +370,9 @@ namespace AddInOpcUaInterface.Phases.Phase4
                     // Example: Project access level = Read only; Extended access level = Read/Write
 
                     // Convert the project and extended access levels (int) to string format
-                    if (AddInFields.AccessLevelDictionary.TryGetValue(projectAccessLevel, out string projectAccessLevelStr))
+                    if (Ctx.AccessLevelDictionary.TryGetValue(projectAccessLevel, out string projectAccessLevelStr))
                     {
-                        if (AddInFields.AccessLevelDictionary.TryGetValue(extendedAccessLevel, out string extendedAccessLevelStr))
+                        if (Ctx.AccessLevelDictionary.TryGetValue(extendedAccessLevel, out string extendedAccessLevelStr))
                         {
                             LogMessages.PublishLog($@"ACCESS LEVEL MISMATCH: The variable {variableName} has not been added to the "
                                          + $@"server interface as its access level in the project ({projectAccessLevelStr}) is not "
@@ -474,31 +483,31 @@ namespace AddInOpcUaInterface.Phases.Phase4
         {
             // Logic to create UADataType and UAObject for the struct
             XElement uaDataTypeElement =
-                new XElement(AddInFields.RootNameSpace + "UADataType",
+                new XElement(Ctx.RootNameSpace + "UADataType",
                     new XAttribute("NodeId", $"ns=2;s=DT_{parent + "." + structName}"),
                     new XAttribute("BrowseName", $"2:{parent + "." + structName}"),
-                    new XElement(AddInFields.RootNameSpace + "DisplayName", parent + "." + structName),
-                    new XElement(AddInFields.RootNameSpace + "Description", $"This UDT ({parent + "." + structName}) has no description"),
-                    new XElement(AddInFields.RootNameSpace + "References",
-                        new XElement(AddInFields.RootNameSpace + "Reference", $"ns=1;i=3400",
+                    new XElement(Ctx.RootNameSpace + "DisplayName", parent + "." + structName),
+                    new XElement(Ctx.RootNameSpace + "Description", $"This UDT ({parent + "." + structName}) has no description"),
+                    new XElement(Ctx.RootNameSpace + "References",
+                        new XElement(Ctx.RootNameSpace + "Reference", $"ns=1;i=3400",
                             new XAttribute("ReferenceType", "HasSubtype"),
                             new XAttribute("IsForward", "false")),
-                        new XElement(AddInFields.RootNameSpace + "Reference", $"ns=2;s=B_{parent + "." + structName}",
+                        new XElement(Ctx.RootNameSpace + "Reference", $"ns=2;s=B_{parent + "." + structName}",
                             new XAttribute("ReferenceType", "HasEncoding"))
                     ),
-                    new XElement(AddInFields.RootNameSpace + "Definition",
+                    new XElement(Ctx.RootNameSpace + "Definition",
                         new XAttribute("Name", parent + "." + structName),
                         fields
                     )
                 );
 
             XElement uaObjectElement =
-                new XElement(AddInFields.RootNameSpace + "UAObject",
+                new XElement(Ctx.RootNameSpace + "UAObject",
                     new XAttribute("NodeId", $"ns=2;s=B_{parent + "." + structName}"),
                     new XAttribute("BrowseName", "Default Binary"),
-                    new XElement(AddInFields.RootNameSpace + "DisplayName", "Default Binary"),
-                    new XElement(AddInFields.RootNameSpace + "References",
-                        new XElement(AddInFields.RootNameSpace + "Reference", "i=76",
+                    new XElement(Ctx.RootNameSpace + "DisplayName", "Default Binary"),
+                    new XElement(Ctx.RootNameSpace + "References",
+                        new XElement(Ctx.RootNameSpace + "Reference", "i=76",
                             new XAttribute("ReferenceType", "HasTypeDefinition"))
                     )
                 );
@@ -520,7 +529,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
             IEnumerable<XElement> fields = members.Select(field =>
             {
                 // Rename XElement from "Member" to "Field"
-                field.Name = AddInFields.RootNameSpace + "Field";
+                field.Name = Ctx.RootNameSpace + "Field";
 
                 // Rename the attribute "Datatype" to "DataType"
                 // Step 1: Create new attribute called "DataType" with the same value as the attribute "Datatype"
@@ -544,7 +553,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
                 if (dataType.StartsWith("Array"))
                 {
                     if (dataType.Contains("[*]"))
-                        {
+                    {
                         LogMessages.PublishLog($@"UNSUPPORTED DATA TYPE: Arrays with variable limits, such as ""{dataType}"" are not supported.");
                         continue;   //exits the current iteration of the foreach loop
                     }

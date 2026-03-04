@@ -22,8 +22,8 @@ namespace AddInOpcUaInterface
     {
         private static XNamespace _swNamespace;
 
-        public static List<string> SystemDataTypes  = new List<string>();                   // List containing names of system data types
-        public static List<string> UserDataTypes    = new List<string>();                   // List containing names of user data types
+        public static List<string> SystemDataTypes = new List<string>();                   // List containing names of system data types
+        public static List<string> UserDataTypes = new List<string>();                   // List containing names of user data types
         public static List<string> RemovedDataTypes = new List<string>();                   // List containing names of removed data types
         public static List<XElement> XElementUserSystemDataTypes = new List<XElement>();    // List of XElements containing all user and system data types
 
@@ -35,8 +35,14 @@ namespace AddInOpcUaInterface
         public static void GetUserSystemDataTypeElements(PlcTypeSystemGroup typeGroup, bool isSwUnit)
         {
             #region COLLECT SYSTEM AND USER DATA TYPES
-                       
+
             string phase = "Collect names";
+
+            // Start empty before entering the loop
+            SystemDataTypes.Clear();
+            UserDataTypes.Clear();
+            RemovedDataTypes.Clear();
+            XElementUserSystemDataTypes.Clear();
 
             // Iterate through all system data types and store their names in a List<string>
             PlcSystemTypeGroupComposition sysGroupComposition = typeGroup.SystemTypeGroups;
@@ -49,7 +55,7 @@ namespace AddInOpcUaInterface
                     // Data Types defined in a Software Unit need to be preceeded by the name of the Software Unit
                     if (isSwUnit)
                     {
-                        SystemDataTypes.Add(ProjectFields.SelectedSoftwareUnit.Name + "." + plcStruct.Name);
+                        SystemDataTypes.Add(AddInExecutionContext.Current.GetSelectedSoftwareUnit().Name + "." + plcStruct.Name);
                     }
                     else { SystemDataTypes.Add(plcStruct.Name); }
                 }
@@ -63,8 +69,8 @@ namespace AddInOpcUaInterface
             {
                 // Data Types defined in a Software Unit need to be preceeded by the name of the Software Unit
                 if (isSwUnit)
-                { 
-                    UserDataTypes.Add(ProjectFields.SelectedSoftwareUnit.Name + "." + plcStruct.Name);
+                {
+                    UserDataTypes.Add(AddInExecutionContext.Current.GetSelectedSoftwareUnit().Name + "." + plcStruct.Name);
                 }
                 else { UserDataTypes.Add(plcStruct.Name); }
             }
@@ -77,7 +83,7 @@ namespace AddInOpcUaInterface
             #region CREATE NEW XELEMENTS FOR SYSTEM AND USER DATA TYPES
 
             phase = "Create XElements";
-            
+
             // Iterate through all system data types and stores their names in a List<string>.
             sysGroupComposition = typeGroup.SystemTypeGroups;
 
@@ -122,7 +128,7 @@ namespace AddInOpcUaInterface
                     // Data Types defined in a Software Unit need to be preceeded by the name of the Software Unit
                     if (isSwUnit)
                     {
-                        UserDataTypes.Add(ProjectFields.SelectedSoftwareUnit.Name + "." + plcStruct.Name);
+                        UserDataTypes.Add(AddInExecutionContext.Current.GetSelectedSoftwareUnit().Name + "." + plcStruct.Name);
                     }
                     else { UserDataTypes.Add(plcStruct.Name); }
                 }
@@ -154,14 +160,15 @@ namespace AddInOpcUaInterface
             if (isConsistent == false)
             {
                 DisplayMessage.ErrorMessage("Some elements are not consistent. Please compile the project before running the Add-In.");
-            };
+            }
+            ;
 
             XElement inputElement = new XElement("EmptyElement");
 
             try
             {
                 // Export the user/system data type as a .txt file
-                string filePath = Path.ChangeExtension(AddInFields.FilePath, ".txt");
+                string filePath = Path.ChangeExtension(AddInExecutionContext.Current.FilePath, ".txt");
                 dataType.Export(new FileInfo(filePath), ExportOptions.None);
 
                 // Import the file as an XDocument
@@ -175,15 +182,15 @@ namespace AddInOpcUaInterface
             #endregion
 
             #region  CONVERT THE USER DATA TYPE TO OPC UA FORMAT
-            
+
             // Extract relevant information from the input XElement
-            XElement attributeList  = inputElement.Element("SW.Types.PlcStruct").Element("AttributeList");
+            XElement attributeList = inputElement.Element("SW.Types.PlcStruct").Element("AttributeList");
             string dataTypeName = attributeList.Element("Name")?.Value;
 
-            if(isSwUnit)
+            if (isSwUnit)
             {
                 // Data Types defined in a Software Unit need to be preceeded by the name of the Software Unit
-                dataTypeName = ProjectFields.SelectedSoftwareUnit.Name + "." + dataTypeName;               
+                dataTypeName = AddInExecutionContext.Current.GetSelectedSoftwareUnit().Name + "." + dataTypeName;
             }
 
             // Access the "Sections" XElement within the "Interface" element
@@ -195,7 +202,7 @@ namespace AddInOpcUaInterface
 
             IEnumerable<XElement> members = section.Elements(_swNamespace + "Member");
             IEnumerable<XElement> fields = ProcessFields(members, dataTypeName);
-            
+
             if (fields != null)
             {
                 CreateDataTypeElement(dataTypeName, fields, parentNodeId);
@@ -203,7 +210,7 @@ namespace AddInOpcUaInterface
             else
             {
                 // If the data type is unknown, the variable is not added to the project
-                LogMessages.PublishLog("                   " 
+                LogMessages.PublishLog("                   "
                                      + $@"MISSING DATA TYPE: The UDT/SDT ""{dataTypeName}"" has not been included "
                                      + $@"in the server interface.");
 
@@ -225,7 +232,7 @@ namespace AddInOpcUaInterface
             IEnumerable<XElement> fields = members.Select(field =>
             {
                 // Rename XElement from "Member" to "Field"
-                field.Name = AddInFields.RootNameSpace + "Field";
+                field.Name = AddInExecutionContext.Current.RootNameSpace + "Field";
 
                 // Rename the attribute "Datatype" to "DataType"
                 // Step 1: Create new attribute called "DataType" with the same value as the attribute "Datatype"
@@ -271,11 +278,11 @@ namespace AddInOpcUaInterface
                 else
                 {
                     // Handle Software Unit data types that reference a type defined in the device (PLC)
-                    if (ProjectFields.IsSoftwareUnit)
+                    if (AddInExecutionContext.Current.IsSoftwareUnit)
                     {
-                        if (dataType.StartsWith(ProjectFields.SelectedSoftwareUnit.Name))
+                        if (dataType.StartsWith(AddInExecutionContext.Current.GetSelectedSoftwareUnit().Name))
                         {
-                            dataType = dataType.Substring(ProjectFields.SelectedSoftwareUnit.Name.Length + 1);
+                            dataType = dataType.Substring(AddInExecutionContext.Current.GetSelectedSoftwareUnit().Name.Length + 1);
                         }
                     }
 
@@ -411,20 +418,21 @@ namespace AddInOpcUaInterface
         /// <param name="fields"></param>
         private static void CreateDataTypeElement(string dataTypeName, IEnumerable<XElement> fields, string parentNodeId)
         {
+            var ctx = AddInExecutionContext.Current;
             XElement uaDataTypeElement =
-                new XElement(AddInFields.RootNameSpace + "UADataType",
+                new XElement(ctx.RootNameSpace + "UADataType",
                     new XAttribute("NodeId", $"ns=2;s=DT_{dataTypeName}"),
                     new XAttribute("BrowseName", $"2:{dataTypeName}"),
-                    new XElement(AddInFields.RootNameSpace + "DisplayName", dataTypeName),
-                    new XElement(AddInFields.RootNameSpace + "Description", "This UDT has no description"),
-                    new XElement(AddInFields.RootNameSpace + "References",
-                        new XElement(AddInFields.RootNameSpace + "Reference", parentNodeId,
+                    new XElement(ctx.RootNameSpace + "DisplayName", dataTypeName),
+                    new XElement(ctx.RootNameSpace + "Description", "This UDT has no description"),
+                    new XElement(ctx.RootNameSpace + "References",
+                        new XElement(ctx.RootNameSpace + "Reference", parentNodeId,
                             new XAttribute("ReferenceType", "HasSubtype"),
                             new XAttribute("IsForward", "false")),
-                        new XElement(AddInFields.RootNameSpace + "Reference", $"ns=2;s=B_{dataTypeName}",
+                        new XElement(ctx.RootNameSpace + "Reference", $"ns=2;s=B_{dataTypeName}",
                             new XAttribute("ReferenceType", "HasEncoding"))
                     ),
-                    new XElement(AddInFields.RootNameSpace + "Definition",
+                    new XElement(ctx.RootNameSpace + "Definition",
                         new XAttribute("Name", dataTypeName),
                         fields
                     )
@@ -432,12 +440,12 @@ namespace AddInOpcUaInterface
 
             // Create the UAObject XElement
             XElement uaObjectElement =
-                new XElement(AddInFields.RootNameSpace + "UAObject",
+                new XElement(ctx.RootNameSpace + "UAObject",
                     new XAttribute("NodeId", $"ns=2;s=B_{dataTypeName}"),
                     new XAttribute("BrowseName", "Default Binary"),
-                    new XElement(AddInFields.RootNameSpace + "DisplayName", "Default Binary"),
-                    new XElement(AddInFields.RootNameSpace + "References",
-                        new XElement(AddInFields.RootNameSpace + "Reference", "i=76",
+                    new XElement(ctx.RootNameSpace + "DisplayName", "Default Binary"),
+                    new XElement(ctx.RootNameSpace + "References",
+                        new XElement(ctx.RootNameSpace + "Reference", "i=76",
                             new XAttribute("ReferenceType", "HasTypeDefinition"))
                     )
             );
@@ -454,32 +462,33 @@ namespace AddInOpcUaInterface
         /// <param name="structFields"></param>
         private static void CreateStructElements(string structName, string parentElement, IEnumerable<XElement> structFields)
         {
+            var ctx = AddInExecutionContext.Current;
             XElement uaDataTypeElement =
-                new XElement(AddInFields.RootNameSpace + "UADataType",
+                new XElement(ctx.RootNameSpace + "UADataType",
                     new XAttribute("NodeId", $"ns=2;s=DT_{parentElement + "." + structName}"),
                     new XAttribute("BrowseName", $"2:{parentElement + "." + structName}"),
-                    new XElement(AddInFields.RootNameSpace + "DisplayName", parentElement + "." + structName),
-                    new XElement(AddInFields.RootNameSpace + "Description", $"This UDT ({parentElement + "." + structName}) has no description"),
-                    new XElement(AddInFields.RootNameSpace + "References",
-                        new XElement(AddInFields.RootNameSpace + "Reference", "ns=1;i=3400",
+                    new XElement(ctx.RootNameSpace + "DisplayName", parentElement + "." + structName),
+                    new XElement(ctx.RootNameSpace + "Description", $"This UDT ({parentElement + "." + structName}) has no description"),
+                    new XElement(ctx.RootNameSpace + "References",
+                        new XElement(ctx.RootNameSpace + "Reference", "ns=1;i=3400",
                             new XAttribute("ReferenceType", "HasSubtype"),
                             new XAttribute("IsForward", "false")),
-                        new XElement(AddInFields.RootNameSpace + "Reference", $"ns=2;s=B_{parentElement + "." + structName}",
+                        new XElement(ctx.RootNameSpace + "Reference", $"ns=2;s=B_{parentElement + "." + structName}",
                             new XAttribute("ReferenceType", "HasEncoding"))
                     ),
-                    new XElement(AddInFields.RootNameSpace + "Definition",
+                    new XElement(ctx.RootNameSpace + "Definition",
                         new XAttribute("Name", parentElement + "." + structName),
                         structFields
                     )
                 );
 
             XElement uaObjectElement =
-                new XElement(AddInFields.RootNameSpace + "UAObject",
+                new XElement(ctx.RootNameSpace + "UAObject",
                     new XAttribute("NodeId", $"ns=2;s=B_{parentElement + "." + structName}"),
                     new XAttribute("BrowseName", "Default Binary"),
-                    new XElement(AddInFields.RootNameSpace + "DisplayName", "Default Binary"),
-                    new XElement(AddInFields.RootNameSpace + "References",
-                        new XElement(AddInFields.RootNameSpace + "Reference", "i=76",
+                    new XElement(ctx.RootNameSpace + "DisplayName", "Default Binary"),
+                    new XElement(ctx.RootNameSpace + "References",
+                        new XElement(ctx.RootNameSpace + "Reference", "i=76",
                             new XAttribute("ReferenceType", "HasTypeDefinition"))
                     )
                 );

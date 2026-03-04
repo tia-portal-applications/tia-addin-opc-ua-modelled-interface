@@ -15,7 +15,7 @@ namespace AddInOpcUaInterface
         /// Reference to tiaPortal in which the add-in is executed
         /// </summary>
         private readonly TiaPortal _tiaPortal;
-        
+
         /// <summary>
         /// The constructor of the ProjectTreeProvider
         /// </summary>
