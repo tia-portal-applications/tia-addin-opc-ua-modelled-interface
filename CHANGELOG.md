@@ -1,6 +1,11 @@
 # Changelog
 All changes to the project are documented in this file.
 
+## [V2.0.0] - 2026/03/04
+### Changed
+- **TIA Portal Compatibility**: Adapted internal references and dependencies to ensure full compatibility with TIA Portal V21. It is not designed for or compatible with other versions of TIA Portal. Please ensure you are using TIA Portal V21 for proper functionality with this release. 
+ *No functional changes or new features compared to V2.0.0 release for TIA Portal V20.
+
 ## [V1.1.3] - 2025/07/03
 ### Added
 - **Software Units for TIA Portal V20**: User-modeled interfaces for Software Units are now supported for TIA Portal V20.
