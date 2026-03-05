@@ -22,8 +22,8 @@ namespace AddInOpcUaInterface
     {
         private static XNamespace _swNamespace;
 
-        public static List<string> SystemDataTypes = new List<string>();                   // List containing names of system data types
-        public static List<string> UserDataTypes = new List<string>();                   // List containing names of user data types
+        public static List<string> SystemDataTypes = new List<string>();                    // List containing names of system data types
+        public static List<string> UserDataTypes = new List<string>();                      // List containing names of user data types
         public static List<string> RemovedDataTypes = new List<string>();                   // List containing names of removed data types
         public static List<XElement> XElementUserSystemDataTypes = new List<XElement>();    // List of XElements containing all user and system data types
 

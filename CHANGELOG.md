@@ -1,6 +1,11 @@
 # Changelog
 All changes to the project are documented in this file.
 
+## [V2.0.0] - 2026/03/04
+### Fixed
+- **TIA Portal V20+ Compatibility**: Migrate ProjectFields and AddInFields to a new 'ExecutionContext' class to eliminate reliance on static.
+- **Node Accumulation**: Implemented clearing of internal data collections at the beginning of each execution to guarantee accurate counts and expected results.
+
 ## [V1.1.3] - 2025/07/03
 ### Added
 - **Software Units for TIA Portal V20**: User-modeled interfaces for Software Units are now supported for TIA Portal V20.

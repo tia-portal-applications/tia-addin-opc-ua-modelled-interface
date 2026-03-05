@@ -1,13 +1,13 @@
-# OPC UA - User modelled interface - V1.1.3
+# OPC UA - User modelled interface - V2.0.0
 
 <div style="border: 1px solid gray; padding: 10px">
-  <strong>What's new with V1.1.1</strong>
+  <strong>What's new with V2.0.0</strong>
   <ul>
-    <li><strong>Software Units</strong>: A new <a href="#create-server-interface-for-sw-units">action</a> allows the creation of user-modeled interfaces for Software Units.</li>
-    <li><strong>Multi-dimensional arrays</strong>: Support for arrays with multiple dimensions.</li>
-    <li><strong>Strings of length defined by Constant</strong>: Strings where the length is defined by a constant are now supported.</li>
+    <li><strong>Enhanced reliability</strong>: Ensure seamless operation and eliminating previous data accumulation issues. </li>
+    <li><strong>New Add-in architecture</strong>: A new architecture design is compatible for TIA Portal V20+ combating stateful problems.</li>
+    <li><strong>TIA Portal Compatibility</strong>: This add-in version is currently <strong>compatible exclusive with TIA Portal V20</strong>. Direct compatibility with V21 would require internal references. Therefore, please ensure you are using TIA Portal V20 for proper functionality.</li>
   </ul>
-  <strong>Check what's new in <a href="CHANGELOG.md">V1.1.2 and V1.1.3</a></strong>
+  <strong>Check what's new in <a href="CHANGELOG.md">V2.0.0</a></strong>
 </div>
 
 ## Description
