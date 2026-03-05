@@ -1,9 +1,9 @@
-# OPC UA - User modelled interface - V2.00
+# OPC UA - User modelled interface - V2.0.0
 
 <div style="border: 1px solid gray; padding: 10px">
   <strong>What's new with V2.0.0</strong>
   <ul>
-    <li><strong>TIA Portal VX Compatibility</strong>: This specific package of the add-in V2.0.0 is <strong>fully and exclusive compatible with TIA Portal V21</strong>. </li>
+    <li><strong>TIA Portal Compatibility</strong>: This specific package of the add-in V2.0.0 is <strong>fully and exclusive compatible with TIA Portal V21</strong>. </li>
     <li><strong>Feature set</strong>: This V2.0.0 package includes all features introduced in the V1.1.3 release.</li>
   </ul>
   <strong>Check what's new in <a href="CHANGELOG.md">V2.0.0</a></strong>
