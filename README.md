@@ -81,7 +81,6 @@ The "Create server interface for SW Units" action allows the creation of user-mo
     <img src="media/create_sw_units.png" alt="Create server interface for SW Unit" width="450" />
 </div>
 
-**NOTE:** This option can only be executed with the .dll from TIA Portal V19.
 
 <a name="features"></a>
 ## Features
