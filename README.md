@@ -5,7 +5,7 @@
   <ul>
     <li><strong>New Add-in architecture</strong>: A new architecture design is compatible for TIA Portal V20+ combating stateful problems.</li>
     <li><strong>Enhanced reliability</strong>: Ensure seamless operation and eliminating previous data accumulation issues. </li>
-    <li><strong>TIA Portal Compatibility</strong>: This add-in version is currently <strong>compatible up to with TIA Portal V20</strong>. To use </li>
+    <li><strong>TIA Portal Compatibility</strong>: This add-in version is currently <strong>compatible up to with TIA Portal V20</strong>. To use this add-in in TIA Portal V21, switch to 'tia-addin-opc-ua-modelled-interface-V21' branch. </li>
   </ul>
   <strong>Check what's new in <a href="CHANGELOG.md">V2.0.0</a></strong>
 </div>
@@ -35,13 +35,13 @@ Follow these steps to carry out the installation process:
 1. Download the repository to the local machine.
 2. Open Visual Studio, selecting the option: "Run as Administrator".
 3. Ensure that all necessary references are included in the project **AddinOpcUaInterface**. If any references are missing, select the Openness DLL files from TIA Portal version V19 as your reference source.
-4. Build the solution. The post-build event command will automatically transfer the .addin file to the **C:\Program Files\Siemens\Automation\Portal V19\AddIn** directory.
+4. Build the solution. The post-build event command will automatically transfer the .addin file to the **C:\Program Files\Siemens\Automation\Portal V20\AddIn** directory.
 
-**NOTE:** If TIA Portal version V17 or V18 is being used, please refer to the instructions described in [Chapter 4](#tia-portal-version).
+**NOTE:** If TIA Portal version V17, V18 or V19 is being used, please refer to the instructions described in [Chapter 4](#tia-portal-version).
 
 <a name="usage"></a>
 ## Usage
-To use the Add-In in TIA Portal, make sure that the **OpcUa-UserModelledInterface.addin** file is located in the following directory: **C:\Program Files\Siemens\Automation\Portal V19\AddIns**. 
+To use the Add-In in TIA Portal, make sure that the **OpcUa-UserModelledInterface.addin** file is located in the following directory: **C:\Program Files\Siemens\Automation\Portal V20\AddIns**. 
 
 Then, proceed with the following steps:
 
@@ -120,23 +120,23 @@ The Add-In utilizes the Openness API to access information stored in the TIA Por
 <a name="tia-portal-versions"></a>
 ## TIA Portal version
 
-The Add-In is designed to run on TIA Portal V19, but it can be adapted to run on TIA Portal version V17 and V18. To do so:
-- Update the references of the project **AddinOpcUaInterface**. Use the Openness DLL file "Siemens.Engineering.Addin" from TIA Portal versions V17 or V18 as your reference source. 
+The Add-In is designed to run on TIA Portal V20, but it can be adapted to run on TIA Portal version V17, V18 and V19. To do so:
+- Update the references of the project **AddinOpcUaInterface**. Use the Openness DLL file "Siemens.Engineering.Addin" from TIA Portal versions V17, V18 or V19 as your reference source. 
 
-    **NOTE**: Openness has backward compatibility. This means that an Add-In built with the DLL files from TIA Portal V17 can also run on TIA Portal V18, V19 and future versions.
+    **NOTE**: Openness has backward compatibility. This means that an Add-In built with the DLL files from TIA Portal V17 can also run on TIA Portal V18, V19 and V20.
 - Change the post-build event command to: 
     ```
     copy "$(ProjectDir)AddInPublisherConfig.xml" "$(TargetDir)AddInPublisherConfig.xml" /Y 
-    "C:\Program Files\Siemens\Automation\Portal V1X\PublicAPI\V1X.AddIn\Siemens.Engineering.AddIn.Publisher.exe" -f "$(TargetDir)AddInPublisherConfig.xml" -l "$(TargetDir)PostBuildLog.txt" -v -c -o "C:\Program Files\Siemens\Automation\Portal V1X\AddIns\OpcUa-UserModelledInterface.addin"
+    "C:\Program Files\Siemens\Automation\Portal VXX\PublicAPI\VXX.AddIn\Siemens.Engineering.AddIn.Publisher.exe" -f "$(TargetDir)AddInPublisherConfig.xml" -l "$(TargetDir)PostBuildLog.txt" -v -c -o "C:\Program Files\Siemens\Automation\Portal VXX\AddIns\OpcUa-UserModelledInterface.addin"
     ```
-    **NOTE**: Replace the placeholder "Portal V1X" with the specific version of TIA Portal installed on your machine. For example, if TIA Portal V18 is installed, replace "Portal V1X" with "Portal V18". Similarly, update "V1X.AddIn" to match the version of the Openness DLL files selected in the previous step. If the selected DLL files are those from TIA Portal V17, change "V1X.AddIn" to "V17.AddIn".
+    **NOTE**: Replace the placeholder "Portal VXX" with the specific version of TIA Portal installed on your machine. For example, if TIA Portal V18 is installed, replace "Portal VXX" with "Portal V18". Similarly, update "VXX.AddIn" to match the version of the Openness DLL files selected in the previous step. If the selected DLL files are those from TIA Portal V17, change "VXX.AddIn" to "V17.AddIn".
 
 - Replace the content in the **AddInPublisherConfig.xml** file.
 
     For TIA V19:
 
         <PackageConfiguration xmlns="http://www.siemens.com/automation/Openness/AddIn/Publisher/V19">
-            <Author>&lt;SIEMENS AG - DI FA S SUP SPH COM&gt;</Author>
+            <Author>SIEMENS - SIMATIC Systems Support</Author>
             <AddInVersion>V19</AddInVersion>
             <Description>Automatically create user modelled interfaces for OPC UA servers.</Description>
             <DisplayInMultiuser />
@@ -144,7 +144,7 @@ The Add-In is designed to run on TIA Portal V19, but it can be adapted to run on
             <Product>
                 <Name>OPC UA - User modelled interface</Name>
                 <Id>tia_add_in_opc_ua_interface</Id>
-                <Version>1.1.0</Version>
+                <Version>2.0.0</Version>
             </Product>
 
             <FeatureAssembly>
@@ -175,7 +175,7 @@ The Add-In is designed to run on TIA Portal V19, but it can be adapted to run on
     For TIA V18:
 
         <PackageConfiguration xmlns="http://www.siemens.com/automation/Openness/AddIn/Publisher/V18">
-            <Author>&lt;SIEMENS AG - DI FA S SUP SPH COM&gt;</Author>
+            <Author>SIEMENS - SIMATIC Systems Support</Author>
             <AddInVersion>V18</AddInVersion>
             <Description>Automatically create user modelled interfaces for OPC UA servers.</Description>
             <DisplayInMultiuser />
@@ -183,7 +183,7 @@ The Add-In is designed to run on TIA Portal V19, but it can be adapted to run on
             <Product>
                 <Name>OPC UA - User modelled interface</Name>
                 <Id>tia_add_in_opc_ua_interface</Id>
-                <Version>1.1.0</Version>
+                <Version>2.0.0</Version>
             </Product>
 
             <FeatureAssembly>
@@ -216,7 +216,7 @@ The Add-In is designed to run on TIA Portal V19, but it can be adapted to run on
     For TIA V17:
 
         <PackageConfiguration xmlns="http://www.siemens.com/automation/Openness/AddIn/Publisher/V17">
-            <Author>&lt;SIEMENS AG - DI FA S SUP SPH COM&gt;</Author>
+            <Author>SIEMENS - SIMATIC Systems Support</Author>
             <AddInVersion>V17</AddInVersion>
             <Description>Automatically create user modelled interfaces for OPC UA servers.</Description>
             <DisplayInMultiuser />
@@ -224,7 +224,7 @@ The Add-In is designed to run on TIA Portal V19, but it can be adapted to run on
             <Product>
                 <Name>OPC UA - User modelled interface</Name>
                 <Id>tia_add_in_opc_ua_interface</Id>
-                <Version>1.1.0</Version>
+                <Version>2.0.0</Version>
             </Product>
 
             <FeatureAssembly>
