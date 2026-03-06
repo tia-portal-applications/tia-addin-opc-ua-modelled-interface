@@ -4,12 +4,11 @@
   <strong>What's new with V2.0.0</strong>
   <ul>
     <li><strong>TIA Portal Compatibility</strong>: This specific package of the add-in V2.0.0 is <strong>fully and exclusive compatible with TIA Portal V21</strong>. </li>
-    <li><strong>Feature set</strong>: This V2.0.0 package includes all features introduced in the V1.1.3 release.</li>
-  </ul>
-  <strong>Check what's new in <a href="CHANGELOG.md">V2.0.0</a></strong>
+  <strong>
+  Check what's new in <a href="CHANGELOG.md">V2.0.0</a></strong>
 </div>
 
-For a complete and detailed list of all changes, including architectural improvements and compatibility updates, please refer to the [CHANGELOG.md](CHANGELOG.md) included in this package.
+Note: This add-in is only for TIA Portal V21. To use previous TIA Portal versions switch to <strong>tia-addin-opc-ua-modelled-interface-V20</strong> branch.
 
 ## Description
 This Add-In has been developed to streamline the creation of user-modeled interfaces for OPC UA servers. By browsing through the TIA Portal project, it incorporates all variables that are accessible via OPC UA and arranges them in a structured manner, eliminating the need for manual configuration and significantly reducing the time and effort required.
@@ -26,7 +25,6 @@ The main goals of the Add-In are:
 2. [Usage](#usage)
 3. [Features](#features)
 4. [How it works](#how-it-works)
-5. [Tia Portal version](#tia-portal-version)
 
 <a name="installation"></a>
 ## Installation
@@ -35,14 +33,14 @@ Follow these steps to carry out the installation process:
 
 1. Download the repository to the local machine.
 2. Open Visual Studio, selecting the option: "Run as Administrator".
-3. Ensure that all necessary references are included in the project **AddinOpcUaInterface**. If any references are missing, select the Openness DLL files from TIA Portal version V19 as your reference source.
-4. Build the solution. The post-build event command will automatically transfer the .addin file to the **C:\Program Files\Siemens\Automation\Portal V19\AddIn** directory.
+3. Ensure that all necessary references are included in the project **AddinOpcUaInterface**. If any references are missing, select the Openness DLL files from TIA Portal version V21 as your reference source.
+4. Build the solution. The post-build event command will automatically transfer the .addin file to the **C:\Users\Siemens\AppData\Roaming\Siemens\Automation\Portal V21\UserAddIns** directory.
 
-**NOTE:** If TIA Portal version V17 or V18 is being used, please refer to the instructions described in [Chapter 4](#tia-portal-version).
+**NOTE:** For TIA Portal previous versions, please use the addin-opc-ua-modelled-interface-V20 branch.
 
 <a name="usage"></a>
 ## Usage
-To use the Add-In in TIA Portal, make sure that the **OpcUa-UserModelledInterface.addin** file is located in the following directory: **C:\Program Files\Siemens\Automation\Portal V19\AddIns**. 
+To use the Add-In in TIA Portal, make sure that the **OpcUa-UserModelledInterface.addin** file is located in the following directory: **"C:\Users\Siemens\AppData\Roaming\Siemens\Automation\Portal V21\UserAddIns**. 
 
 Then, proceed with the following steps:
 
@@ -118,142 +116,6 @@ The Add-In utilizes the Openness API to access information stored in the TIA Por
     <img src="media/flowchart_v2-add-in.png" alt="Flowchart of the Add-In" width="1000" />
 </div>
 
-<a name="tia-portal-versions"></a>
-## TIA Portal version
-
-The Add-In is designed to run on TIA Portal V19, but it can be adapted to run on TIA Portal version V17 and V18. To do so:
-- Update the references of the project **AddinOpcUaInterface**. Use the Openness DLL file "Siemens.Engineering.Addin" from TIA Portal versions V17 or V18 as your reference source. 
-
-    **NOTE**: Openness has backward compatibility. This means that an Add-In built with the DLL files from TIA Portal V17 can also run on TIA Portal V18, V19 and future versions.
-- Change the post-build event command to: 
-    ```
-    copy "$(ProjectDir)AddInPublisherConfig.xml" "$(TargetDir)AddInPublisherConfig.xml" /Y 
-    "C:\Program Files\Siemens\Automation\Portal V1X\PublicAPI\V1X.AddIn\Siemens.Engineering.AddIn.Publisher.exe" -f "$(TargetDir)AddInPublisherConfig.xml" -l "$(TargetDir)PostBuildLog.txt" -v -c -o "C:\Program Files\Siemens\Automation\Portal V1X\AddIns\OpcUa-UserModelledInterface.addin"
-    ```
-    **NOTE**: Replace the placeholder "Portal V1X" with the specific version of TIA Portal installed on your machine. For example, if TIA Portal V18 is installed, replace "Portal V1X" with "Portal V18". Similarly, update "V1X.AddIn" to match the version of the Openness DLL files selected in the previous step. If the selected DLL files are those from TIA Portal V17, change "V1X.AddIn" to "V17.AddIn".
-
-- Replace the content in the **AddInPublisherConfig.xml** file.
-
-    For TIA V19:
-
-        <PackageConfiguration xmlns="http://www.siemens.com/automation/Openness/AddIn/Publisher/V19">
-            <Author>&lt;SIEMENS AG - DI FA S SUP SPH COM&gt;</Author>
-            <AddInVersion>V19</AddInVersion>
-            <Description>Automatically create user modelled interfaces for OPC UA servers.</Description>
-            <DisplayInMultiuser />
-            
-            <Product>
-                <Name>OPC UA - User modelled interface</Name>
-                <Id>tia_add_in_opc_ua_interface</Id>
-                <Version>1.1.0</Version>
-            </Product>
-
-            <FeatureAssembly>
-                <AssemblyInfo>
-                <Assembly>AddInOpcUaInterface.dll</Assembly>
-                </AssemblyInfo>
-            </FeatureAssembly>
-
-            <AdditionalAssemblies>
-                <AssemblyInfo>
-                    <Assembly>AddInOPCUAInterface.UI.dll</Assembly>
-                </AssemblyInfo>
-            </AdditionalAssemblies>
-
-            <!--Please check required permissions-->
-            <RequiredPermissions>
-                <TIAPermissions>
-                <TIA.ReadWrite/>
-                </TIAPermissions>
-                <UnrestrictedPermissions>
-                    <System.UnrestrictedAccess>
-                        <JustificationComment>Needed for the execution of the "OPC UA - User Modelled Interface" Add-In</JustificationComment>
-                    </System.UnrestrictedAccess>
-                </UnrestrictedPermissions>
-            </RequiredPermissions>
-        </PackageConfiguration>
-    
-    For TIA V18:
-
-        <PackageConfiguration xmlns="http://www.siemens.com/automation/Openness/AddIn/Publisher/V18">
-            <Author>&lt;SIEMENS AG - DI FA S SUP SPH COM&gt;</Author>
-            <AddInVersion>V18</AddInVersion>
-            <Description>Automatically create user modelled interfaces for OPC UA servers.</Description>
-            <DisplayInMultiuser />
-            
-            <Product>
-                <Name>OPC UA - User modelled interface</Name>
-                <Id>tia_add_in_opc_ua_interface</Id>
-                <Version>1.1.0</Version>
-            </Product>
-
-            <FeatureAssembly>
-                <AssemblyInfo>
-                <Assembly>AddInOpcUaInterface.dll</Assembly>
-                </AssemblyInfo>
-            </FeatureAssembly>
-
-            <AdditionalAssemblies>
-                <AssemblyInfo>
-                    <Assembly>AddInOPCUAInterface.UI.dll</Assembly>
-                </AssemblyInfo>
-            </AdditionalAssemblies>
-
-            <!--Please check required permissions-->
-            <RequiredPermissions>
-            <TIAPermissions>
-                <TIA.ReadWrite/>
-            </TIAPermissions>
-            <SecurityPermissions>
-                <System.Security.Permissions.SecurityPermission.UnmanagedCode/>
-                <System.Security.Permissions.FileDialogPermission/>
-                <System.Security.Permissions.UIPermission/>
-                <System.Security.Permissions.MediaPermission/>
-                <System.Security.Permissions.FileIOPermission/>
-            </SecurityPermissions>
-        </RequiredPermissions>
-        </PackageConfiguration>
-
-    For TIA V17:
-
-        <PackageConfiguration xmlns="http://www.siemens.com/automation/Openness/AddIn/Publisher/V17">
-            <Author>&lt;SIEMENS AG - DI FA S SUP SPH COM&gt;</Author>
-            <AddInVersion>V17</AddInVersion>
-            <Description>Automatically create user modelled interfaces for OPC UA servers.</Description>
-            <DisplayInMultiuser />
-            
-            <Product>
-                <Name>OPC UA - User modelled interface</Name>
-                <Id>tia_add_in_opc_ua_interface</Id>
-                <Version>1.1.0</Version>
-            </Product>
-
-            <FeatureAssembly>
-                <AssemblyInfo>
-                <Assembly>AddInOpcUaInterface.dll</Assembly>
-                </AssemblyInfo>
-            </FeatureAssembly>
-
-            <AdditionalAssemblies>
-                <AssemblyInfo>
-                    <Assembly>AddInOPCUAInterface.UI.dll</Assembly>
-                </AssemblyInfo>
-            </AdditionalAssemblies>
-
-            <!--Please check required permissions-->
-            <RequiredPermissions>
-            <TIAPermissions>
-                <TIA.ReadWrite/>
-            </TIAPermissions>
-            <SecurityPermissions>
-                <System.Security.Permissions.SecurityPermission.UnmanagedCode/>
-                <System.Security.Permissions.FileDialogPermission/>
-                <System.Security.Permissions.UIPermission/>
-                <System.Security.Permissions.MediaPermission/>
-                <System.Security.Permissions.FileIOPermission/>
-            </SecurityPermissions>
-        </RequiredPermissions>
-        </PackageConfiguration>
 
 # Reference links
 
