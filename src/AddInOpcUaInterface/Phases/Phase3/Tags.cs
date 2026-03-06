@@ -17,6 +17,9 @@ namespace AddInOpcUaInterface.Phases
     {
         public static List<XElement> XElementTags = new List<XElement>();
 
+        /// <summary>
+        /// Removes all elements from the collection of tag elements.
+        /// </summary>
         public static void ResetTagElements()
         { XElementTags.Clear(); }
 
