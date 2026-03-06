@@ -114,7 +114,7 @@ The Add-In utilizes the Openness API to access information stored in the TIA Por
 5. Finally, the program exports the XDocument as an XML file, which is imported into TIA Portal to create the server interface.
 
 <div style="text-align:center">
-    <img src="media/flowchart-add-in.png" alt="Flowchart of the Add-In" width="1000" />
+    <img src="media/flowchart_v2-add-in.png" alt="Flowchart of the Add-In" width="1000" />
 </div>
 
 <a name="tia-portal-versions"></a>
