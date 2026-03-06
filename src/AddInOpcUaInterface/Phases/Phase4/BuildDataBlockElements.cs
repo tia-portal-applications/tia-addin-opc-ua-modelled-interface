@@ -21,6 +21,9 @@ namespace AddInOpcUaInterface.Phases.Phase4
         // Convenience accessor for the current execution context
         private static AddInExecutionContext Ctx => AddInExecutionContext.Current;
 
+        /// <summary>
+        /// Clears all existing XElementDataBlocks and UaObjectTypes from their respective collections.
+        /// </summary>
         public static void ResetDatablocksElements()
         {
             XElementDataBlocks.Clear();

@@ -26,10 +26,14 @@ namespace AddInOpcUaInterface.Phases
     {
         private static int _numberOfProcessedDBs = 0;
 
+        /// <summary>
+        /// Resets the count of processed datablocks to zero.
+        /// </summary>
         public static void ResetDatablockElements()
         {
             _numberOfProcessedDBs = 0;
         }
+
         /// <summary>
         /// Browses through all the project's data blocks.
         /// </summary>
