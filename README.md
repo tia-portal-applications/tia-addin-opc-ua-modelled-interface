@@ -34,7 +34,7 @@ Follow these steps to carry out the installation process:
 
 1. Download the repository to the local machine.
 2. Open Visual Studio, selecting the option: "Run as Administrator".
-3. Ensure that all necessary references are included in the project **AddinOpcUaInterface**. If any references are missing, select the Openness DLL files from TIA Portal version V19 as your reference source.
+3. Ensure that all necessary references are included in the project **AddinOpcUaInterface**. If any references are missing, select the Openness DLL files from TIA Portal version 20 as your reference source.
 4. Build the solution. The post-build event command will automatically transfer the .addin file to the **C:\Program Files\Siemens\Automation\Portal V20\AddIn** directory.
 
 **NOTE:** If TIA Portal version V17, V18 or V19 is being used, please refer to the instructions described in [Chapter 4](#tia-portal-version).
@@ -82,7 +82,6 @@ The "Create server interface for SW Units" action allows the creation of user-mo
     <img src="media/create_sw_units.png" alt="Create server interface for SW Unit" width="450" />
 </div>
 
-**NOTE:** This option can only be executed with the .dll from TIA Portal V19.
 
 <a name="features"></a>
 ## Features
