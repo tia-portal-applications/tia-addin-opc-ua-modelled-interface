@@ -39,6 +39,27 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Siemens.Engineering.AddIn.Base">
+      <HintPath>..\..\..\..\..\..\..\Program Files\Siemens\Automation\Portal V21\PublicAPI\V21\net48\Siemens.Engineering.AddIn.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Siemens.Engineering.AddIn.Permissions">
+      <HintPath>..\..\..\..\..\..\..\Program Files\Siemens\Automation\Portal V21\PublicAPI\V21\net48\Siemens.Engineering.AddIn.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="Siemens.Engineering.AddIn.Safety">
+      <HintPath>..\..\..\..\..\..\..\Program Files\Siemens\Automation\Portal V21\PublicAPI\V21\net48\Siemens.Engineering.AddIn.Safety.dll</HintPath>
+    </Reference>
+    <Reference Include="Siemens.Engineering.AddIn.Step7">
+      <HintPath>..\..\..\..\..\..\..\Program Files\Siemens\Automation\Portal V21\PublicAPI\V21\net48\Siemens.Engineering.AddIn.Step7.dll</HintPath>
+    </Reference>
+    <Reference Include="Siemens.Engineering.AddIn.Utilities">
+      <HintPath>..\..\..\..\..\..\..\Program Files\Siemens\Automation\Portal V21\PublicAPI\V21\net48\Siemens.Engineering.AddIn.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Siemens.Engineering.Base">
+      <HintPath>..\..\..\..\..\..\..\Program Files\Siemens\Automation\Portal V21\PublicAPI\V21\net48\Siemens.Engineering.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Siemens.Engineering.Step7">
+      <HintPath>..\..\..\..\..\..\..\Program Files\Siemens\Automation\Portal V21\PublicAPI\V21\net48\Siemens.Engineering.Step7.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
