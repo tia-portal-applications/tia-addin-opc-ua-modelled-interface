@@ -6,8 +6,8 @@
   This repository contains two branches to support different versions of TIA Portal:
  
   <ul>
-    <li>For TIA Portal versions V17-V20, use the branch: <strong>tia-addin-opc-ua-modelled-interface-V20</strong></li>
-    <li>For TIA Portal version V21+, use the branch: <strong>tia-addin-opc-ua-modelled-interface-V21</strong></li>
+    <li>For TIA Portal versions V17-V20, use the branch: <strong>tia-addin-opc-ua-modelled-interface-v20</strong></li>
+    <li>For TIA Portal version V21+, use the branch: <strong>main</strong></li>
   </ul>
 </div>
 
