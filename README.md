@@ -1,14 +1,17 @@
 # OPC UA - User modelled interface - V2.0.0
 
-<div style="border: 1px solid gray; padding: 10px">
-  <strong>What's new with V2.0.0</strong>
+<div style="border: 1px solid #e6a817; border-radius: 6px; padding: 12px 16px;">
+  <strong>⚠️ Before you download</strong>
+ 
+  This repository contains two branches to support different versions of TIA Portal:
+ 
   <ul>
-    <li><strong>TIA Portal Compatibility</strong>: This specific package of the add-in V2.0.0 is <strong>fully and exclusive compatible with TIA Portal V21</strong>. </li>
-  <strong>
-  Check what's new in <a href="CHANGELOG.md">V2.0.0</a></strong>
+    <li>For TIA Portal versions V17-V20, use the branch: <strong>tia-addin-opc-ua-modelled-interface-V20</strong></li>
+    <li>For TIA Portal version V21+, use the branch: <strong>tia-addin-opc-ua-modelled-interface-V21</strong></li>
+  </ul>
 </div>
 
-Note: This add-in is only for TIA Portal V21. To use previous TIA Portal versions switch to <strong>tia-addin-opc-ua-modelled-interface-V20</strong> branch.
+Check what's new in <a href="CHANGELOG.md">V2.0.0</a></strong>
 
 ## Description
 This Add-In has been developed to streamline the creation of user-modeled interfaces for OPC UA servers. By browsing through the TIA Portal project, it incorporates all variables that are accessible via OPC UA and arranges them in a structured manner, eliminating the need for manual configuration and significantly reducing the time and effort required.
