@@ -125,7 +125,7 @@ The Add-In utilizes the Openness API to access information stored in the TIA Por
 The Add-In is designed to run on TIA Portal V20, but it can be adapted to run on TIA Portal version V17, V18 and V19. To do so:
 - Update the references of the project **AddinOpcUaInterface**. Use the Openness DLL file "Siemens.Engineering.Addin" from TIA Portal versions V17, V18 or V19 as your reference source. 
 
-    **NOTE**: Openness has backward compatibility. This means that an Add-In built with the DLL files from TIA Portal V17 can also run on TIA Portal V18, V19 and V20.
+    **NOTE**: Openness has backward compatibility. This means that an Add-In built with the DLL files from TIA Portal V17 can also run on TIA Portal V18 and V19 (not V20).
 - Change the post-build event command to: 
     ```
     copy "$(ProjectDir)AddInPublisherConfig.xml" "$(TargetDir)AddInPublisherConfig.xml" /Y 
