@@ -105,7 +105,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(ProjectDir)AddInPublisherConfig.xml" "$(TargetDir)AddInPublisherConfig.xml" /Y 
-"C:\Program Files\Siemens\Automation\Portal V21\PublicAPI\V21\Siemens.Engineering.AddIn.Publisher.exe" -f "$(TargetDir)AddInPublisherConfig.xml" -l "$(TargetDir)PostBuildLog.txt" -v -c -o "C:\Users\Siemens\AppData\Roaming\Siemens\Automation\Portal V21\UserAddIns\OpcUa-UserModelledInterface.addin"
+"C:\Program Files\Siemens\Automation\Portal V21\PublicAPI\V21\Siemens.Engineering.AddIn.Publisher.exe" -f "$(TargetDir)AddInPublisherConfig.xml" -l "$(TargetDir)PostBuildLog.txt" -v -c -o "%25userprofile%25\AppData\Roaming\Siemens\Automation\Portal V21\UserAddIns\OpcUa-UserModelledInterface.addin"
 
 </PostBuildEvent>
   </PropertyGroup>
