@@ -260,6 +260,7 @@ The Add-In is designed to run on TIA Portal V20, but it can be adapted to run on
 
 OPC UA communication:
 - [SIMATIC S7-1500, ET 200MP, ET 200SP, ET 200AL, ET 200pro, ET 200eco PN Communication](https://support.industry.siemens.com/cs/document/59192925/simatic-s7-1500-et-200mp-et-200sp-et-200al-et-200pro-et-200eco-pn-communication?dti=0&lc=en-WW)
+- [OPC UA Foundation](https://opcfoundation.org/)
 
 Openness API:
 - [TIA Portal Openness: Automation of engineering workflows](https://support.industry.siemens.com/cs/document/109792902/tia-portal-openness-automation-of-engineering-workflows?dti=0&lc=en-WW)
