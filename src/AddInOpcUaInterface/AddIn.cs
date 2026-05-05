@@ -240,6 +240,7 @@ namespace AddInOpcUaInterface
             stopwatch.Start();
 
             // Create a log file to record logs (track variables that have not been added into the server interface)
+
             LogMessages.CreateLogFile();
 
             #region PHASE 1: IMPORT THE XML TEMPLATE OF THE SERVER INTERFACE AS AN XDOCUMENT
@@ -250,6 +251,7 @@ namespace AddInOpcUaInterface
             // Count the number of interface elements included with the template
             ctx.NumberDefaultNodes = InterfaceTemplate.GetTotalInterfaceElements();
             #endregion
+            
 
             if (exclusiveAccess.IsCancellationRequested) { OperationCancelled(exclusiveAccess); }
 

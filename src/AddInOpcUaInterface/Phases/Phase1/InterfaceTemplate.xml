@@ -114,6 +114,15 @@
 		<Alias Alias="HasEncoding">i=38</Alias>
 		<!-- Other OPC UA Aliases -->
 		<Alias Alias="OPC_UA_NODEID">i=17</Alias>
+		<Alias Alias="OPC_UA_QUALIFIEDNAME">i=20</Alias>
+		<Alias Alias="OPC_UA_LOCALIZEDTEXT">i=21</Alias>
+		<Alias Alias="OPC_UA_DATETIME">i=13</Alias>
+		<Alias Alias="OPC_UA_BYTESTRING">i=15</Alias>
+		<Alias Alias="OPC_UA_GUID">i=14</Alias>
+		<Alias Alias="OPC_UA_XMLELEMENT">i=16</Alias>
+		<Alias Alias="OPC_UA_STATUSCODE">i=19</Alias>
+		<Alias Alias="OPC_UA_ServerMethodPre">i=58</Alias>
+		<Alias Alias="OPC_UA_ServerMethodPost">i=58</Alias>
 	</Aliases>
 	<Extensions>
 		<Extension>

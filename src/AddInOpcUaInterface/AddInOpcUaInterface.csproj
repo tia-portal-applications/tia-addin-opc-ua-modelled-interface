@@ -78,6 +78,7 @@
     <Compile Include="Other\LogMessages.cs" />
     <Compile Include="Phases\Phase4\BuildDataBlockElements.cs" />
     <Compile Include="Phases\Phase4\DataBlocksInstance.cs" />
+    <Compile Include="Phases\Phase4\BuildMethods.cs" />
     <Compile Include="Phases\Phase4\DataBlocksGlobal.cs" />
     <Compile Include="Phases\Phase5\ImportServerInterface.cs" />
     <Compile Include="Phases\Phase1\InterfaceTemplate.cs" />
