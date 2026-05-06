@@ -1,8 +1,8 @@
 using AddInOpcUaInterface.Other;
-using Siemens.Engineering.SW;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace AddInOpcUaInterface.Phases.Phase4
@@ -41,9 +41,11 @@ namespace AddInOpcUaInterface.Phases.Phase4
             { "OPC_UA_GUID",            "i=14" },
             { "OPC_UA_XMLELEMENT",      "i=16" },
             { "OPC_UA_STATUSCODE",      "i=19" },
-            { "OPC_UA_ServerMethodPre",  "i=58" },
-            { "OPC_UA_ServerMethodPost", "i=58" }
+            { "OPC_UA_ServerMethodPre", "i=58" },
+            { "OPC_UA_ServerMethodPost","i=58" }
         };
+        private static readonly XNamespace _ns = "http://www.siemens.com/automation/Openness/SW/Interface/v5";
+        private static readonly Regex _arrayTypeRegex = new Regex(@"^Array\[(.+)\]\s+of\s+(.+)$",RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         /// <summary>
         /// Checks whether the instance DB belongs to a server method block
@@ -54,26 +56,24 @@ namespace AddInOpcUaInterface.Phases.Phase4
 
         public static void CheckMethod(string nodeId, XElement attributeList)
         {
-            XNamespace ns = "http://www.siemens.com/automation/Openness/SW/Interface/v5";
-
             XElement sectionStatic = attributeList
                 .Element("Interface")
-                .Element(ns + "Sections")
-                .Elements(ns + "Section")
+                .Element(_ns + "Sections")
+                .Elements(_ns + "Section")
                 .FirstOrDefault(s => (string)s.Attribute("Name") == "Static");
 
             // Check if this DB belongs to a server method block
 
-            if (sectionStatic?.Elements(ns + "Member")
+            if (sectionStatic?.Elements(_ns + "Member")
                     .FirstOrDefault(m => (string)m.Attribute("Name") == "OPC_UA_ServerMethodPre_Instance") == null)
             {
                 return;
             }
 
-            bool hasInputArgs = sectionStatic.Elements(ns + "Member")
+            bool hasInputArgs = sectionStatic.Elements(_ns + "Member")
                 .Any(m => (string)m.Attribute("Name") == "UAMethod_InParameters");
 
-            bool hasOutputArgs = sectionStatic.Elements(ns + "Member")
+            bool hasOutputArgs = sectionStatic.Elements(_ns + "Member")
                 .Any(m => (string)m.Attribute("Name") == "UAMethod_OutParameters");
 
             // Build the UAMethod node
@@ -105,13 +105,15 @@ namespace AddInOpcUaInterface.Phases.Phase4
 
         private static void BuildUAMethodNode(string nodeId, bool hasInputArgs, bool hasOutputArgs)
         {
+            var rootNs = Ctx.RootNameSpace;
+            var rootNsSi = Ctx.RootNameSpaceSi;
             var methodReferences = new List<XElement>
             {
-                new XElement(Ctx.RootNameSpace + "Reference",
+                new XElement(rootNs + "Reference",
                     new XAttribute("ReferenceType", "HasModellingRule"),
                     "i=78"),
 
-                new XElement(Ctx.RootNameSpace + "Reference",
+                new XElement(rootNs + "Reference",
                     new XAttribute("ReferenceType", "HasComponent"),
                     new XAttribute("IsForward", "false"),
                     $"ns=2;s={nodeId}")
@@ -119,27 +121,27 @@ namespace AddInOpcUaInterface.Phases.Phase4
 
             if (hasInputArgs)
                 methodReferences.Add(
-                    new XElement(Ctx.RootNameSpace + "Reference",
+                    new XElement(rootNs + "Reference",
                         new XAttribute("ReferenceType", "HasProperty"),
                         $"ns=2;s={nodeId}.Method.InputArguments"));
 
             if (hasOutputArgs)
                 methodReferences.Add(
-                    new XElement(Ctx.RootNameSpace + "Reference",
+                    new XElement(rootNs + "Reference",
                         new XAttribute("ReferenceType", "HasProperty"),
                         $"ns=2;s={nodeId}.Method.OutputArguments"));
 
             XElement uaMethodElement =
-                new XElement(Ctx.RootNameSpace + "UAMethod",
+                new XElement(rootNs + "UAMethod",
                     new XAttribute("NodeId", $"ns=2;s={nodeId}.Method"),
                     new XAttribute("BrowseName", "2:Method"),
                     new XAttribute("ParentNodeId", $"ns=2;s={nodeId}"),
                     new XAttribute("MethodDeclarationId", $"ns=2;s={nodeId}"),
-                    new XElement(Ctx.RootNameSpace + "DisplayName", "Method"),
-                    new XElement(Ctx.RootNameSpace + "References", methodReferences),
-                    new XElement(Ctx.RootNameSpace + "Extensions",
-                        new XElement(Ctx.RootNameSpace + "Extension",
-                            new XElement(Ctx.RootNameSpaceSi + "MethodMapping",
+                    new XElement(rootNs + "DisplayName", "Method"),
+                    new XElement(rootNs + "References", methodReferences),
+                    new XElement(rootNs + "Extensions",
+                        new XElement(rootNs + "Extension",
+                            new XElement(rootNsSi + "MethodMapping",
                                 $"{nodeId}.Method")))
                 );
 
@@ -160,7 +162,6 @@ namespace AddInOpcUaInterface.Phases.Phase4
           XElement attributeList,
           string paramStructName)
         {
-            XNamespace ns = "http://www.siemens.com/automation/Openness/SW/Interface/v5";
             XNamespace uax = "http://opcfoundation.org/UA/2008/02/Types.xsd";
             XNamespace xsi = "http://www.w3.org/2001/XMLSchema-instance";
             XNamespace rootNs = Ctx.RootNameSpace;
@@ -168,12 +169,12 @@ namespace AddInOpcUaInterface.Phases.Phase4
 
             XElement sectionStatic = attributeList
                     .Element("Interface")
-                    .Element(ns + "Sections")
-                    .Elements(ns + "Section")
+                    .Element(_ns + "Sections")
+                    .Elements(_ns + "Section")
                     .FirstOrDefault(s => (string)s.Attribute("Name") == "Static");
 
             XElement paramMember = sectionStatic
-                    ?.Elements(ns + "Member")
+                    ?.Elements(_ns + "Member")
                     .FirstOrDefault(m => (string)m.Attribute("Name") == paramStructName);
 
             var arguments = new List<XElement>();
@@ -181,7 +182,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
             if (paramMember != null)
 
             {
-                List<XElement> childMembers = ResolveMembers(paramMember, ns);
+                List<XElement> childMembers = ResolveMembers(paramMember, _ns);
 
                 foreach (XElement childMember in childMembers)
                 {
@@ -194,7 +195,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
                     if (isStruct)
                     {
                         // Flatten all fields as scalar arguments ──
-                        var udtMembers = AddChildElementsOfUdt(cleanType);
+                        var udtMembers = GetUdtFields(cleanType);
 
                         foreach (var (udtMemberName, udtMemberDatatype) in udtMembers)
                         {
@@ -232,12 +233,6 @@ namespace AddInOpcUaInterface.Phases.Phase4
                         {
                             var (_, elemTypeId) = ResolveDataTypeId(elementType);
 
-                            // Total number of elements across all dimensions
-                            int totalSize = dimensions.Aggregate(1, (acc, d) => acc * d);
-
-                            string arrayParentNodeId = $"ns=2;s={nodeId}.Method.{argumentType}";
-                            string arrayNodeId = $"ns=2;s={nodeId}.Method.{argumentType}.{memberName}";
-
                             // Add argument entry to InputArguments / OutputArguments list
                             arguments.Add(
                                 new XElement(uax + "ExtensionObject",
@@ -274,13 +269,8 @@ namespace AddInOpcUaInterface.Phases.Phase4
                                             new XAttribute("IsForward", "false"),
                                             $"ns=2;s={nodeId}.Method.{argumentType}"))));                          
                         }
-
-
                         else
                         {
-                            //  Scalar
-                            var (_, typeId) = ResolveDataTypeId(cleanType); 
-
                             arguments.Add(
                                 new XElement(uax + "ExtensionObject",
                                     new XElement(uax + "TypeId",
@@ -289,7 +279,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
                                         new XElement(uax + "Argument",
                                             new XElement(uax + "Name", memberName),
                                             new XElement(uax + "DataType",
-                                                new XElement(uax + "Identifier", typeId)),
+                                                new XElement(uax + "Identifier", dataTypeId)),
                                             new XElement(uax + "ValueRank", "-1"),
                                             new XElement(uax + "ArrayDimensions"),
                                             new XElement(uax + "Description",
@@ -326,9 +316,6 @@ namespace AddInOpcUaInterface.Phases.Phase4
             BuildDataBlockElements.XElementDataBlocks.Add(inputOutputArgNode);
             // Append the child nodes to the associated node
             BuildDataBlockElements.XElementDataBlocks.AddRange(extraNodes);
-
-            
-
         }
 
         /// <summary>
@@ -336,8 +323,8 @@ namespace AddInOpcUaInterface.Phases.Phase4
         /// </summary>
         /// <param name="isStruct"> </param>
         /// <param name="dataTypeId"> </param>
-        /// <returns></returns>
-        
+        /// <returns> Returns whether the type is a struct/UDT and the OPC UA data type NodeId </returns>
+
         private static (bool isStruct, string dataTypeId) ResolveDataTypeId(string cleanType)
         {
             string normalizedType = cleanType.Contains(':') ? cleanType.Substring(cleanType.LastIndexOf(':') + 1): cleanType;
@@ -345,10 +332,8 @@ namespace AddInOpcUaInterface.Phases.Phase4
             if (_dataTypeMap.TryGetValue(normalizedType, out string mapped))
                 return (false, mapped);
 
-            if (UserSystemDataTypes.UserDataTypes.Contains(normalizedType))
-                return (true, "ns=2;s=DT_" + normalizedType);
-
-            if (UserSystemDataTypes.SystemDataTypes.Contains(normalizedType))
+            if (UserSystemDataTypes.UserDataTypes.Contains(normalizedType) ||
+                UserSystemDataTypes.SystemDataTypes.Contains(normalizedType))
                 return (true, "ns=2;s=DT_" + normalizedType);
 
             return (false, "i=24");
@@ -364,10 +349,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
         
         private static (bool isArray, string elementType, int[] dimensions) ParseArrayType(string rawType)
         {
-            var match = System.Text.RegularExpressions.Regex.Match(
-                rawType,
-                @"^Array\[(.+)\]\s+of\s+(.+)$",
-                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            var match = _arrayTypeRegex.Match(rawType);
 
             if (!match.Success)
                 return (false, rawType, null);
@@ -398,7 +380,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
         /// Returns all fields (name + datatype) of a UDT from the already-built XElementUserSystemDataTypes list.
         /// </summary>
 
-        private static List<(string name, string datatype)> AddChildElementsOfUdt(string cleanType)
+        private static List<(string name, string datatype)> GetUdtFields(string cleanType)
         {
             var result = new List<(string name, string datatype)>();
             string dataTypeNodeId = "ns=2;s=DT_" + cleanType;
@@ -449,22 +431,17 @@ namespace AddInOpcUaInterface.Phases.Phase4
                 string datatype = (string)child.Attribute("Datatype") ?? "";
                 string cleanDatatype = datatype.Trim('"');
                 var (isArray, _, _) = ParseArrayType(cleanDatatype);
+
                 if (isArray)
                 {
                     result.Add(child);
                     continue;
                 }
 
-                var grandChildren = child.Elements(ns + "Member").ToList();
-
-                if (grandChildren.Count > 0)
-                {
+                if (child.Elements(ns + "Member").Any())
                     result.AddRange(ResolveMembers(child, ns));
-                }
                 else
-                {
                     result.Add(child);
-                }
             }
 
             return result;
