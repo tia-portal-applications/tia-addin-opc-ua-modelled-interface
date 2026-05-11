@@ -123,6 +123,7 @@ namespace AddInOpcUaInterface.Other
         public int NumberGlobalDBs = 0;     // Number of nodes (folders, data blocks, variables) associated with Global DBs
         public int NumberInstanceDBs = 0;     // Number of nodes (folders, data blocks, variables) associated with Instance DBs
 
+
         #endregion
 
         /// <summary>

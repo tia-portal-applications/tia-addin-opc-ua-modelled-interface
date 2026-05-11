@@ -31,8 +31,6 @@ namespace AddInOpcUaInterface.Phases.Phase4
             { "ldt",    "i=13" },
             { "wstring","i=12" },
 
-            // OPC UA specific types
-
             { "OPC_UA_QUALIFIEDNAME",   "i=20" },
             { "OPC_UA_LOCALIZEDTEXT",   "i=21" },
             { "OPC_UA_NODEID",          "i=17" },
@@ -44,16 +42,26 @@ namespace AddInOpcUaInterface.Phases.Phase4
             { "OPC_UA_ServerMethodPre", "i=58" },
             { "OPC_UA_ServerMethodPost","i=58" }
         };
-        private static readonly XNamespace _ns = "http://www.siemens.com/automation/Openness/SW/Interface/v5";
-        private static readonly Regex _arrayTypeRegex = new Regex(@"^Array\[(.+)\]\s+of\s+(.+)$",RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+        private static readonly XNamespace _ns =
+            "http://www.siemens.com/automation/Openness/SW/Interface/v5";
+        private static readonly Regex _arrayTypeRegex =
+            new Regex(@"^Array\[(.+)\]\s+of\s+(.+)$",
+                RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+        // ── Sequential integer NodeId counter for array variable nodes ───
+        private static int _nextNodeId = 1000;
+        private static int GetNextNodeId() => _nextNodeId++;
+
+        public static void ResetNodeIdCounter(int startValue = 1000)
+        {
+            _nextNodeId = startValue;
+        }
 
         /// <summary>
         /// Checks whether the instance DB belongs to a server method block
-        ///and builds the UAMethod, InputArguments and OutputArguments nodes.
+        /// and builds the UAMethod, InputArguments and OutputArguments nodes.
         /// </summary>
-        /// <param name="nodeId">The NodeId of the parent DB object.</param>
-        /// <param name="attributeList">The AttributeList XElement of the exported DB.</param>
-
         public static void CheckMethod(string nodeId, XElement attributeList)
         {
             XElement sectionStatic = attributeList
@@ -62,10 +70,9 @@ namespace AddInOpcUaInterface.Phases.Phase4
                 .Elements(_ns + "Section")
                 .FirstOrDefault(s => (string)s.Attribute("Name") == "Static");
 
-            // Check if this DB belongs to a server method block
-
             if (sectionStatic?.Elements(_ns + "Member")
-                    .FirstOrDefault(m => (string)m.Attribute("Name") == "OPC_UA_ServerMethodPre_Instance") == null)
+                    .FirstOrDefault(m => (string)m.Attribute("Name") ==
+                        "OPC_UA_ServerMethodPre_Instance") == null)
             {
                 return;
             }
@@ -76,43 +83,28 @@ namespace AddInOpcUaInterface.Phases.Phase4
             bool hasOutputArgs = sectionStatic.Elements(_ns + "Member")
                 .Any(m => (string)m.Attribute("Name") == "UAMethod_OutParameters");
 
-            // Build the UAMethod node
-
             BuildUAMethodNode(nodeId, hasInputArgs, hasOutputArgs);
 
-            // Build InputArguments if the struct exists
-
             if (hasInputArgs)
-            {
                 BuildMethodArguments(nodeId, "InputArguments", attributeList, "UAMethod_InParameters");
-            }
-
-            // Build OutputArguments if the struct exists
 
             if (hasOutputArgs)
-            {
-               BuildMethodArguments(nodeId, "OutputArguments", attributeList, "UAMethod_OutParameters");
-            }
+                BuildMethodArguments(nodeId, "OutputArguments", attributeList, "UAMethod_OutParameters");
         }
 
         /// <summary>
         /// Builds and adds the UAMethod node to the output list.
         /// </summary>
-        /// <param name="nodeId"> The NodeId of the parent DB object.</param>
-        /// <param name="hasInputArgs"> </param>
-        /// <param name="hasOutputArgs"> </param>
-        
-
         private static void BuildUAMethodNode(string nodeId, bool hasInputArgs, bool hasOutputArgs)
         {
             var rootNs = Ctx.RootNameSpace;
             var rootNsSi = Ctx.RootNameSpaceSi;
+
             var methodReferences = new List<XElement>
             {
                 new XElement(rootNs + "Reference",
                     new XAttribute("ReferenceType", "HasModellingRule"),
                     "i=78"),
-
                 new XElement(rootNs + "Reference",
                     new XAttribute("ReferenceType", "HasComponent"),
                     new XAttribute("IsForward", "false"),
@@ -142,8 +134,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
                     new XElement(rootNs + "Extensions",
                         new XElement(rootNs + "Extension",
                             new XElement(rootNsSi + "MethodMapping",
-                                $"{nodeId}.Method")))
-                );
+                                $"{nodeId}.Method"))));
 
             BuildDataBlockElements.XElementDataBlocks.Add(uaMethodElement);
         }
@@ -151,36 +142,32 @@ namespace AddInOpcUaInterface.Phases.Phase4
         /// <summary>
         /// Builds a UAVariable node for InputArguments or OutputArguments of a UAMethod.
         /// </summary>
-        /// <param name="nodeId"> The NodeId of the parent DB object.</param>
-        /// <param name="argumentType"> </param>
-        /// <param name="attributeList"> The AttributeList XElement of the exported DB u</param>
-        /// <param name="paramStructName"> </param>
-
         private static void BuildMethodArguments(
-          string nodeId,
-          string argumentType,
-          XElement attributeList,
-          string paramStructName)
+            string nodeId,
+            string argumentType,
+            XElement attributeList,
+            string paramStructName)
         {
             XNamespace uax = "http://opcfoundation.org/UA/2008/02/Types.xsd";
             XNamespace xsi = "http://www.w3.org/2001/XMLSchema-instance";
             XNamespace rootNs = Ctx.RootNameSpace;
+            var rootNsSi = Ctx.RootNameSpaceSi;
+
             var extraNodes = new List<XElement>();
-
-            XElement sectionStatic = attributeList
-                    .Element("Interface")
-                    .Element(_ns + "Sections")
-                    .Elements(_ns + "Section")
-                    .FirstOrDefault(s => (string)s.Attribute("Name") == "Static");
-
-            XElement paramMember = sectionStatic
-                    ?.Elements(_ns + "Member")
-                    .FirstOrDefault(m => (string)m.Attribute("Name") == paramStructName);
-
+            var arrayArgNodeIds = new List<string>();
             var arguments = new List<XElement>();
 
-            if (paramMember != null)
+            XElement sectionStatic = attributeList
+                .Element("Interface")
+                .Element(_ns + "Sections")
+                .Elements(_ns + "Section")
+                .FirstOrDefault(s => (string)s.Attribute("Name") == "Static");
 
+            XElement paramMember = sectionStatic
+                ?.Elements(_ns + "Member")
+                .FirstOrDefault(m => (string)m.Attribute("Name") == paramStructName);
+
+            if (paramMember != null)
             {
                 List<XElement> childMembers = ResolveMembers(paramMember, _ns);
 
@@ -190,85 +177,144 @@ namespace AddInOpcUaInterface.Phases.Phase4
                     string rawType = (string)childMember.Attribute("Datatype") ?? "Bool";
                     string cleanType = rawType.Trim('"');
 
-                    (bool isStruct, string dataTypeId) = ResolveDataTypeId(cleanType);
+                    // ── ARRAY ──────────────────────────────────────────────────────
+                    var (isArray, elementType, dimensions) = ParseArrayType(cleanType);
 
-                    if (isStruct)
+                    if (isArray)
                     {
-                        // Flatten all fields as scalar arguments ──
-                        var udtMembers = GetUdtFields(cleanType);
+                        var (_, elemTypeId) = ResolveDataTypeId(elementType);
 
-                        foreach (var (udtMemberName, udtMemberDatatype) in udtMembers)
+                        // Add to argument list
+                        arguments.Add(
+                            new XElement(uax + "ExtensionObject",
+                                new XElement(uax + "TypeId",
+                                    new XElement(uax + "Identifier", "i=297")),
+                                new XElement(uax + "Body",
+                                    new XElement(uax + "Argument",
+                                        new XElement(uax + "Name", memberName),
+                                        new XElement(uax + "DataType",
+                                            new XElement(uax + "Identifier", elemTypeId)),
+                                        new XElement(uax + "ValueRank",
+                                            dimensions.Length.ToString()),
+                                        new XElement(uax + "ArrayDimensions",
+                                            dimensions.Select(d =>
+                                                new XElement(uax + "UInt32", d.ToString()))),
+                                        new XElement(uax + "Description",
+                                            new XAttribute(xsi + "nil", "true"))))));
+
+                        // ── Allocate sequential integer NodeIds ──────────────────
+                        int arrayParentId = GetNextNodeId();
+                        int firstChildId = GetNextNodeId();
+                        for (int i = 1; i < dimensions[0]; i++) GetNextNodeId();
+
+                        // ── Forward HasComponent references to each child ─────────
+                        var childRefs = Enumerable.Range(0, dimensions[0])
+                            .Select(i =>
+                                new XElement(rootNs + "Reference",
+                                    new XAttribute("ReferenceType", "HasComponent"),
+                                    new XAttribute("IsForward", "true"),
+                                    $"ns=2;i={firstChildId + i}"))
+                            .ToList();
+
+                        // ── Parent array UAVariable node ─────────────────────────
+                        string mappingBase = $"{nodeId}.\"{paramStructName}\".\"{memberName}\"";
+
+                        var parentRefs = new List<XElement>
                         {
-                            string memberDataTypeId;
+                            new XElement(rootNs + "Reference",
+                                new XAttribute("ReferenceType", "HasTypeDefinition"),
+                                new XAttribute("IsForward", "true"),
+                                "i=63")
+                        };
+                        parentRefs.AddRange(childRefs);
 
-                            if (udtMemberDatatype.StartsWith("ns=") || udtMemberDatatype.StartsWith("i="))
-                                memberDataTypeId = udtMemberDatatype;
-                            else
-                            {
-                                var (_, resolvedId) = ResolveDataTypeId(udtMemberDatatype);
-                                memberDataTypeId = resolvedId;
-                            }
+                        extraNodes.Add(
+                            new XElement(rootNs + "UAVariable",
+                                new XAttribute("NodeId", $"ns=2;i={arrayParentId}"),
+                                new XAttribute("BrowseName", $"2:{memberName}"),
+                                new XAttribute("ParentNodeId",
+                                    $"ns=2;s={nodeId}.Method.{argumentType}"),
+                                new XAttribute("DataType", elemTypeId),
+                                new XAttribute("AccessLevel", "3"),
+                                new XAttribute("ValueRank", dimensions.Length.ToString()),
+                                new XAttribute("ArrayDimensions",
+                                    string.Join(" ", dimensions)),
+                                new XElement(rootNs + "DisplayName", memberName),
+                                new XElement(rootNs + "References",
+                                    parentRefs.Cast<object>().ToArray()),
+                                new XElement(rootNs + "Extensions",
+                                    new XElement(rootNs + "Extension",
+                                        new XElement(rootNsSi + "VariableMapping",
+                                            mappingBase)))));
 
-                            arguments.Add(
-                                new XElement(uax + "ExtensionObject",
-                                    new XElement(uax + "TypeId",
-                                        new XElement(uax + "Identifier", "i=297")),
-                                    new XElement(uax + "Body",
-                                        new XElement(uax + "Argument",
-                                            new XElement(uax + "Name", udtMemberName),
-                                            new XElement(uax + "DataType",
-                                                new XElement(uax + "Identifier", memberDataTypeId)),
-                                            new XElement(uax + "ValueRank", "-1"),
-                                            new XElement(uax + "ArrayDimensions"),
-                                            new XElement(uax + "Description",
-                                                new XAttribute(xsi + "nil", "true"))))));
-                        }
-                    }
-                    else
-                    {
-                        // Scalar or Array primitive
-                        var (isArray, elementType, dimensions) = ParseArrayType(cleanType);
+                        arrayArgNodeIds.Add($"ns=2;i={arrayParentId}");
 
-                        if (isArray)
+                        // ── Child UAVariable nodes ────────────────────────────────
+                        for (int i = 0; i < dimensions[0]; i++)
                         {
-                            var (_, elemTypeId) = ResolveDataTypeId(elementType);
+                            string childMapping = $"{nodeId}.\"{paramStructName}\".\"{memberName}\"[{i}]";
 
-                            // Add argument entry to InputArguments / OutputArguments list
-                            arguments.Add(
-                                new XElement(uax + "ExtensionObject",
-                                    new XElement(uax + "TypeId",
-                                        new XElement(uax + "Identifier", "i=297")),
-                                    new XElement(uax + "Body",
-                                        new XElement(uax + "Argument",
-                                            new XElement(uax + "Name", memberName),
-                                            new XElement(uax + "DataType",
-                                                new XElement(uax + "Identifier", elemTypeId)),
-                                            new XElement(uax + "ValueRank", dimensions.Length.ToString()),
-                                            new XElement(uax + "ArrayDimensions",
-                                                dimensions.Select(d =>
-                                                    new XElement(uax + "UInt32", d.ToString()))),
-                                            new XElement(uax + "Description",
-                                                new XAttribute(xsi + "nil", "true"))))));
-
-                            //  Create one  UAVariable node for the array and UAVariable child node for array argument
                             extraNodes.Add(
                                 new XElement(rootNs + "UAVariable",
-                                    new XAttribute("NodeId", $"ns=2;s={nodeId}.Method.{argumentType}.{memberName}"),
-                                    new XAttribute("BrowseName", $"2:{memberName}"),
-                                    new XAttribute("ParentNodeId", $"ns=2;s={nodeId}.Method.{argumentType}"), 
+                                    new XAttribute("NodeId",
+                                        $"ns=2;i={firstChildId + i}"),
+                                    new XAttribute("BrowseName", $"2:[{i}]"),
+                                    new XAttribute("ParentNodeId",
+                                        $"ns=2;i={arrayParentId}"),
                                     new XAttribute("DataType", elemTypeId),
-                                    new XAttribute("AccessLevel", "3"),                                        
-                                    new XAttribute("ValueRank", dimensions.Length.ToString()),
-                                    new XAttribute("ArrayDimensions", string.Join(" ", dimensions)),               
-                                    new XElement(rootNs + "DisplayName", memberName),
+                                    new XAttribute("AccessLevel", "3"),
+                                    new XElement(rootNs + "DisplayName", $"[{i}]"),
                                     new XElement(rootNs + "References",
                                         new XElement(rootNs + "Reference",
-                                            new XAttribute("ReferenceType", "HasTypeDefinition"), "i=63"),
-                                        new XElement(rootNs + "Reference",
-                                            new XAttribute("ReferenceType", "HasProperty"),
-                                            new XAttribute("IsForward", "false"),
-                                            $"ns=2;s={nodeId}.Method.{argumentType}"))));                          
+                                            new XAttribute("ReferenceType",
+                                                "HasTypeDefinition"),
+                                            new XAttribute("IsForward", "true"),
+                                            "i=63")),
+                                    new XElement(rootNs + "Extensions",
+                                        new XElement(rootNs + "Extension",
+                                            new XElement(rootNsSi + "VariableMapping",
+                                                childMapping)))));
                         }
+                    }
+                    // ── STRUCT ────────────────────────────────────────────────────
+                    else
+                    {
+                        (bool isStruct, string dataTypeId) = ResolveDataTypeId(cleanType);
+
+                        if (isStruct)
+                        {
+                            var udtMembers = GetUdtFields(cleanType);
+
+                            foreach (var (udtMemberName, udtMemberDatatype) in udtMembers)
+                            {
+                                string memberDataTypeId;
+
+                                if (udtMemberDatatype.StartsWith("ns=") ||
+                                    udtMemberDatatype.StartsWith("i="))
+                                    memberDataTypeId = udtMemberDatatype;
+                                else
+                                {
+                                    var (_, resolvedId) = ResolveDataTypeId(udtMemberDatatype);
+                                    memberDataTypeId = resolvedId;
+                                }
+
+                                arguments.Add(
+                                    new XElement(uax + "ExtensionObject",
+                                        new XElement(uax + "TypeId",
+                                            new XElement(uax + "Identifier", "i=297")),
+                                        new XElement(uax + "Body",
+                                            new XElement(uax + "Argument",
+                                                new XElement(uax + "Name", udtMemberName),
+                                                new XElement(uax + "DataType",
+                                                    new XElement(uax + "Identifier",
+                                                        memberDataTypeId)),
+                                                new XElement(uax + "ValueRank", "-1"),
+                                                new XElement(uax + "ArrayDimensions"),
+                                                new XElement(uax + "Description",
+                                                    new XAttribute(xsi + "nil", "true"))))));
+                            }
+                        }
+                        // ── SCALAR ────────────────────────────────────────────────
                         else
                         {
                             arguments.Add(
@@ -288,7 +334,27 @@ namespace AddInOpcUaInterface.Phases.Phase4
                     }
                 }
             }
-            // This node contains the argument definitions for the input/output parameters of the method.
+
+            // ── InputArguments / OutputArguments container node ───────────────────
+            var containerRefs = new List<XElement>
+            {
+                new XElement(rootNs + "Reference",
+                    new XAttribute("ReferenceType", "HasTypeDefinition"), "i=68"),
+                new XElement(rootNs + "Reference",
+                    new XAttribute("ReferenceType", "HasModellingRule"), "i=78"),
+                new XElement(rootNs + "Reference",
+                    new XAttribute("ReferenceType", "HasComponent"),
+                    new XAttribute("IsForward", "false"),
+                    $"ns=2;s={nodeId}.Method")
+            };
+
+            foreach (string id in arrayArgNodeIds)
+            {
+                containerRefs.Add(
+                    new XElement(rootNs + "Reference",
+                        new XAttribute("ReferenceType", "HasComponent"),
+                        id));
+            }
 
             XElement inputOutputArgNode = new XElement(rootNs + "UAVariable",
                 new XAttribute("NodeId", $"ns=2;s={nodeId}.Method.{argumentType}"),
@@ -299,35 +365,21 @@ namespace AddInOpcUaInterface.Phases.Phase4
                 new XAttribute("ValueRank", "1"),
                 new XElement(rootNs + "DisplayName", argumentType),
                 new XElement(rootNs + "References",
-                    new XElement(rootNs + "Reference",
-                        new XAttribute("ReferenceType", "HasTypeDefinition"), "i=68"),
-                    new XElement(rootNs + "Reference",
-                        new XAttribute("ReferenceType", "HasModellingRule"), "i=78"),
-                    new XElement(rootNs + "Reference",
-                        new XAttribute("ReferenceType", "HasProperty"),
-                        new XAttribute("IsForward", "false"),
-                        $"ns=2;s={nodeId}.Method")),
+                    containerRefs.Cast<object>().ToArray()),
                 new XElement(rootNs + "Value",
                     new XElement(uax + "ListOfExtensionObject",
                         new XAttribute(XNamespace.Xmlns + "uax", uax),
                         arguments)));
 
-            // Add the InputArguments/OutputArguments container node
             BuildDataBlockElements.XElementDataBlocks.Add(inputOutputArgNode);
-            // Append the child nodes to the associated node
             BuildDataBlockElements.XElementDataBlocks.AddRange(extraNodes);
         }
 
-        /// <summary>
-        /// Resolves the data type ID and whether the type is a UDT/Struct.
-        /// </summary>
-        /// <param name="isStruct"> </param>
-        /// <param name="dataTypeId"> </param>
-        /// <returns> Returns whether the type is a struct/UDT and the OPC UA data type NodeId </returns>
-
         private static (bool isStruct, string dataTypeId) ResolveDataTypeId(string cleanType)
         {
-            string normalizedType = cleanType.Contains(':') ? cleanType.Substring(cleanType.LastIndexOf(':') + 1): cleanType;
+            string normalizedType = cleanType.Contains(':')
+                ? cleanType.Substring(cleanType.LastIndexOf(':') + 1)
+                : cleanType;
 
             if (_dataTypeMap.TryGetValue(normalizedType, out string mapped))
                 return (false, mapped);
@@ -339,15 +391,8 @@ namespace AddInOpcUaInterface.Phases.Phase4
             return (false, "i=24");
         }
 
-        /// <summary>
-        /// Parses a TIA Portal array type string into its components. For example: "Array[0..7] of Int".
-        /// </summary>
-        /// <param name="isArray"> </param>
-        /// <param name="elementType"> </param>
-        /// <param name="dimensions"> </param>
-        /// <returns></returns>
-        
-        private static (bool isArray, string elementType, int[] dimensions) ParseArrayType(string rawType)
+        private static (bool isArray, string elementType, int[] dimensions)
+            ParseArrayType(string rawType)
         {
             var match = _arrayTypeRegex.Match(rawType);
 
@@ -356,29 +401,21 @@ namespace AddInOpcUaInterface.Phases.Phase4
 
             string elementType = match.Groups[2].Value.Trim();
             string[] dimParts = match.Groups[1].Value.Split(',');
-
             var dims = new List<int>();
+
             foreach (string dim in dimParts)
             {
                 var bounds = dim.Trim().Split(new[] { ".." }, StringSplitOptions.None);
                 if (bounds.Length == 2
                     && int.TryParse(bounds[0].Trim(), out int lo)
                     && int.TryParse(bounds[1].Trim(), out int hi))
-                {
-                    dims.Add(hi - lo + 1); // size of this dimension
-                }
+                    dims.Add(hi - lo + 1);
                 else
-                {
-                    dims.Add(0); // unknown dimension
-                }
+                    dims.Add(0);
             }
 
             return (true, elementType, dims.ToArray());
         }
-
-        /// <summary>
-        /// Returns all fields (name + datatype) of a UDT from the already-built XElementUserSystemDataTypes list.
-        /// </summary>
 
         private static List<(string name, string datatype)> GetUdtFields(string cleanType)
         {
@@ -390,17 +427,17 @@ namespace AddInOpcUaInterface.Phases.Phase4
                     e.Name.LocalName == "UADataType" &&
                     (string)e.Attribute("NodeId") == dataTypeNodeId);
 
-            if (dataTypeElement == null)
-                return result;
+            if (dataTypeElement == null) return result;
 
             XElement definition = dataTypeElement
                 .Elements()
                 .FirstOrDefault(e => e.Name.LocalName == "Definition");
 
-            if (definition == null)
-                return result;
+            if (definition == null) return result;
 
-            foreach (XElement field in definition.Elements().Where(e => e.Name.LocalName == "Field"))
+            foreach (XElement field in definition
+                .Elements()
+                .Where(e => e.Name.LocalName == "Field"))
             {
                 string name = (string)field.Attribute("Name");
                 string dataType = (string)field.Attribute("DataType");
@@ -411,9 +448,6 @@ namespace AddInOpcUaInterface.Phases.Phase4
 
             return result;
         }
-        /// <summary>
-        /// Resolves the full list of members of a parameter struct member.
-        /// </summary>
 
         private static List<XElement> ResolveMembers(XElement paramMember, XNamespace ns)
         {
@@ -446,8 +480,5 @@ namespace AddInOpcUaInterface.Phases.Phase4
 
             return result;
         }
-
     }
 }
-        
-
