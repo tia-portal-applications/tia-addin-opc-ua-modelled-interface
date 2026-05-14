@@ -344,7 +344,33 @@ namespace AddInOpcUaInterface.Phases.Phase4
 
             // Save the current count before adding variables, to detect empty DBs later
             int currentElementsCount = BuildDataBlockElements.XElementDataBlocks.Count();
-            BuildDataBlockElements.BuildXElement(attributeList, blockName, typeOfDB, isSafety);
+            
+            XNamespace nsInterface = "http://www.siemens.com/automation/Openness/SW/Interface/v5";
+            XElement sectionStatic = attributeList
+                .Element("Interface")
+                ?.Element(nsInterface + "Sections")
+                ?.Elements(nsInterface + "Section")
+                .FirstOrDefault(s => (string)s.Attribute("Name") == "Static");
+
+            string paramStructName = string.Empty;
+            string argumentType = string.Empty;
+
+            if (sectionStatic != null)
+            {
+                if (sectionStatic.Elements(nsInterface + "Member")
+                    .Any(m => (string)m.Attribute("Name") == "UAMethod_InParameters"))
+                {
+                    paramStructName = "UAMethod_InParameters";
+                    argumentType = "InputArguments";
+                }
+                else if (sectionStatic.Elements(nsInterface + "Member")
+                    .Any(m => (string)m.Attribute("Name") == "UAMethod_OutParameters"))
+                {
+                    paramStructName = "UAMethod_OutParameters";
+                    argumentType = "OutputArguments";
+                }
+            }
+            BuildDataBlockElements.BuildXElement(attributeList, blockName, typeOfDB, isSafety, paramStructName, argumentType);
 
             #endregion
 

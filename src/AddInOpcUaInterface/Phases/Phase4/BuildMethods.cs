@@ -177,7 +177,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
                     string rawType = (string)childMember.Attribute("Datatype") ?? "Bool";
                     string cleanType = rawType.Trim('"');
 
-                    // ── ARRAY ──────────────────────────────────────────────────────
+                    //  ARRAY 
                     var (isArray, elementType, dimensions) = ParseArrayType(cleanType);
 
                     if (isArray)
@@ -202,12 +202,12 @@ namespace AddInOpcUaInterface.Phases.Phase4
                                         new XElement(uax + "Description",
                                             new XAttribute(xsi + "nil", "true"))))));
 
-                        // ── Allocate sequential integer NodeIds ──────────────────
+                        //  Allocate sequential integer NodeIds 
                         int arrayParentId = GetNextNodeId();
                         int firstChildId = GetNextNodeId();
                         for (int i = 1; i < dimensions[0]; i++) GetNextNodeId();
 
-                        // ── Forward HasComponent references to each child ─────────
+                        // Forward HasComponent references to each child
                         var childRefs = Enumerable.Range(0, dimensions[0])
                             .Select(i =>
                                 new XElement(rootNs + "Reference",
@@ -216,7 +216,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
                                     $"ns=2;i={firstChildId + i}"))
                             .ToList();
 
-                        // ── Parent array UAVariable node ─────────────────────────
+                        // Parent array UAVariable node
                         string mappingBase = $"{nodeId}.\"{paramStructName}\".\"{memberName}\"";
 
                         var parentRefs = new List<XElement>
@@ -249,7 +249,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
 
                         arrayArgNodeIds.Add($"ns=2;i={arrayParentId}");
 
-                        // ── Child UAVariable nodes ────────────────────────────────
+                        //  Child UAVariable nodes 
                         for (int i = 0; i < dimensions[0]; i++)
                         {
                             string childMapping = $"{nodeId}.\"{paramStructName}\".\"{memberName}\"[{i}]";
@@ -276,7 +276,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
                                                 childMapping)))));
                         }
                     }
-                    // ── STRUCT ────────────────────────────────────────────────────
+                    // STRUCT 
                     else
                     {
                         (bool isStruct, string dataTypeId) = ResolveDataTypeId(cleanType);
@@ -314,7 +314,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
                                                     new XAttribute(xsi + "nil", "true"))))));
                             }
                         }
-                        // ── SCALAR ────────────────────────────────────────────────
+                        // SCALAR 
                         else
                         {
                             arguments.Add(
@@ -335,7 +335,7 @@ namespace AddInOpcUaInterface.Phases.Phase4
                 }
             }
 
-            // ── InputArguments / OutputArguments container node ───────────────────
+            // timInputArguments / OutputArguments container node 
             var containerRefs = new List<XElement>
             {
                 new XElement(rootNs + "Reference",
